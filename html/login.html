@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <meta charset="utf-8">
     <style>
     </style>
@@ -11,27 +11,45 @@
 </head>
 
 <body>
-<div>
     <div>
-        <!-- title -->
         <div>
-            <h1>智能众包平台</h1>
-        </div>
-        <!-- login -->
-        <div>
+            <!-- title -->
             <div>
-                <p>登陆页</p>
+                <h1>智能众包平台</h1>
             </div>
+            <!-- login -->
             <div>
-                <form action="">
-                    <video src=""></video>
+                <div>
+                    <p>登陆页</p>
+                </div>
+                <div>
+                    <form action="">
+                        <div id="camera"></div>
 
-                    <p>用户名</p>
-                </form>
+
+                        <p>用户名</p>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </body>
+<script src="../javascript/camera.js"></script>
+<script>
+    var camera = new Camera('camera', {
+        needEdit: true,
+        imageType: 'png',
+        width: 400,
+        height: 300
+    });
+    camera.init();
+    //take photo
+    var img = camera.take();
+    console.log(img);
+
+
+
+
+</script>
 
 </html>
