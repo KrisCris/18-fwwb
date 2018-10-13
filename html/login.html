@@ -6,36 +6,93 @@
     <meta charset="utf-8">
     <style>
     </style>
-    <script>
-    </script>
+
 </head>
 
 <body>
     <div>
-        <div>
+        <div id="main">
             <!-- title -->
             <div>
-                <h1>智能众包平台</h1>
+                <h1>CrowdSourcing</h1>
             </div>
-            <!-- login -->
+            <!-- tips -->
+            <div class="tips">
+                <p>在这里登陆</p>
+            </div>
+            <div class="tips" style="display: none;">
+                <p>在这里注册</p>
+            </div>
+
+            <!--login-->
             <div>
+                <div id="camera"></div>
                 <div>
-                    <p>登陆页</p>
+                    <div><input type="text" placeholder="用户名"  v-model="username"></div>
+                    <div><input type="password" placeholder="密码" v-model="password"></div>
+                    <div><button>登陆</button></div>
+                    <div><button>注册</button></div>
+                    <div><a href="">忘记密码？</a></div>
                 </div>
                 <div>
-                    <form action="">
-                        <div id="camera"></div>
+                    <div><input type="text" placeholder="用户名" v-model="signName"></div>
+                    <div><input type="password" placeholder="密码" v-model="signPass"></div>
+                    <div><input type="password" placeholder="重复密码" v-model="rePass"></div>
+                </div>
+                <div>
 
-
-                        <p>用户名</p>
-                    </form>
                 </div>
             </div>
+
         </div>
     </div>
 </body>
 <script src="../javascript/camera.js"></script>
+<script src="../resource/vue/vue.js"></script>
+<script src="../resource/jquery/jquery.js"></script>
 <script>
+    let app = new Vue({
+        el:"#main",
+        data:{
+            username:"",
+            password:"",
+            signName:"",
+            signPass:"",
+            rePass:"",
+            phoneNum:"",
+            name:"",
+            company:"",
+            eMail:"",
+
+        },
+        created(){
+
+        },
+        methods:{
+            login:function(){
+                var that = this;
+                $.post("../php/login.php",{
+                    username:that.username,
+                    password:that.password,
+                }).done((data)=>{
+                    data = JSON.parse(data);
+                    if(data.status=="succeed"){
+
+                    }else{
+
+                    }
+                })
+
+                }
+
+
+            },
+            signIn:function(){
+
+            },
+
+        
+    })
     var camera = new Camera('camera', {
         needEdit: true,
         imageType: 'png',
