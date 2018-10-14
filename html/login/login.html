@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta charset="utf-8">
+    <style>
+    </style>
+
+</head>
+
+<body>
+    <div>
+        <div id="main">
+            <!-- title -->
+            <div>
+                <h1>CrowdSourcing</h1>
+            </div>
+            <!-- tips -->
+            <div class="tips">
+                <p>在这里登陆</p>
+            </div>
+            <div class="tips" style="display: none;">
+                <p>在这里注册</p>
+            </div>
+
+            <!--login-->
+            <div>
+                <div id="camera"></div>
+                <div>
+                    <div>
+                        <input type="text" placeholder="用户名" v-model="username">
+                    </div>
+                    <div>
+                        <input type="password" placeholder="密码" v-model="password">
+                    </div>
+                    <div>
+                        <button>登陆</button>
+                    </div>
+                    <div>
+                        <button>注册</button>
+                    </div>
+                    <div>
+                        <a href="">忘记密码？</a>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <input type="text" placeholder="用户名" v-model="signName" id="username_sign">
+                    </div>
+                    <div>
+                        <input type="password" placeholder="密码" v-model="signPass">
+                    </div>
+                    <div>
+                        <input type="password" placeholder="重复密码" v-model="rePass" id="rePass">
+                        <p style="display:none;">两次密码不相同！</p>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="姓名" v-model="name">
+                    </div>
+                    <div>
+                        <select v-model="company">
+                            <option disabled value="">请选择公司</option>
+                            <option v-for="option in options" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="手机" v-model="phoneNum">
+                        <p style="display:none;">请输入正确手机号！</p>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="邮箱" v-model="eMail">
+                        <p style="display:none;">请输入正确邮箱！</p>
+                    </div>
+                </div>
+                <div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script src="../../javascript/camera.js"></script>
+<script src="../../resource/vue/vue.js"></script>
+<script src="../../resource/jquery/jquery.js"></script>
+<script>
+    let app = new Vue({
+        el: "#main",
+        data: {
+            username: "",
+            password: "",
+            signName: "",
+            signPass: "",
+            rePass: "",
+            phoneNum: "",
+            name: "",
+            company: "",
+            eMail: "",
+            isMail: false,
+            isCompany: false,
+            isPhoneFormat: false,
+            samePass: false,
+            options: [],
+            usernames: [],
+        },
+        created() {
+            var that = this;
+            $.post("../../php/login/getInfo.php").done((data) => {
+                data = JSON.parse(data);
+                data.companies.forEach(company => {
+                    that.options.push(company);
+                });
+                data.usernames.forEach(username => {
+                    that.usernames.push(username);
+                })
+
+            })
+        },
+        methods: {
+            login: function () {
+                var that = this;
+                $.post("../../php/login/login.php", {
+                    username: that.username,
+                    password: that.password,
+                }).done((data) => {
+                    data = JSON.parse(data);
+                    if (data.status == "succeed") {
+
+                    }
+                    else {
+
+                    }
+                })
+
+            },
+
+            signIn: function () {
+                var that = this;
+                $.post("../../php/login/signIn.php", {
+                    username: that.signName,
+                    password: that.signPass,
+                    name: that.name,
+                    company: that.company,
+                    phone: that.phoneNum,
+                    mail: that.eMail,
+
+                }).done((data) => {
+                    data = JSON.parse(data);
+                    if (data.status == "succeed") {
+
+                    }
+                    else {
+
+                    }
+
+                })
+                
+
+            }
+
+
+        },
+
+
+    })
+    var camera = new Camera('camera', {
+        needEdit: true,
+        imageType: 'png',
+        width: 400,
+        height: 300
+    });
+    camera.init();
+    //take photo
+    var img = camera.take();
+    console.log(img);
+
+
+
+
+</script>
+
+
+</html>
