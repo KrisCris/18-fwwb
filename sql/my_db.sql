@@ -11,7 +11,7 @@
  Target Server Version : 50553
  File Encoding         : 65001
 
- Date: 13/10/2018 22:45:33
+ Date: 14/10/2018 13:11:28
 */
 
 SET NAMES utf8mb4;
@@ -32,7 +32,7 @@ CREATE TABLE `adiministrators`  (
   `company` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `gender` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `eMail` char(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`P_Id`, `name`) USING BTREE
+  PRIMARY KEY (`username`, `P_Id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -41,40 +41,15 @@ CREATE TABLE `adiministrators`  (
 INSERT INTO `adiministrators` VALUES (1, '管理员', '123', '123', '11111111111', NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
--- Table structure for persons
--- ----------------------------
-DROP TABLE IF EXISTS `persons`;
-CREATE TABLE `persons`  (
-  `FirstName` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `LastName` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `Age` int(11) NULL DEFAULT NULL
-) ENGINE = MyISAM CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of persons
--- ----------------------------
-INSERT INTO `persons` VALUES ('Peter', 'Griffin', 35);
-INSERT INTO `persons` VALUES ('Glenn', 'Quagmire', 33);
-INSERT INTO `persons` VALUES ('Peter', 'Griffin', 35);
-INSERT INTO `persons` VALUES ('Glenn', 'Quagmire', 33);
-INSERT INTO `persons` VALUES ('Peter', 'Griffin', 35);
-INSERT INTO `persons` VALUES ('Glenn', 'Quagmire', 33);
-INSERT INTO `persons` VALUES ('Mickey', 'Mouse', 15);
-INSERT INTO `persons` VALUES ('sadf', 'fszd', 25);
-INSERT INTO `persons` VALUES ('', '', 0);
-INSERT INTO `persons` VALUES ('', '', 0);
-INSERT INTO `persons` VALUES ('', '', 0);
-
--- ----------------------------
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
-  `P_Id` int(11) NOT NULL,
+  `P_Id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `phoneNum` int(11) NOT NULL,
+  `phoneNum` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `loginTime` datetime NULL DEFAULT NULL,
   `gender` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `exitTime` datetime NULL DEFAULT NULL,
@@ -83,6 +58,11 @@ CREATE TABLE `user`  (
   `range` int(1) NULL DEFAULT NULL,
   `eMail` char(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`P_Id`) USING BTREE
-) ENGINE = MyISAM CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of user
+-- ----------------------------
+INSERT INTO `user` VALUES (1, '洪高泽', '111', '111', '13372416908', NULL, '', NULL, NULL, '', NULL, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
