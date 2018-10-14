@@ -13,23 +13,25 @@
     <div>
         <div id="main">
             <!-- title -->
-            <div>
+            <div v-bind:style="fade">
                 <h1>CrowdSourcing</h1>
             </div>
             <!-- tips -->
-            <div class="tips">
+            <div class="tips" v-bind:style="fade">
                 <p>在这里登陆</p>
             </div>
-            <div class="tips" style="display: none;">
-                <p>在这里注册</p>
+            <div class="tips" v-bind:style="next">
+                <p>点击画面以录入人脸</p>
             </div>
+
 
             <!--login-->
             <div>
-                <div id="camera"></div>
+                <div id="camera" v-bind:style="next"></div>
+                <!-- form -->
                 <div>
                     <div>
-                        <input type="text" placeholder="用户名" v-model="username">
+                        <input type="text" placeholder="用户名" v-model="username" @click="show">
                     </div>
                     <div>
                         <input type="password" placeholder="密码" v-model="password">
@@ -38,46 +40,13 @@
                         <button>登陆</button>
                     </div>
                     <div>
-                        <button>注册</button>
+                        <button @click="window.location.href='register.html'">注册</button>
                     </div>
                     <div>
                         <a href="">忘记密码？</a>
                     </div>
                 </div>
-                <div>
-                    <div>
-                        <input type="text" placeholder="用户名" v-model="signName" id="username_sign">
-                    </div>
-                    <div>
-                        <input type="password" placeholder="密码" v-model="signPass">
-                    </div>
-                    <div>
-                        <input type="password" placeholder="重复密码" v-model="rePass" id="rePass">
-                        <p style="display:none;">两次密码不相同！</p>
-                    </div>
-                    <div>
-                        <input type="text" placeholder="姓名" v-model="name">
-                    </div>
-                    <div>
-                        <select v-model="company">
-                            <option disabled value="">请选择公司</option>
-                            <option v-for="option in options" v-bind:value="option">
-                                {{ option }}
-                            </option>
-                        </select>
-                    </div>
-                    <div>
-                        <input type="text" placeholder="手机" v-model="phoneNum">
-                        <p style="display:none;">请输入正确手机号！</p>
-                    </div>
-                    <div>
-                        <input type="text" placeholder="邮箱" v-model="eMail">
-                        <p style="display:none;">请输入正确邮箱！</p>
-                    </div>
-                </div>
-                <div>
 
-                </div>
             </div>
 
         </div>
@@ -92,34 +61,23 @@
         data: {
             username: "",
             password: "",
-            signName: "",
-            signPass: "",
-            rePass: "",
-            phoneNum: "",
-            name: "",
-            company: "",
-            eMail: "",
-            isMail: false,
-            isCompany: false,
-            isPhoneFormat: false,
-            samePass: false,
-            options: [],
-            usernames: [],
+            //css
+            next: {
+                display: "none",
+            },
+            fade:{
+                display:"",
+            },
         },
         created() {
-            var that = this;
-            $.post("../../php/login/getInfo.php").done((data) => {
-                data = JSON.parse(data);
-                data.companies.forEach(company => {
-                    that.options.push(company);
-                });
-                data.usernames.forEach(username => {
-                    that.usernames.push(username);
-                })
 
-            })
         },
         methods: {
+            show:function(){
+                this.next.display="";
+                this.fade.display="none";
+            },
+
             login: function () {
                 var that = this;
                 $.post("../../php/login/login.php", {
@@ -134,37 +92,8 @@
 
                     }
                 })
-
             },
-
-            signIn: function () {
-                var that = this;
-                $.post("../../php/login/signIn.php", {
-                    username: that.signName,
-                    password: that.signPass,
-                    name: that.name,
-                    company: that.company,
-                    phone: that.phoneNum,
-                    mail: that.eMail,
-
-                }).done((data) => {
-                    data = JSON.parse(data);
-                    if (data.status == "succeed") {
-
-                    }
-                    else {
-
-                    }
-
-                })
-                
-
-            }
-
-
         },
-
-
     })
     var camera = new Camera('camera', {
         needEdit: true,
@@ -176,11 +105,6 @@
     //take photo
     var img = camera.take();
     console.log(img);
-
-
-
-
 </script>
-
 
 </html>

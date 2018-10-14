@@ -1,17 +1,17 @@
 <?php
-// edit by hpc
+
     header("Content-type:text/html;charset=utf-8");
     $username = $_POST['username'];
     $password = $_POST['password'];
     $issuccess="success";
     $errMsg="";
-    $con = mysql_connect("localhost","root","root");
+    $con = mysqli_connect("localhost","root","910189033");
     if (!$con)
     {
     die('Could not connect: ' . mysql_error());
     }
 
-    mysql_select_db("my_db", $con);
+    mysqli_select_db("cs_db", $con);
 
     $sql='SELECT * FROM user WHERE (username=$username AND password=$password)'; 
     
