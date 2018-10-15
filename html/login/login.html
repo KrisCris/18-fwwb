@@ -17,11 +17,8 @@
                 <h1>CrowdSourcing</h1>
             </div>
             <!-- tips -->
-            <div class="tips" v-bind:style="fade">
-                <p>在这里登陆</p>
-            </div>
-            <div class="tips" v-bind:style="next">
-                <p>点击画面以录入人脸</p>
+            <div class="tips">
+                <p v-text="message"></p>
             </div>
 
 
@@ -31,13 +28,13 @@
                 <!-- form -->
                 <div>
                     <div>
-                        <input type="text" placeholder="用户名" v-model="username" @click="show">
+                        <input type="text" placeholder="用户名" v-model="username" @click="show()">
                     </div>
                     <div>
-                        <input type="password" placeholder="密码" v-model="password">
+                        <input type="password" placeholder="密码" v-model="password" @click="recog()">
                     </div>
                     <div>
-                        <button>登陆</button>
+                        <button @click="login()">登陆</button>
                     </div>
                     <div>
                         <button @click="window.location.href='register.html'">注册</button>
@@ -48,34 +45,50 @@
                 </div>
 
             </div>
-
+            <!-- test -->
+            <button @click="takePhoto()">temp taking photo</button>
         </div>
+        <!-- end of vue -->
     </div>
 </body>
 <script src="../../javascript/camera.js"></script>
 <script src="../../resource/vue/vue.js"></script>
 <script src="../../resource/jquery/jquery.js"></script>
+<script src="../../resource/jquery/jquery.cookie.js"></script>
 <script>
     let app = new Vue({
         el: "#main",
         data: {
             username: "",
             password: "",
-            //css
-            next: {
-                display: "none",
-            },
-            fade:{
-                display:"",
-            },
+            img: "",
+            hasCam: false,
+            message: "在这里登陆",
+            next: { display: "none", },
+            fade: { display: "", },
         },
         created() {
 
         },
         methods: {
-            show:function(){
-                this.next.display="";
-                this.fade.display="none";
+            show: function () {
+                this.next.display = "";
+                this.fade.display = "none";
+                if (!this.hasCam) {
+                    this.message = "人脸认证中"
+                    camera.init();
+                    this.hasCam = true;
+                }
+
+            },
+
+            recog: function () {
+                if (!this.hasCam || this.username == "") {
+                    this.message = '请先输入账号！';
+                }
+                else {
+                    this.takePhoto();
+                }
             },
 
             login: function () {
@@ -83,28 +96,58 @@
                 $.post("../../php/login/login.php", {
                     username: that.username,
                     password: that.password,
+                    facialData: that.img,
                 }).done((data) => {
                     data = JSON.parse(data);
-                    if (data.status == "succeed") {
+                    {
+                        // 返回数据该长的样子↓↓↓
+                        // {
+                        //     "code": 1,
+                        //     "data": {
+                        //         "group": 2,
+                        //         "token": "caoFX8Wnu2GgJV60IYwkzbt4x"
+                        //     },
+                        //     "msg": "success"
+                        // }
 
-                    }
-                    else {
-
+                        if (data.status == 1) {
+                            $.cookie('group', 'data.data.group', { expires: 1 });//group=0,管理员；group=1,发包；group=2,接包
+                            $.cookie('uuid', 'data.data.token', { expires: 1 });
+                            switch(data.data.group){
+                                case 0: window.location.href="../admin/index.html";
+                                break;
+                                case 1: window.location.href="../sender/index.html";
+                                break;
+                                case 2: window.location.href="../receiver/index.html";
+                                break;
+                            }
+                        }
+                        else {
+                            //密码错误的情况
+                            window.location.href="login.html";
+                            //懒得写了，先刷新一下算了
+                        }
                     }
                 })
             },
+
+            takePhoto: function () {
+                //take photo
+                img = camera.take();
+                //test
+                console.log(img);
+            }
         },
     })
     var camera = new Camera('camera', {
         needEdit: true,
         imageType: 'png',
-        width: 400,
-        height: 300
+        width: 350,
+        height: 250,
     });
-    camera.init();
-    //take photo
-    var img = camera.take();
-    console.log(img);
+
+
+
 </script>
 
 </html>

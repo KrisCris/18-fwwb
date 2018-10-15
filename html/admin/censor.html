@@ -23,6 +23,7 @@
             <tr>
               <th>用户名</th>
               <th>姓名</th>
+              <th>手机</th>
               <th>邮箱</th>
               <th>隶属公司</th>
               <th>审核</th>
@@ -31,11 +32,11 @@
           <!-- 有新的待审核人员时增加到表格下 -->
           <div>
 
-            <tr>
-              <template v-for="value in infor">
-                <td>{{ value }}</td>
+            <tr v-for="person in info">
 
-              </template>
+              <td v-for="data in person">{{ data }}</td>
+
+
               <td>
                 <input type="button" value="通过" @click='pass'>
                 <input type="button" value="拒绝" @click='refuse'>
@@ -60,34 +61,22 @@
     el: '#main',
     // 定义属性，并设置初始值
     data: {
-      infor: {
-        username: '233',
-        signname: 'asd',
-        company: 'asdaw',
-        email: 'faad',
-      },
+      info: [],
       index: '233ascms',
     },
+    created() {
+      var that = this;
+      $.post("../../php/admin/fetchUncensored.php", {}).done((data) => {
+        data = JSON.parse(data);
+        
+        data.forEach(user => {
+          that.info.push(user);
+        });
+      })
 
+    },
     // 点击菜单使用的函数
     methods: {
-      fetch: function () {
-        var that = this;
-        $.post("", {
-          signname: that.signname,
-          username: that.username,
-          email: that.email,
-          phoneNumber: that.phoneNumber,
-          index: that.index,
-
-        }).done((data) => {
-          //////
-          data = JSON.parse(data);
-          if (data.status == "succeed") {
-            that.fetch;
-          }
-        })
-      },
       //审核通过
       pass: function () {
         var that = this;
