@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+</head>
+
+<body>
+  <div id="main">
+    <a href="#">注册审核</a><br>
+    <a href="manage.html">人员管理</a><br>
+    <a href="company.html">外包公司</a><br>
+    <a href="infro.html">人员信息</a>
+
+    <div>
+      <!-- //注册审核页面 -->
+      <div>
+        <h4>注册审核列表</h4>
+        <table border="1">
+          <div>
+            <tr>
+              <th>用户名</th>
+              <th>姓名</th>
+              <th>邮箱</th>
+              <th>隶属公司</th>
+              <th>审核</th>
+            </tr>
+          </div>
+          <!-- 有新的待审核人员时增加到表格下 -->
+          <div>
+
+            <tr>
+              <template v-for="value in infor">
+                <td>{{ value }}</td>
+
+              </template>
+              <td>
+                <input type="button" value="通过" @click='pass'>
+                <input type="button" value="拒绝" @click='refuse'>
+              </td>
+            </tr>
+
+          </div>
+
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+<script src="../../resource/vue/vue.js"></script>
+<script src="../../resource/jquery/jquery.js"></script>
+<script>
+  // 创建一个新的 Vue 实例
+  var main = new Vue({
+    // DOM 元素，挂载视图模型
+    el: '#main',
+    // 定义属性，并设置初始值
+    data: {
+      infor: {
+        username: '233',
+        signname: 'asd',
+        company: 'asdaw',
+        email: 'faad',
+      },
+      index: '233ascms',
+    },
+
+    // 点击菜单使用的函数
+    methods: {
+      fetch: function () {
+        var that = this;
+        $.post("", {
+          signname: that.signname,
+          username: that.username,
+          email: that.email,
+          phoneNumber: that.phoneNumber,
+          index: that.index,
+
+        }).done((data) => {
+          //////
+          data = JSON.parse(data);
+          if (data.status == "succeed") {
+            that.fetch;
+          }
+        })
+      },
+      //审核通过
+      pass: function () {
+        var that = this;
+        $.post("", {
+          usename: that.usename,
+        }).done((data) => {
+          /////
+          data = JSON.parse(data);
+          if (data.status == "succeed") {
+            alert("审核通过");
+          }
+          else {
+
+          }
+        })
+      },
+      //拒绝通过
+      refuse: function () {
+        var that = this;
+        $.post("", {
+
+        }).done((data) => {
+          /////
+          data = JSON.parse(data);
+          if (data.status == "succeed") {
+            alert("拒绝注册");
+          }
+          else {
+
+          }
+        })
+      },
+
+    }
+  })
+</script>
+
+</html>
