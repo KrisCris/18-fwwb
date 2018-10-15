@@ -2,13 +2,13 @@
 
 header("Content-type:text/html;charset=utf-8");
 
-$con = mysql_connect("localhost","root","root");
+$con = mysql_connect("localhost","root","910189033");
 if (!$con)
   {
   die('Could not connect: ' . mysql_error());
   }
 
-mysql_select_db("my_db", $con);
+mysql_select_db("cs_db", $con);
 
 $result = mysql_query("SELECT * FROM adiministrators");
 

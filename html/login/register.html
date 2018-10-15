@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta charset="utf-8">
+    <style>
+        /* .placeholder,#main{
+            width: 33% 33% 33%,
+        } */
+    </style>
+    <!-- <link rel="stylesheet" type="text/css" href="../../css/login.css" > -->
+</head>
+
+<body>
+    <div>
+        <div id="main">
+            <!-- title--display:none after step1-->
+            <div v-bind:style="step1_style" class="title">
+                <h1>CrowdSourcing</h1>
+            </div>
+            <!-- tips-->
+            <div class="tips" v-bind:style="step2_style">
+                <p>继续注册</p>
+            </div>
+            <div class="tips" v-bind:style="step1_style">
+                <p>在这里注册</p>
+            </div>
+
+            <!--register-->
+            <div>
+                <!-- cam--show up in step2-->
+                <div id="camera" v-bind:style="step2_style"></div>
+
+                <!--form-->
+                <!-- identity--[part 1]--display:none after step1-->
+                <div v-bind:style="step1_style">
+                    <div>
+                        <input type="text" placeholder="姓名" v-model="name">
+                    </div>
+                    <div>
+                        <select v-model="company">
+                            <option disabled value="">请选择公司</option>
+                            <option v-for="option in options" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="手机" v-model="phone">
+                        <p style="display:none;">请输入正确手机号</p>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="邮箱" v-model="mail">
+                        <p style="display:none;">请输入正确邮箱</p>
+                    </div>
+                </div>
+
+                <!-- options-1--display:none after step1-->
+                <div v-bind:style="step1_style">
+                    <a href="login.html">已有账号？</a>
+                    <div>
+                        <button @click="fore()">下一步</button>
+                    </div>
+                </div>
+
+                <!-- username--[part 2]--show up in step2-->
+                <div v-bind:style="step2_style">
+                    <div>
+                        <input type="text" placeholder="用户名" v-model="username">
+                    </div>
+                    <div>
+                        <input type="password" placeholder="密码" v-model="password">
+                    </div>
+                    <div>
+                        <input type="password" placeholder="重复密码" v-model="password_2">
+                    </div>
+                </div>
+
+                <!-- options-2--show up in step2 -->
+                <div v-bind:style="step2_style">
+                    <button @click="prev()">上一步</button>
+                    <a href="login.html">已有账号？</a>
+                    <div>
+                        <button @click="register()">完成</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../javascript/camera.js"></script>
+<script src="../../resource/vue/vue.js"></script>
+<script src="../../resource/jquery/jquery.js"></script>
+<script>
+    let app = new Vue({
+        el: "#main",
+        data: {
+            name: "",
+            company: "",
+            phone: "",
+            mail: "",
+            username: "",
+            password: "",
+            password_2: "",
+            options: [],
+            hasCam: false,
+            //CSS
+            step1_style: {
+                display: "",
+            },
+            step2_style: {
+                display: "none",
+            }
+        },
+        created() {
+            var that = this;
+            // get company names for selector
+            $.post("../../php/login/getInfo.php").done((data) => {
+                data = JSON.parse(data);
+                data.companies.forEach(company => {
+                    that.options.push(company);
+                });
+            })
+        },
+
+        methods: {
+            fore: function () {
+                //判断是否空,haven't done yet
+                if (true) {
+                    this.step1_style.display = "none";
+                    this.step2_style.display = "";
+                    if (!this.hasCam) {
+                        camera.init();
+                        this.hasCam = true;
+                    }
+
+                }
+                else {
+
+                }
+
+
+            },
+
+            prev: function () {
+                this.step1_style.display = "";
+                this.step2_style.display = "none";
+            },
+
+            register: function () {
+                var that = this;
+                if (that.password == that.password_2) {
+                    $.post("../../php/login/register.php", {
+                        name: that.name,
+                        company: that.company,
+                        phone: that.phone,
+                        mail: that.mail,
+                        username: that.username,
+                        password: that.password,
+                    }).done((data) => {
+                        data = JSON.parse(data);
+                        if (data.status == "succeed") {
+                            //跳转
+                        }
+                        else {
+
+                        }
+                    })
+                }
+                else {
+                    //两次密码不一样
+                }
+            }
+
+        },
+
+
+    })
+    var camera = new Camera('camera', {
+        needEdit: true,
+        imageType: 'png',
+        width: 400,
+        height: 300
+    });
+
+    //take photo
+    var img = camera.take();
+    console.log(img);
+
+
+
+
+</script>
+
+
+</html>
