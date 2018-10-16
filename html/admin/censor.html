@@ -3,17 +3,20 @@
 
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>注册审核</title>
 
 </head>
 
 <body>
   <div id="main">
-    <a href="#">注册审核</a><br>
-    <a href="manage.html">人员管理</a><br>
-    <a href="company.html">外包公司</a><br>
-    <a href="infro.html">人员信息</a>
-
+    <div>
+      <!-- 头像 -->
+      <img>
+    <a href="#">注册审核</a>
+    <a href="manage.html">人员管理</a>
+    <a href="company.html">外包公司</a>
+    <a href="info.html">人员信息</a>
+    </div>
     <div>
       <!-- //注册审核页面 -->
       <div>
@@ -23,6 +26,7 @@
             <tr>
               <th>用户名</th>
               <th>姓名</th>
+              <th>手机</th>
               <th>邮箱</th>
               <th>隶属公司</th>
               <th>审核</th>
@@ -31,13 +35,14 @@
           <!-- 有新的待审核人员时增加到表格下 -->
           <div>
 
-            <tr>
-              <template v-for="value in infor">
-                <td>{{ value }}</td>
-
-              </template>
+            <tr v-for="(person,index) in info" id="index">
+              <td>{{person.usename}}</td>
+              <td>{{person.name}}</td>
+              <td>{{person.phone}}</td>
+              <td>{{person.mail}}</td>
+              <td>{{person.company}}</td>
               <td>
-                <input type="button" value="通过" @click='pass'>
+                <input type="button" value="通过" @click='console.log(person[index]);'>
                 <input type="button" value="拒绝" @click='refuse'>
               </td>
             </tr>
@@ -60,64 +65,50 @@
     el: '#main',
     // 定义属性，并设置初始值
     data: {
-      infor: {
-        username: '233',
-        signname: 'asd',
-        company: 'asdaw',
-        email: 'faad',
-      },
-      index: '233ascms',
+      info: [],
     },
+    //开始时运行
+    created() {
+      var that = this;
+      $.post("../../php/admin/fetchUncensored.php", {}).done((data) => {
+        data = JSON.parse(data);
 
+        data.forEach(user => {
+          that.info.push(user);
+        });
+      })
+
+    },
     // 点击菜单使用的函数
     methods: {
-      fetch: function () {
-        var that = this;
-        $.post("", {
-          signname: that.signname,
-          username: that.username,
-          email: that.email,
-          phoneNumber: that.phoneNumber,
-          index: that.index,
-
-        }).done((data) => {
-          //////
-          data = JSON.parse(data);
-          if (data.status == "succeed") {
-            that.fetch;
-          }
-        })
-      },
       //审核通过
-      pass: function () {
+      verified: function () {
         var that = this;
-        $.post("", {
-          usename: that.usename,
+        $.post("../../php/admin/verify.php", {
+          info: that.info,
         }).done((data) => {
           /////
           data = JSON.parse(data);
-          if (data.status == "succeed") {
-            alert("审核通过");
-          }
-          else {
 
-          }
+          data.forEach(user => {
+            that.info.push(user);
+          });
+
         })
       },
       //拒绝通过
       refuse: function () {
         var that = this;
-        $.post("", {
-
+        $.post("../../php/admin/refuse.php", {
+          info: that.info,
         }).done((data) => {
           /////
           data = JSON.parse(data);
-          if (data.status == "succeed") {
-            alert("拒绝注册");
-          }
-          else {
 
-          }
+          data.forEach(user => {
+            that.info.push(user);
+          });
+
         })
       },
 
