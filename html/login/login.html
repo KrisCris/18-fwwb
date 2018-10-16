@@ -61,21 +61,11 @@
         data: {
             username: "",
             password: "",
-<<<<<<< Updated upstream
             img: "",
             hasCam: false,
             message: "在这里登陆",
             next: { display: "none", },
             fade: { display: "", },
-=======
-            //css
-            next: {
-                display: "none",
-            },
-            fade: {
-                display: "",
-            },
->>>>>>> Stashed changes
         },
         created() {
 
@@ -84,7 +74,6 @@
             show: function () {
                 this.next.display = "";
                 this.fade.display = "none";
-<<<<<<< Updated upstream
                 if (!this.hasCam) {
                     this.message = "人脸认证中"
                     camera.init();
@@ -100,8 +89,6 @@
                 else {
                     this.takePhoto();
                 }
-=======
->>>>>>> Stashed changes
             },
 
             login: function () {

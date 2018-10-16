@@ -34,14 +34,11 @@
           </div>
           <!-- 有新的待审核人员时增加到表格下 -->
           <div>
-
+            <!-- table -->
             <tr v-for="person in info">
-
-              <td v-for="data in person">{{ data }}</td>
-
-
+              <td v-for="(data,index) in person">{{ data }}</td>
               <td>
-                <input type="button" value="通过" @click='verified'>
+                <input type="button" value="通过" @click='console.log(person[index]);'>
                 <input type="button" value="拒绝" @click='refuse'>
               </td>
             </tr>
@@ -83,7 +80,7 @@
       //审核通过
       verified: function () {
         var that = this;
-        $.post("../../admin/", {
+        $.post("../../php/admin/verify.php", {
           info: that.info,
         }).done((data) => {
           /////
@@ -98,7 +95,7 @@
       //拒绝通过
       refuse: function () {
         var that = this;
-        $.post("../../admin/", {
+        $.post("../../php/admin/refuse.php", {
           info: that.info,
         }).done((data) => {
           /////
