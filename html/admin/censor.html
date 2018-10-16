@@ -34,9 +34,13 @@
           </div>
           <!-- 有新的待审核人员时增加到表格下 -->
           <div>
-            <!-- table -->
-            <tr v-for="person in info">
-              <td v-for="(data,index) in person">{{ data }}</td>
+
+            <tr v-for="(person,index) in info" id="index">
+              <td>{{person.usename}}</td>
+              <td>{{person.name}}</td>
+              <td>{{person.phone}}</td>
+              <td>{{person.mail}}</td>
+              <td>{{person.company}}</td>
               <td>
                 <input type="button" value="通过" @click='console.log(person[index]);'>
                 <input type="button" value="拒绝" @click='refuse'>
