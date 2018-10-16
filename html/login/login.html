@@ -4,52 +4,73 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <meta charset="utf-8">
+    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <script src="../../resource/bootstrap/js/bootstrap.min.js"></script>
     <style>
     </style>
 
 </head>
 
-<body>
-    <div>
-        <div id="main">
-            <!-- title -->
-            <div v-bind:style="fade">
-                <h1>CrowdSourcing</h1>
-            </div>
-            <!-- tips -->
-            <div class="tips">
-                <p v-text="message"></p>
-            </div>
+<body class="bg-light">
 
+    <div class="container-fluid" style="margin-top:5%;">
+        <div id="main" class="row-fluid bg-light">
+            <div class="col-md-4  offset-md-4">
+                <div class="col-md-8 offset-md-2">
+                    <div class=" text-center text-light">
+                        <a href="login.html" class="btn btn-dark btn-lg btn-block"><strong>CrowdSourcing</strong></a>
+                    </div><br>
+                    
+                    <div class="alert alert-success">
+                        <strong>Tips： </strong> <span>在这里登陆</span>
+                    </div>
+                    <!--login -->
+                    <div id="camera">
+                            <canvas style="height: 250px; width:100%;" class="alert alert-dark">
+                        
+                                </canvas>
+                    </div>
+                    
+                    <!-- <div id="camera"  position:；" class="alert-dark">
+                        <i class="fa fa-camera " style="font-size:48px; line-height: 100%"></i>
+                        
+                    </div> -->
+                    <br>
+                        <div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
+                                </div>
+                                <input v-model="username" @click="show()" type="text" class="form-control" placeholder="输入用户名"
+                                    id="usr" name="username">
+                            </div>
 
-            <!--login-->
-            <div>
-                <div id="camera" v-bind:style="next"></div>
-                <!-- form -->
-                <div>
-                    <div>
-                        <input type="text" placeholder="用户名" v-model="username" @click="show()">
-                    </div>
-                    <div>
-                        <input type="password" placeholder="密码" v-model="password" @click="recog()">
-                    </div>
-                    <div>
-                        <button @click="login()">登陆</button>
-                    </div>
-                    <div>
-                        <button @click="window.location.href='register.html'">注册</button>
-                    </div>
-                    <div>
-                        <a href="">忘记密码？</a>
-                    </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text "><i class="fa fa-key"></i></span>
+                                </div>
+                                <input v-model="password" @click="recog()" type="password" class="form-control"
+                                    placeholder="输入密码" id="usr" name="username">
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <button @click="login()" type="button" class="btn btn-primary btn-block">登陆</button>
+                                <button @click="window.location.href='register.html'" type="button" class="btn btn-default btn-block">注册</button>
+                                <div style="text-align:right;">
+                                    <a href="">忘记密码？</a>
+                                </div>
+                            </div>
+                        </div>
                 </div>
 
+
+                <!-- test -->
+                <button @click="takePhoto()">temp taking photo</button>
             </div>
-            <!-- test -->
-            <button @click="takePhoto()">temp taking photo</button>
+
         </div>
-        <!-- end of vue -->
-    </div>
 </body>
 <script src="../../javascript/camera.js"></script>
 <script src="../../resource/vue/vue.js"></script>
@@ -113,18 +134,18 @@
                         if (data.status == 1) {
                             $.cookie('group', 'data.data.group', { expires: 1 });//group=0,管理员；group=1,发包；group=2,接包
                             $.cookie('uuid', 'data.data.token', { expires: 1 });
-                            switch(data.data.group){
-                                case 0: window.location.href="../admin/index.html";
-                                break;
-                                case 1: window.location.href="../sender/index.html";
-                                break;
-                                case 2: window.location.href="../receiver/index.html";
-                                break;
+                            switch (data.data.group) {
+                                case 0: window.location.href = "../admin/index.html";
+                                    break;
+                                case 1: window.location.href = "../sender/index.html";
+                                    break;
+                                case 2: window.location.href = "../receiver/index.html";
+                                    break;
                             }
                         }
                         else {
                             //密码错误的情况
-                            window.location.href="login.html";
+                            window.location.href = "login.html";
                             //懒得写了，先刷新一下算了
                         }
                     }
@@ -142,7 +163,7 @@
     var camera = new Camera('camera', {
         needEdit: true,
         imageType: 'png',
-        width: 350,
+        width: 400,
         height: 250,
     });
 
