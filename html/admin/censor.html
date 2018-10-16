@@ -3,17 +3,20 @@
 
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>注册审核</title>
 
 </head>
 
 <body>
   <div id="main">
-    <a href="#">注册审核</a><br>
-    <a href="manage.html">人员管理</a><br>
-    <a href="company.html">外包公司</a><br>
-    <a href="infro.html">人员信息</a>
-
+    <div>
+      <!-- 头像 -->
+      <img>
+    <a href="#">注册审核</a>
+    <a href="manage.html">人员管理</a>
+    <a href="company.html">外包公司</a>
+    <a href="info.html">人员信息</a>
+    </div>
     <div>
       <!-- //注册审核页面 -->
       <div>
@@ -38,7 +41,7 @@
 
 
               <td>
-                <input type="button" value="通过" @click='pass'>
+                <input type="button" value="通过" @click='verified'>
                 <input type="button" value="拒绝" @click='refuse'>
               </td>
             </tr>
@@ -62,13 +65,13 @@
     // 定义属性，并设置初始值
     data: {
       info: [],
-      index: '233ascms',
     },
+    //开始时运行
     created() {
       var that = this;
       $.post("../../php/admin/fetchUncensored.php", {}).done((data) => {
         data = JSON.parse(data);
-        
+
         data.forEach(user => {
           that.info.push(user);
         });
@@ -78,35 +81,33 @@
     // 点击菜单使用的函数
     methods: {
       //审核通过
-      pass: function () {
+      verified: function () {
         var that = this;
-        $.post("", {
-          usename: that.usename,
+        $.post("../../admin/", {
+          info: that.info,
         }).done((data) => {
           /////
           data = JSON.parse(data);
-          if (data.status == "succeed") {
-            alert("审核通过");
-          }
-          else {
 
-          }
+          data.forEach(user => {
+            that.info.push(user);
+          });
+
         })
       },
       //拒绝通过
       refuse: function () {
         var that = this;
-        $.post("", {
-
+        $.post("../../admin/", {
+          info: that.info,
         }).done((data) => {
           /////
           data = JSON.parse(data);
-          if (data.status == "succeed") {
-            alert("拒绝注册");
-          }
-          else {
 
-          }
+          data.forEach(user => {
+            that.info.push(user);
+          });
+
         })
       },
 
