@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
-    <script src="../../resource/bootstrap/js/bootstrap.min.js"></script>
+    <!-- <script src="../../resource/bootstrap/js/bootstrap.min.js"></script> -->
     <style>
     </style>
 
@@ -14,48 +14,56 @@
 
 <body class="bg-light">
 
-    <div class="container-fluid" style="margin-top:5%;">
+    <div class="container-fluid" style="margin-top: 5%">
         <div id="main" class="row-fluid bg-light">
             <div class="col-md-4  offset-md-4">
-                <div class="col-md-8 offset-md-2">
-                    <div class=" text-center text-light">
-                        <a href="login.html" class="btn btn-dark btn-lg btn-block"><strong>CrowdSourcing</strong></a>
-                    </div><br>
+                <div class="col-md-8 offset-md-2 ">
+                    <!-- content -->
+                    <div class="row">
+                        <div class="col">
+                            <div class=" text-center text-light">
+                                <a href="login.html" class="btn btn-dark btn-lg btn-block"><strong>CrowdSourcing</strong></a>
+                            </div><br>
 
-                    <div class="alert alert-success">
-                        <strong>Tips： </strong> <span>在这里登陆</span>
-                    </div>
-                    <!--login -->
-                    <div id="camera">
-                        <canvas style="height: 250px; width:100%;" class="alert alert-dark">
-
-                        </canvas>
-                    </div>
-
-                    <!-- <div id="camera"  position:；" class="alert-dark">
-                        <i class="fa fa-camera " style="font-size:48px; line-height: 100%"></i>
-                        
-                    </div> -->
-                    <br>
-                    <div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
+                            <div v-bind:class="stateColor">
+                                <strong>Notify：</strong> <span v-text="notify"></span>
                             </div>
-                            <input v-model="username" @click="show()" type="text" class="form-control" placeholder="输入用户名"
-                                id="usr" name="username">
-                        </div>
 
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text "><i class="fa fa-key"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div v-if="!seen" style="line-height:250px;text-align: center;width: 100%; height:250px;background-color: rgb(155, 155, 155); border-radius: 5px">
+                                <i class="fa fa-camera" style="font-size: 50px;vertical-align:middle"></i>
+                            </div>
+                            <div id="camera" style="border-radius: 5px;background-color: rgb(155, 155, 155);"></div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
+                                </div>
+                                <input v-model="username" @click="show()" type="text" class="form-control" placeholder="输入用户名"
+                                    name="username">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text "><i class="fa fa-key"></i></span>
+                                </div>
+                                <input v-model="password" @click="recog()" type="password" class="form-control"
+                                    placeholder="输入密码" name="username">
                             </div>
                             <input v-model="password" @click="recog()" type="password" class="form-control" placeholder="输入密码"
                                 id="usr" name="username">
                         </div>
                     </div>
-                    <div>
-                        <div>
+
+                    <div class="row">
+                        <div class="col">
                             <button @click="login()" type="button" class="btn btn-primary btn-block">登陆</button>
                             <button @click="window.location.href='register.html'" type="button" class="btn btn-default btn-block">注册</button>
                             <div style="text-align:right;">
@@ -63,11 +71,9 @@
                             </div>
                         </div>
                     </div>
+                    <!-- content -->
                 </div>
-
-
-                <!-- test -->
-                <button @click="takePhoto()">temp taking photo</button>
+                   
             </div>
 
         </div>
@@ -82,82 +88,126 @@
         data: {
             username: "",
             password: "",
-            img: "",
+            img: [],
             hasCam: false,
-            message: "在这里登陆",
-            next: { display: "none", },
-            fade: { display: "", },
+            notify: "在这里登陆",
+            seen: false,
+            stateColor: "alert alert-success",
+            hasPass: false,
+            group: "",
         },
         created() {
 
         },
         methods: {
             show: function () {
-                this.next.display = "";
-                this.fade.display = "none";
                 if (!this.hasCam) {
-                    this.message = "人脸认证中"
                     camera.init();
+                    this.seen = true;
+                    window.setTimeout(() => {
+                        this.notify = "获取面部信息···"
+                        this.stateColor = "alert alert-primary";
+                    }, 2000);
                     this.hasCam = true;
-                }
+                        var count = 0;
+                        window.setInterval(() => {                  //wrong use
+                            this.img.push(camera.take());
+                            count++;
+                            if(count==5){
+                                window.clearInterval();
+                            }
+                        }, 1000);
 
+                        this.img.forEach(element => {
+                    console.log(element);
+                        });
+                }     
             },
 
             recog: function () {
+                var that = this;
                 if (!this.hasCam || this.username == "") {
-                    this.message = '请先输入账号！';
+                    this.notify = '请先输入账号！';
+                    this.stateColor = "alert alert-danger";
                 }
                 else {
-                    this.takePhoto();
+                    this.notify = "面部识别中···"
+                    this.stateColor = "alert alert-primary"
+                    window.setTimeout(()=>{
+                        $.post("../../php/facialRecog.php", {
+                        username: that.username,
+                        facialData: that.img,
+                    }).done((data) => {
+                        //
+                        // code:1
+                        // group:2
+                        // 
+                        //
+                        data = JSON.parse(data);
+                        if (data.status == 1) {
+                            that.notify = "面部识别通过";
+                            that.stateColor = "alert alert-success";
+                            that.hasPass = true;
+                            that.group = data.group;    //.............
+                        }
+                        else {
+                            that.hasPass = false;
+                            that.notify = "面部识别失败！";
+                            that.stateColor = "alert alert-danger";
+                        }
+                    })},2000)
+
                 }
             },
 
             login: function () {
                 var that = this;
-                $.post("../../php/login/login.php", {
-                    username: that.username,
-                    password: that.password,
-                    facialData: that.img,
-                }).done((data) => {
-                    data = JSON.parse(data);
-                    {
-                        // 返回数据该长的样子↓↓↓
-                        // {
-                        //     "code": 1,
-                        //     "data": {
-                        //         "group": 2,
-                        //         "token": "caoFX8Wnu2GgJV60IYwkzbt4x"
-                        //     },
-                        //     "msg": "success"
-                        // }
+                if (hasPass) {
+                    $.post("../../php/login/login.php", {
+                        username: that.username,
+                        password: that.password,
+                        facialData: that.img,
+                    }).done((data) => {
+                        data = JSON.parse(data);
+                        {
+                            // 返回数据该长的样子↓↓↓
+                            // {
+                            //     "code": 1,
+                            //     "data": {
+                            //         "group": 2,
+                            //         "token": "caoFX8Wnu2GgJV60IYwkzbt4x"
+                            //     },
+                            //     "msg": "success"
+                            // }
 
-                        if (data.status == 1) {
-                            $.cookie('group', 'data.data.group', { expires: 1 });//group=0,管理员；group=1,发包；group=2,接包
-                            $.cookie('uuid', 'data.data.token', { expires: 1 });
-                            switch (data.data.group) {
-                                case 0: window.location.href = "../admin/index.html";
-                                    break;
-                                case 1: window.location.href = "../sender/index.html";
-                                    break;
-                                case 2: window.location.href = "../receiver/index.html";
-                                    break;
+                            if (data.status == 1) {
+                                $.cookie('group', 'data.data.group', { expires: 1 });//group=0,管理员；group=1,发包；group=2,接包
+                                $.cookie('uuid', 'data.data.token', { expires: 1 });
+                                switch (data.data.group) {
+                                    case 0: window.location.href = "../admin/index.html";
+                                        break;
+                                    case 1: window.location.href = "../sender/index.html";
+                                        break;
+                                    case 2: window.location.href = "../receiver/index.html";
+                                        break;
+                                }
+                            }
+                            else {
+                                //密码错误的情况
+                                window.location.href = "login.html";
+                                //懒得写了，先刷新一下算了
                             }
                         }
-                        else {
-                            //密码错误的情况
-                            window.location.href = "login.html";
-                            //懒得写了，先刷新一下算了
-                        }
-                    }
-                })
+                    })
+                }
             },
 
-            takePhoto: function () {
-                //take photo
-                img = camera.take();
-                //test
-                console.log(img);
-            }
+            //     takePhoto: function () {
+            //         //take photo
+            //         img = camera.take();
+            //         //test
+            //         console.log(img);
+            //     }
         },
     })
     var camera = new Camera('camera', {
