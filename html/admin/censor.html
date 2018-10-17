@@ -24,7 +24,7 @@
         <table border="1">
           <div>
             <tr>
-              <th>用户名</th>
+              <th>id</th>
               <th>姓名</th>
               <th>手机</th>
               <th>邮箱</th>
@@ -35,15 +35,15 @@
           <!-- 有新的待审核人员时增加到表格下 -->
           <div>
 
-            <tr v-for="(person,index) in info" id="index">
-              <td>{{person.usename}}</td>
+            <tr v-for="person in info" >
+              <td>{{person.id}}</td>
               <td>{{person.name}}</td>
               <td>{{person.phone}}</td>
               <td>{{person.mail}}</td>
               <td>{{person.company}}</td>
               <td>
-                <input type="button" value="通过" @click='console.log(person[index]);'>
-                <input type="button" value="拒绝" @click='refuse'>
+                <input type="button" value="通过" @click='verified(person.id)'>
+                <input type="button" value="拒绝" @click='refuse(person.id)'>
               </td>
             </tr>
 
@@ -82,10 +82,10 @@
     // 点击菜单使用的函数
     methods: {
       //审核通过
-      verified: function () {
+      verified: function (id) {
         var that = this;
         $.post("../../php/admin/verify.php", {
-          info: that.info,
+          personId: id,
         }).done((data) => {
           /////
           data = JSON.parse(data);
@@ -100,7 +100,7 @@
       refuse: function () {
         var that = this;
         $.post("../../php/admin/refuse.php", {
-          info: that.info,
+          personId: id,
         }).done((data) => {
           /////
           data = JSON.parse(data);
