@@ -71,7 +71,7 @@
                     </div>
                     <!-- content -->
                 </div>
-                   
+
             </div>
 
         </div>
@@ -107,19 +107,19 @@
                         this.stateColor = "alert alert-primary";
                     }, 2000);
                     this.hasCam = true;
-                        var count = 0;
-                        window.setInterval(() => {                  //wrong use
-                            this.img.push(camera.take());
-                            count++;
-                            if(count==5){
-                                window.clearInterval();
-                            }
-                        }, 1000);
+                    var count = 0;
+                    window.setInterval(() => {                  //wrong use
+                        this.img.push(camera.take());
+                        count++;
+                        if (count == 5) {
+                            window.clearInterval();
+                        }
+                    }, 1000);
 
-                        this.img.forEach(element => {
-                    console.log(element);
-                        });
-                }     
+                    this.img.forEach(element => {
+                        console.log(element);
+                    });
+                }
             },
 
             recog: function () {
@@ -131,29 +131,30 @@
                 else {
                     this.notify = "面部识别中···"
                     this.stateColor = "alert alert-primary"
-                    window.setTimeout(()=>{
+                    window.setTimeout(() => {
                         $.post("../../php/facialRecog.php", {
-                        username: that.username,
-                        facialData: that.img,
-                    }).done((data) => {
-                        //
-                        // code:1
-                        // group:2
-                        // 
-                        //
-                        data = JSON.parse(data);
-                        if (data.status == 1) {
-                            that.notify = "面部识别通过";
-                            that.stateColor = "alert alert-success";
-                            that.hasPass = true;
-                            that.group = data.group;    //.............
-                        }
-                        else {
-                            that.hasPass = false;
-                            that.notify = "面部识别失败！";
-                            that.stateColor = "alert alert-danger";
-                        }
-                    })},2000)
+                            username: that.username,
+                            facialData: that.img,
+                        }).done((data) => {
+                            //
+                            // code:1
+                            // group:2
+                            // 
+                            //
+                            data = JSON.parse(data);
+                            if (data.status == 1) {
+                                that.notify = "面部识别通过";
+                                that.stateColor = "alert alert-success";
+                                that.hasPass = true;
+                                that.group = data.group;    //.............
+                            }
+                            else {
+                                that.hasPass = false;
+                                that.notify = "面部识别失败！";
+                                that.stateColor = "alert alert-danger";
+                            }
+                        })
+                    }, 2000)
 
                 }
             },
