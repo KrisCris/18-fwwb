@@ -2,62 +2,95 @@
 <html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="utf-8">
+
+  <script src="../../resource/vue/vue.js"></script>
+  <script src="../../resource/jquery/jquery.js"></script>
+  <script src="../../resource/bootstrap/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.min.css">
   <title>注册审核</title>
 
 </head>
 
 <body>
   <div id="main">
-    <div>
-      <!-- 头像 -->
-      <img>
-    <a href="#">注册审核</a>
-    <a href="manage.html">人员管理</a>
-    <a href="company.html">外包公司</a>
-    <a href="info.html">人员信息</a>
+    <div class="list-group">
+      <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+        <!-- Links -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#" class="list-group-item"><i class="fa fa-check-square-o"></i>注册审核</a>
+          </li>
+          <!-- Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa fa-id-card-o"></i>
+              人员管理
+            </a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="resource_deliverManage.html"><i class="fa fa-send"></i>发包人员管理</a>
+              <a class="dropdown-item" href="resource_receiverManage.html"><i class="fa fa-coffee"></i>接包人员管理</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="company.html"><i class="fa fa-suitcase"></i>外包公司</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="info.html"><i class="fa fa-user-circle"></i>人员信息</a>
+          </li>
+
+
+        </ul>
+      </nav>
     </div>
-    <div>
+    <div class="container-fluid" style="margin-top:80px">
       <!-- //注册审核页面 -->
-      <div>
-        <h4>注册审核列表</h4>
-        <table border="1">
-          <div>
-            <tr>
-              <th>id</th>
-              <th>姓名</th>
-              <th>手机</th>
-              <th>邮箱</th>
-              <th>隶属公司</th>
-              <th>审核</th>
-            </tr>
+      <div class="card">
+        <div class="card-header"><h4>注册审核列表</h4></div>
+        <div class="card-body">
+        <div class="table-responsive">
+          <div class="text-center">
+          <table class="table table-dark table-hover table-striped table-bordered table-sm">
+            <div>
+              <thead>
+                <tr>
+                  <th>id</th>
+                  <th>姓名</th>
+                  <th>手机</th>
+                  <th>邮箱</th>
+                  <th>隶属公司</th>
+                  <th>审核</th>
+                </tr>
+              </thead>
+            </div>
+            <!-- 有新的待审核人员时增加到表格下 -->
+            <div>
+
+              <tr v-for="person in info">
+                <td>{{person.id}}</td>
+                <td>{{person.name}}</td>
+                <td>{{person.phone}}</td>
+                <td>{{person.mail}}</td>
+                <td>{{person.company}}</td>
+                <td>
+                  <!-- <i class="fa fa-thumbs-up"></i> -->
+                  <button @click='verified(person.id)'><i class="fa fa-user-plus"></i>通过</button>
+                  <button @click='refuse(person.id)'><i class="fa fa-user-times"></i>通过</button>
+                  <!-- <input type="button" value="通过" @click='verified(person.id)'> -->
+                  <!-- <input type="button" value="拒绝" @click='refuse(person.id)'> -->
+                </td>
+              </tr>
+
+            </div>
           </div>
-          <!-- 有新的待审核人员时增加到表格下 -->
-          <div>
-
-            <tr v-for="person in info" >
-              <td>{{person.id}}</td>
-              <td>{{person.name}}</td>
-              <td>{{person.phone}}</td>
-              <td>{{person.mail}}</td>
-              <td>{{person.company}}</td>
-              <td>
-                <input type="button" value="通过" @click='verified(person.id)'>
-                <input type="button" value="拒绝" @click='refuse(person.id)'>
-              </td>
-            </tr>
-
+          </table>
           </div>
-
-        </table>
+        </div>
       </div>
     </div>
   </div>
-
-
 </body>
-<script src="../../resource/vue/vue.js"></script>
-<script src="../../resource/jquery/jquery.js"></script>
 <script>
   // 创建一个新的 Vue 实例
   var main = new Vue({
