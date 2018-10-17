@@ -47,7 +47,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
                                 </div>
-                                <input v-model="username" @click="show()" type="text" class="form-control" placeholder="输入用户名"
+                                <input v-model="username" @click="begin()" type="text" class="form-control" placeholder="输入用户名"
                                     name="username">
                             </div>
                             <div class="input-group mb-3">
@@ -57,8 +57,7 @@
                                 <input v-model="password" @click="recog()" type="password" class="form-control"
                                     placeholder="输入密码" name="username">
                             </div>
-                            <input v-model="password" @click="recog()" type="password" class="form-control" placeholder="输入密码"
-                                id="usr" name="username">
+
                         </div>
                     </div>
 
@@ -100,29 +99,30 @@
 
         },
         methods: {
-            show: function () {
+            begin: function () {
                 if (!this.hasCam) {
                     camera.init();
                     this.seen = true;
                     window.setTimeout(() => {
                         this.notify = "获取面部信息···"
                         this.stateColor = "alert alert-primary";
-                    }, 2000);
+                    }, 800);
                     this.hasCam = true;
                     var count = 0;
-                    window.setInterval(() => {                  //wrong use
+                    var timer = window.setInterval(() => {
                         this.img.push(camera.take());
                         count++;
-                        if (count == 5) {
-                            window.clearInterval();
+                        if (count >= 5) {
+                            window.clearInterval(timer);
+                            this.img.forEach(element => {
+                                console.log(element)
+                            });
                         }
                     }, 1000);
 
-                    this.img.forEach(element => {
-                        console.log(element);
-                    });
                 }
             },
+
 
             recog: function () {
                 var that = this;
@@ -130,33 +130,37 @@
                     this.notify = '请先输入账号！';
                     this.stateColor = "alert alert-danger";
                 }
+
+                //  php那边没实装。。。
+                // 然后人脸识别也木有  
+
                 else {
                     this.notify = "面部识别中···"
                     this.stateColor = "alert alert-primary"
-                    window.setTimeout(() => {
-                        $.post("../../php/facialRecog.php", {
-                            username: that.username,
-                            facialData: that.img,
-                        }).done((data) => {
-                            //
-                            // code:1
-                            // group:2
-                            // 
-                            //
-                            data = JSON.parse(data);
-                            if (data.status == 1) {
-                                that.notify = "面部识别通过";
-                                that.stateColor = "alert alert-success";
-                                that.hasPass = true;
-                                that.group = data.group;    //.............
-                            }
-                            else {
-                                that.hasPass = false;
-                                that.notify = "面部识别失败！";
-                                that.stateColor = "alert alert-danger";
-                            }
-                        })
-                    }, 2000)
+                    // window.setTimeout(() => {
+                    //     $.post("../../php/facialRecog.php", {
+                    //         username: that.username,
+                    //         facialData: that.img,
+                    //     }).done((data) => {
+                    //         //
+                    //         // code:1
+                    //         // group:2
+                    //         // 
+                    //         //
+                    //         data = JSON.parse(data);
+                    //         if (data.status == 1) {
+                    //             that.notify = "面部识别通过";
+                    //             that.stateColor = "alert alert-success";
+                    //             that.hasPass = true;
+                    //             that.group = data.group;    //.............
+                    //         }
+                    //         else {
+                    //             that.hasPass = false;
+                    //             that.notify = "面部识别失败！";
+                    //             that.stateColor = "alert alert-danger";
+                    //         }
+                    //     })
+                    // }, 2000)
 
                 }
             },
@@ -203,14 +207,9 @@
                 }
             },
 
-            //     takePhoto: function () {
-            //         //take photo
-            //         img = camera.take();
-            //         //test
-            //         console.log(img);
-            //     }
-        },
+        }
     })
+
     var camera = new Camera('camera', {
         needEdit: true,
         imageType: 'png',
