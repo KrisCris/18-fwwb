@@ -82,6 +82,7 @@ function set($table,$label,$value,$change){
 /**
  * 向数据库里添加记录，array为二维数组，形如
  * [     [字段，值],[字段，值],[字段，值],[字段，值]    ]
+ * 这个应该是array(array(字段，值),array(字段，值),array(字段，值),array(字段，值))吧！
  * 
  */
 function add($table,$array){

@@ -43,7 +43,7 @@ else{
             $data[0]['token']=substr(md5(mt_rand(0,1000)),5,16).time();
             set("user","username",$username,[["token",$data[0]['token']]]);
             $datamsg=array(
-                "group"=>$data[0]['id'],
+                "group"=>$data[0]['userGroup'],
                 "token"=>$data[0]['token']
             );
         }
