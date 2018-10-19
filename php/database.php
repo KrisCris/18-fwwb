@@ -27,6 +27,39 @@ function get($table,$label="",$value=""){
     return $data;
 
 }
+//这个函数可以让你自定义query的内容。。。
+//比如
+// SELECT
+// consumed_order.order_id,
+// service_order.order_id,
+// service_order.job_number
+// FROM
+// consumed_order
+// INNER JOIN technician ON technician.job_number = service_order.job_number ,
+// skill
+// INNER JOIN service_order ON consumed_order.order_id = service_order.order_id
+// WHERE
+// consumed_order.ID <> null
+
+function sql_str($sql){
+    static $con = null;
+    if(!$con)
+        $con = mysqli_connect("localhost","root","910189033","cs_db");
+    if (!$con)
+    {
+        die('Could not connect: ' . mysql_error());
+    }
+    $result = $con->query($sql);
+    if($result->num_rows<=0)return [];
+
+    $data=[];
+    while($row = $result->fetch_assoc()){
+        array_push($data,$row);
+    }
+    return $data;
+}
+
+
 //改
 // $change 改变的内容
 function set($table,$label,$value,$change){

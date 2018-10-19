@@ -4,86 +4,133 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <meta charset="utf-8">
+    <title>注册</title>
+    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
     <style>
-        /* .placeholder,#main{
-            width: 33% 33% 33%,
-        } */
-    </style>
-    <!-- <link rel="stylesheet" type="text/css" href="../../css/login.css" > -->
+        /* 可以设置不同的进入和离开动画 */
+        /* 设置持续时间和动画函数 */
+        .fade-enter-active, .fade-leave-active {
+        transition: opacity 0.2s
+        }
+        .fade-enter, .fade-leave-to {
+        opacity: 0
+        }
+        
+</style>
+
 </head>
 
-<body>
-    <div>
-        <div id="main">
-            <!-- title--display:none after step1-->
-            <div v-bind:style="step1_style" class="title">
-                <h1>CrowdSourcing</h1>
-            </div>
-            <!-- tips-->
-            <div class="tips" v-bind:style="step2_style">
-                <p>继续注册</p>
-            </div>
-            <div class="tips" v-bind:style="step1_style">
-                <p>在这里注册</p>
-            </div>
+<body class="bg-light">
+    <div class="container-fluid" style="margin-top: 5%">
+        <div class="row-fluid bg-light" id="main">
+            <div class="col-md-4  offset-md-4">
+                <div class="col-md-8 offset-md-2 ">
 
-            <!--register-->
-            <div>
-                <!-- cam--show up in step2-->
-                <div id="camera" v-bind:style="step2_style"></div>
+                    <div class="row">
+                        <div class="col">
+                            <div class=" text-center text-light">
+                                <a href="login.html" class="btn btn-dark btn-lg btn-block"><strong>CrowdSourcing</strong></a>
+                            </div><br>
 
-                <!--form-->
-                <!-- identity--[part 1]--display:none after step1-->
-                <div v-bind:style="step1_style">
-                    <div>
-                        <input type="text" placeholder="姓名" v-model="name">
+                            <div v-bind:class="stateColor">
+                                <strong>Notify：</strong> <span v-text="notify"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <select v-model="company">
-                            <option disabled value="">请选择公司</option>
-                            <option v-for="option in options" v-bind:value="option">
-                                {{ option }}
-                            </option>
-                        </select>
-                    </div>
-                    <div>
-                        <input type="text" placeholder="手机" v-model="phone">
-                        <p style="display:none;">请输入正确手机号</p>
-                    </div>
-                    <div>
-                        <input type="text" placeholder="邮箱" v-model="mail">
-                        <p style="display:none;">请输入正确邮箱</p>
-                    </div>
-                </div>
+                    <!-- 1 -->
+                    <transition name="fade">
+                        <div class="row" v-show="show">
+                            <div class="col">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-address-card-o"></i></span>
+                                    </div>
+                                    <input @click="" type="text" class="form-control" placeholder="输入姓名" v-model="name">
+                                </div>
 
-                <!-- options-1--display:none after step1-->
-                <div v-bind:style="step1_style">
-                    <a href="login.html">已有账号？</a>
-                    <div>
-                        <button @click="fore()">下一步</button>
-                    </div>
-                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-id-card-o"></i></span>
+                                    </div>
+                                    <input @click="" type="text" class="form-control" placeholder="输入身份证" v-model="identificationNum">
+                                </div>
 
-                <!-- username--[part 2]--show up in step2-->
-                <div v-bind:style="step2_style">
-                    <div>
-                        <input type="text" placeholder="用户名" v-model="username">
-                    </div>
-                    <div>
-                        <input type="password" placeholder="密码" v-model="password">
-                    </div>
-                    <div>
-                        <input type="password" placeholder="重复密码" v-model="password_2">
-                    </div>
-                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-phone"></i>&nbsp;</span>
+                                    </div>
+                                    <input @click="" type="text" class="form-control" placeholder="输入手机号" v-model="phone">
+                                </div>
 
-                <!-- options-2--show up in step2 -->
-                <div v-bind:style="step2_style">
-                    <button @click="prev()">上一步</button>
-                    <a href="login.html">已有账号？</a>
-                    <div>
-                        <button @click="register()">完成</button>
-                    </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-envelope-o"></i></span>
+                                    </div>
+                                    <input @click="" type="text" class="form-control" placeholder="输入邮箱" v-model="mail">
+                                </div>
+
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-building-o">&nbsp;</i></span>
+                                    </div>
+                                    <select v-model="company" class="form-control">
+                                        <option selected value="0">请选择公司</option>
+                                        <option value="-1">发包人员</option>
+                                        <option v-for="option in options" v-bind:value="option.id">
+                                            {{ option.company }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <button @click="fore()" type="button" class="btn btn-primary btn-block">继续</button>
+                                </div><br>
+                                <div style="text-align:right;">
+                                    <a href="login.html">已有账号？</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </transition>
+
+                    <!-- 2 -->
+                    <transition name="fade">
+                        <div class="row" v-show="fade">
+                            <div class="col">
+                                <div v-if="!seen" style="line-height:250px;text-align: center;width: 100%; height:250px;background-color: rgb(155, 155, 155); border-radius: 5px">
+                                    <i class="fa fa-camera" style="font-size: 50px;vertical-align:middle"></i>
+                                </div>
+                                <div id="camera" style="border-radius: 5px;background-color: rgb(155, 155, 155);"></div>
+                                <br>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
+                                    </div>
+                                    <input v-model="username" type="text" class="form-control" placeholder="输入用户名">
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text "><i class="fa fa-key"></i></span>
+                                    </div>
+                                    <input v-model="password" type="password" class="form-control" placeholder="输入密码">
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text "><i class="fa fa-key"></i></span>
+                                    </div>
+                                    <input v-model="password_2" type="password" class="form-control" placeholder="重复输入密码">
+                                </div>
+                                <div style="text-align:center;">
+                                    <button @click="prev()" type="button" class="btn btn-secondary" style="width:49.2%;">返回</button>
+                                    <button @click="register()" type="button" class="btn btn-success" style="width:49.2%;">提交</button>
+                                </div><br>
+                            </div>
+                        </div>
+                    </transition>
+
                 </div>
             </div>
         </div>
@@ -96,57 +143,53 @@
     let app = new Vue({
         el: "#main",
         data: {
+            //register data
             name: "",
-            company: "",
+            company: "请选择公司",
             phone: "",
             mail: "",
+            identificationNum: "",
             username: "",
             password: "",
             password_2: "",
+            facialData: [],
+            group: "",
+            seen: false,
+            //
+            show: true,
+            fade: false,
+            //
             options: [],
+            //    {
+            //        {
+            //            id:11,
+            //            name:"摸鱼公司",
+            //        }
+            //        {
+            //            id:12,
+            //            name:"摸鱼公司2",
+            //        }
+            //        {
+            //            id:13,
+            //            name:"摸鱼公司3",
+            //        }
+            //     }
             hasCam: false,
-            //CSS
-            step1_style: {
-                display: "",
-            },
-            step2_style: {
-                display: "none",
-            }
+            notify: "在这里注册",
+            stateColor: "alert alert-success",
         },
-        created() {
-            var that = this;
-            // get company names for selector
-            $.post("../../php/login/getInfo.php").done((data) => {
-                data = JSON.parse(data);
-                data.companies.forEach(company => {
-                    that.options.push(company);
-                });
-            })
-        },
+        // created() {
+        //     var that = this;
+        //     // get company names for selector
+        //     $.post("../../php/login/getInfo.php").done((data) => {
+        //         data = JSON.parse(data);
+        //         data.companies.forEach(company => {
+        //             that.options.push(company);
+        //         });
+        //     })
+        // },
 
         methods: {
-            fore: function () {
-                //判断是否空,haven't done yet
-                if (true) {
-                    this.step1_style.display = "none";
-                    this.step2_style.display = "";
-                    if (!this.hasCam) {
-                        camera.init();
-                        this.hasCam = true;
-                    }
-
-                }
-                else {
-
-                }
-
-
-            },
-
-            prev: function () {
-                this.step1_style.display = "";
-                this.step2_style.display = "none";
-            },
 
             register: function () {
                 var that = this;
@@ -156,14 +199,15 @@
                         company: that.company,
                         phone: that.phone,
                         mail: that.mail,
+                        identificationNum: that.identificationNum,
                         username: that.username,
                         password: that.password,
+                        facialData: that.facialData,
+                        group: that.group,
                     }).done((data) => {
                         data = JSON.parse(data);
-                        if (data.status == "succeed") {
-                            //跳转
-                        }
-                        else {
+                        if (data.code == 1) {
+
 
                         }
                     })
@@ -171,22 +215,46 @@
                 else {
                     //两次密码不一样
                 }
-            }
+            },
+
+            fore: function () {
+                if (true) {
+                    this.show = !this.show;
+                    window.setTimeout(() => { this.fade = !this.fade; }, 500)
+
+                }
+
+                if (!this.hasCam) {
+                    camera.init();
+                    this.hasCam = true;
+                }
+            },
+
+            prev: function () {
+                this.fade = !this.fade;
+                window.setTimeout(() => { this.show = !this.show; }, 500)
+            },
 
         },
 
 
-    })
-    var camera = new Camera('camera', {
-        needEdit: true,
-        imageType: 'png',
-        width: 400,
-        height: 300
-    });
 
-    //take photo
-    var img = camera.take();
-    console.log(img);
+
+
+
+
+
+    })
+    // var camera = new Camera('camera', {
+    //     needEdit: true,
+    //     imageType: 'png',
+    //     width: 400,
+    //     height: 300
+    // });
+
+    // //take photo
+    // var img = camera.take();
+    // console.log(img);
 
 
 
