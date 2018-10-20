@@ -15,29 +15,28 @@
 <body>
     <div id="main">
         <div class="list-group">
-            <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
-                <!-- Links -->
-                <ul class="navbar-nav">
+            <nav class="navbar navbar-expand-sm bg-dark navbar-dark left">
+                <!-- vertical with tabs control -->
+                <ul class="nav flex-column nav-tabs">
+                        <li class="nav-item">
+                                <a class="nav-link" href="account.html"><i class="fa fa-user-circle"></i>账号信息</a>
+                            </li>
                     <li class="nav-item">
                         <a class="nav-link" href="censor.html" class="list-group-item"><i class="fa fa-check-square-o"></i>注册审核</a>
                     </li>
                     <!-- Dropdown -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa fa-id-card-o"></i>
+                        <a class="nav-link active dropdown-toggle" href="receiverManage.html" id="navbardrop" data-toggle="dropdown"><i class="fa fa-id-card-o"></i>
                             人员管理
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#"><i class="fa fa-send"></i>发包人员管理</a>
-                            <a class="dropdown-item" href="resource_receiverManage.html"><i class="fa fa-coffee"></i>接包人员管理</a>
+                            <a class="dropdown-item" href="receiverManage.html"><i class="fa fa-coffee"></i>接包人员管理</a>
                         </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="company.html"><i class="fa fa-suitcase"></i>外包公司</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="info.html"><i class="fa fa-user-circle"></i>人员信息</a>
-                    </li>
-
 
                 </ul>
             </nav>
