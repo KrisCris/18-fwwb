@@ -4,8 +4,10 @@ require("../database.php");
 date_default_timezone_set('prc');
 $username=$_POST["username"];
 $password=$_POST["password"];
+
 $data=get("user","username",$username);
 $data_admin=get("administrator","username",$username);
+
 $code=0;
 $code_admin=0;
 $msg="";

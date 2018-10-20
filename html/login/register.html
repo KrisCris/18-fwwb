@@ -30,7 +30,7 @@
                     <div class="row">
                         <div class="col">
                             <div class=" text-center text-light">
-                                <a href="login.html" class="btn btn-dark btn-lg btn-block"><strong>CrowdSourcing</strong></a>
+                                <a href="register.html" class="btn btn-dark btn-lg btn-block"><strong>CrowdSourcing</strong></a>
                             </div><br>
 
                             <div v-bind:class="stateColor">
@@ -76,8 +76,8 @@
                                         <span class="input-group-text"><i class="fa fa-building-o">&nbsp;</i></span>
                                     </div>
                                     <select v-model="company" class="form-control">
-                                        <option selected value="0">请选择公司</option>
-                                        <option value="-1">发包人员</option>
+                                        <option selected value=0>请选择公司</option>
+                                        <option value=-1>发包人员</option>
                                         <option v-for="option in options" v-bind:value="option.id">
                                             {{ option.company }}
                                         </option>
@@ -102,9 +102,9 @@
                                     <i class="fa fa-camera" style="font-size: 50px;vertical-align:middle"></i>
                                 </div>
                                 <div id="camera" style="border-radius: 5px;background-color: rgb(155, 155, 155);"></div>
-                                <br>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
+                                <br>0-
+                                <div class="input-group m0-b-3">
+                                    <div class="input-gro0-up-prepend">
                                         <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
                                     </div>
                                     <input v-model="username" type="text" class="form-control" placeholder="输入用户名">
@@ -145,7 +145,7 @@
         data: {
             //register data
             name: "",
-            company: "请选择公司",
+            company:0,
             phone: "",
             mail: "",
             identificationNum: "",
