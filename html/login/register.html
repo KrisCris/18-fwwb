@@ -11,7 +11,7 @@
         /* 可以设置不同的进入和离开动画 */
         /* 设置持续时间和动画函数 */
         .fade-enter-active, .fade-leave-active {
-        transition: opacity 0.2s
+        transition: opacity 0.5s
         }
         .fade-enter, .fade-leave-to {
         opacity: 0
@@ -46,28 +46,28 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fa fa-address-card-o"></i></span>
                                     </div>
-                                    <input @click="" type="text" class="form-control" placeholder="输入姓名" v-model="name">
+                                    <input @click="" type="text" :class="nameCls" placeholder="输入姓名" v-model="name">
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fa fa-id-card-o"></i></span>
                                     </div>
-                                    <input @click="" type="text" class="form-control" placeholder="输入身份证" v-model="identificationNum">
+                                    <input @click="" type="text" :class="idCls" placeholder="输入身份证" v-model="identificationNum">
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fa fa-phone"></i>&nbsp;</span>
                                     </div>
-                                    <input @click="" type="text" class="form-control" placeholder="输入手机号" v-model="phone">
+                                    <input @click="" type="text" :class="phoneCls" placeholder="输入手机号" v-model="phone">
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fa fa-envelope-o"></i></span>
                                     </div>
-                                    <input @click="" type="text" class="form-control" placeholder="输入邮箱" v-model="mail">
+                                    <input @click="" type="text" :class="mailCls" placeholder="输入邮箱" v-model="mail">
                                 </div>
 
 
@@ -75,13 +75,14 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fa fa-building-o">&nbsp;</i></span>
                                     </div>
-                                    <select v-model="company" class="form-control">
+                                    <select v-model="company" :class="companyCls">
                                         <option selected value=0>请选择公司</option>
                                         <option value=-1>发包人员</option>
                                         <option v-for="option in options" v-bind:value="option.id">
-                                            {{ option.company }}
+                                            {{ option.name }}
                                         </option>
                                     </select>
+                                    <!-- <p>{{company}}</p> -->
                                 </div>
                                 <div>
                                     <button @click="fore()" type="button" class="btn btn-primary btn-block">继续</button>
@@ -102,9 +103,9 @@
                                     <i class="fa fa-camera" style="font-size: 50px;vertical-align:middle"></i>
                                 </div>
                                 <div id="camera" style="border-radius: 5px;background-color: rgb(155, 155, 155);"></div>
-                                <br>0-
-                                <div class="input-group m0-b-3">
-                                    <div class="input-gro0-up-prepend">
+                                <br>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
                                     </div>
                                     <input v-model="username" type="text" class="form-control" placeholder="输入用户名">
@@ -123,9 +124,10 @@
                                     </div>
                                     <input v-model="password_2" type="password" class="form-control" placeholder="重复输入密码">
                                 </div>
-                                <div style="text-align:center;">
-                                    <button @click="prev()" type="button" class="btn btn-secondary" style="width:49.2%;">返回</button>
-                                    <button @click="register()" type="button" class="btn btn-success" style="width:49.2%;">提交</button>
+                                <div class="clearfix">
+                                    <button @click="prev()" type="button" class="btn btn-secondary float-left" style="width:48%;">返回</button>
+                                    <button @click="register()" type="button" class="btn btn-success float-right "
+                                        style="width:48%;">提交</button>
                                 </div><br>
                             </div>
                         </div>
@@ -145,7 +147,7 @@
         data: {
             //register data
             name: "",
-            company:0,
+            company: 0,
             phone: "",
             mail: "",
             identificationNum: "",
@@ -155,39 +157,36 @@
             facialData: [],
             group: "",
             seen: false,
+            complete_1: true,
+            complete_2: false,
             //
             show: true,
             fade: false,
+
             //
             options: [],
-            //    {
-            //        {
-            //            id:11,
-            //            name:"摸鱼公司",
-            //        }
-            //        {
-            //            id:12,
-            //            name:"摸鱼公司2",
-            //        }
-            //        {
-            //            id:13,
-            //            name:"摸鱼公司3",
-            //        }
-            //     }
             hasCam: false,
             notify: "在这里注册",
             stateColor: "alert alert-success",
+
+            //class
+            nameCls: "form-control",
+            phoneCls: "form-control",
+            mailCls: "form-control",
+            idCls: "form-control",
+            companyCls: "form-control",
+            passwordCls: "form-control",
+            usernameCls: "form-control",
         },
-        // created() {
-        //     var that = this;
-        //     // get company names for selector
-        //     $.post("../../php/login/getInfo.php").done((data) => {
-        //         data = JSON.parse(data);
-        //         data.companies.forEach(company => {
-        //             that.options.push(company);
-        //         });
-        //     })
-        // },
+        created() {
+            var that = this;
+            // get company names for selector
+            $.post("../../php/login/getCompany.php").done((data) => {
+                data = JSON.parse(data);
+                that.options = data;
+            });
+
+        },
 
         methods: {
 
@@ -204,11 +203,11 @@
                         password: that.password,
                         facialData: that.facialData,
                         group: that.group,
+
+
                     }).done((data) => {
                         data = JSON.parse(data);
                         if (data.code == 1) {
-
-
                         }
                     })
                 }
@@ -218,16 +217,39 @@
             },
 
             fore: function () {
-                if (true) {
-                    this.show = !this.show;
-                    window.setTimeout(() => { this.fade = !this.fade; }, 500)
-
+                this.isComplete_1();
+                if (!this.complete_1) {
+                    this.notify = '请填写正确的信息！';
+                    this.stateColor = "alert alert-danger";
+                }
+                else {
+                    var that = this;
+                    $.post("../../php/login/isDuplicated.php", {
+                        phone: that.phone,
+                        identificationNum: that.identificationNum,
+                        mail: that.mail,
+                    }).done((data) => {
+                        // {
+                        //     phone:1,
+                        //     id:1,
+                        //     mail:1
+                        // }
+                        if (id == 0){
+                            
+                        }
+                    });
+                    if (true) {//未注册
+                        this.show = !this.show;
+                        window.setTimeout(() => { this.fade = !this.fade; }, 500)
+                    }
+                    if (!this.hasCam) {
+                        camera.init();
+                        this.hasCam = true;
+                    }
                 }
 
-                if (!this.hasCam) {
-                    camera.init();
-                    this.hasCam = true;
-                }
+
+
             },
 
             prev: function () {
@@ -235,6 +257,40 @@
                 window.setTimeout(() => { this.show = !this.show; }, 500)
             },
 
+            isComplete_1: function () {
+                this.name = this.name.replace(/\s+/g, "");
+                this.phone = this.phone.replace(/\s+/g, "");
+                this.identificationNum = this.identificationNum.replace(/\s+/g, "");
+                this.mail = this.mail.replace(/\s+/g, "");
+                if (this.name == "") {
+                    this.nameCls = "form-control is-invalid";
+                    this.complete_1 = false;
+                }
+                else this.nameCls = "form-control";
+                if (this.phone.match(/^1\d{10}$/) === null) {
+                    this.phoneCls = "form-control is-invalid";
+                    this.complete_1 = false;
+                }
+                else this.phoneCls = "form-control";
+                if (this.identificationNum.match(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/) === null) {
+                    this.idCls = "form-control is-invalid";
+                    this.complete_1 = false;
+                }
+                else this.idCls = "form-control";
+                if (this.mail.match(/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/) === null) {
+                    this.mailCls = "form-control is-invalid";
+                    this.complete_1 = false;
+                }
+                else this.mailCls = "form-control";
+                if (this.company == 0) {
+                    this.companyCls = "form-control is-invalid";
+                    this.complete_1 = false;
+                }
+                else this.companyCls = "form-control";
+                if (this.nameCls == "form-control" && this.mailCls == "form-control" && this.phoneCls == "form-control" && this.idCls == "form-control" && this.companyCls == "form-control") {
+                    this.complete_1 = true;
+                }
+            }
         },
 
 
