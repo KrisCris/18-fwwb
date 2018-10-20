@@ -7,13 +7,14 @@ $password=$_POST["password"];
 $phone=$_POST["phone"];
 $company=$_POST["company"];
 $mail=$_POST["mail"];
-$userGroup=$_POST["group"];
+$group;
 $identificationNum=$_POST["identificationNum"];
 $facialData=$_POST["facialData"];
 $msg="";
 $code=0;
-
-$array=array(array("name",$name),array("username",$username),array("password",$password),array("phone",$phone),array("company",$company),array("mail",$mail),array("userGroup",$userGroup),array("identificationNum",$identificationNum),array("facialData",$facialData));
+if($company == -1)  $group = 1;
+else    $group = 2;
+$array=array(array("name",$name),array("username",$username),array("password",$password),array("phone",$phone),array("company",$company),array("mail",$mail),array("userGroup",$group),array("identificationNum",$identificationNum),array("facialData",$facialData));
 
 $data=get("user","username",$username);
 $data_admin=get("administrator","username",$username);
