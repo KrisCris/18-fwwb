@@ -12,22 +12,8 @@ $identificationNum=$_POST["identificationNum"];
 $facialData=$_POST["facialData"];
 $msg="";
 $code=0;
-$datamsg=null;
 
-// $array[][]=[["name",$name],["username",$username],["password",$password],["phone",$phone],["company",$company],["mail",$mail]]; 这样子会报错的
 $array=array(array("name",$name),array("username",$username),array("password",$password),array("phone",$phone),array("company",$company),array("mail",$mail),array("userGroup",$userGroup),array("identificationNum",$identificationNum),array("facialData",$facialData));
-
-$data=get("user","identificationNum",$identificationNum);
-$data_admin=get("administrator","identificationNum",$identificationNum);
-
-if(!empty($data)||!empty($data_admin)){
-    $json=json_encode(array(
-        "code"=> -1,  
-        "msg" => "failed",
-    ));
-    echo $json;
-    exit();
-}
 
 $data=get("user","username",$username);
 $data_admin=get("administrator","username",$username);
