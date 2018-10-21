@@ -19,7 +19,7 @@ $array=array(array("name",$name),array("username",$username),array("password",$p
 $data=get("user","username",$username);
 $data_admin=get("administrator","username",$username);
 if(!empty($data)||!empty($data_admin)){
-    $code=-2;
+    $code=0;
     $msg="failed";
 }
 

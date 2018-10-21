@@ -79,7 +79,7 @@
                                         <option selected value=0>请选择公司</option>
                                         <option value=-1>发包人员</option>
                                         <option v-for="option in options" v-bind:value="option.id">
-                                            {{ option.name }}
+                                            {{ option.companyName }}
                                         </option>
                                     </select>
                                     <!-- <p>{{company}}</p> -->
@@ -154,11 +154,11 @@
             username: "",
             password: "",
             password_2: "",
-            facialData: [],
-            group: "",
+            facialData: "",
             seen: false,
             complete_1: true,
             complete_2: false,
+            isDuplicated: false,
             //
             show: true,
             fade: false,
@@ -202,17 +202,43 @@
                         username: that.username,
                         password: that.password,
                         facialData: that.facialData,
-                        group: that.group,
-
-
                     }).done((data) => {
                         data = JSON.parse(data);
                         if (data.code == 1) {
+                            window.location.href="login.html"
+                            // let timerInterval
+                            // swal({
+                            // position: 'center',
+                            //   type: 'success',
+                            //   title: '注册成功！',
+                            //   showConfirmButton: true,
+                            //   html: '页面将会在 <strong></strong> 毫秒后跳转',
+                            //   timer: 5000,
+                            //   onOpen: () => {
+                            //     swal.showLoading()
+                            //     timerInterval = setInterval(() => {
+                            //       swal.getContent().querySelector('strong')
+                            //         .textContent = swal.getTimerLeft()
+                            //     }, 100)
+                            //   },
+                            //   onClose: () => {
+                            //     clearInterval(timerInterval)
+                            //   }
+                            // }).then((result) => {
+                            //   if (
+                            //     // Read more about handling dismissals
+                            //     result.dismiss === swal.DismissReason.timer
+                            //   ) {
+                            //     console.log('I was closed by the timer')
+                            //   }
+                            // })
                         }
+                        else if(data.code == 0) console.log("用户名重复");
                     })
                 }
                 else {
-                    //两次密码不一样
+                    this.notify = '请重新确认您的密码！';
+                    this.stateColor = "alert alert-danger";
                 }
             },
 
@@ -230,22 +256,45 @@
                         mail: that.mail,
                     }).done((data) => {
                         // {
-                        //     phone:1,
-                        //     id:1,
-                        //     mail:1
+                        //     phone:0,
+                        //     id:0,
+                        //     mail:0
                         // }
-                        if (id == 0){
-                            
+                        if (data.id == 1) {
+                            that.notify = '该身份已注册！';
+                            that.stateColor = "alert alert-danger";
+                            that.idCls = "form-control is-invalid";
+                            that.isDuplicated = true;
+                        }
+                        else if (data.phone == 1 || data.mail == 1) {
+                            that.isDuplicated = true;
+                            that.stateColor = "alert alert-danger";
+                            that.phoneCls = "form-control is-invalid";
+                            if (data.phone == 1) {
+                                that.notify = '该手机已被使用！';
+                            }
+                            if (data.mail == 1) {
+                                that.notify = '该邮箱已被使用！';
+                            }
+                            if (data.mail == 1 && data.phone == 1) {
+                                that.notify = '该邮箱和手机已被使用！';
+                            }
+                        }
+                        else that.isDuplicated == false;
+
+                        if (!that.isDuplicated) {
+                            that.show = !that.show;
+                            window.setTimeout(() => { that.fade = !that.fade; }, 500)
+
+                        }
+                        this.seen = true;
+                        if (!that.hasCam) {
+                            camera.init();
+                            that.hasCam = true;
                         }
                     });
-                    if (true) {//未注册
-                        this.show = !this.show;
-                        window.setTimeout(() => { this.fade = !this.fade; }, 500)
-                    }
-                    if (!this.hasCam) {
-                        camera.init();
-                        this.hasCam = true;
-                    }
+
+
                 }
 
 
@@ -301,12 +350,12 @@
 
 
     })
-    // var camera = new Camera('camera', {
-    //     needEdit: true,
-    //     imageType: 'png',
-    //     width: 400,
-    //     height: 300
-    // });
+    var camera = new Camera('camera', {
+        needEdit: true,
+        imageType: 'png',
+        width: 400,
+        height: 250
+    });
 
     // //take photo
     // var img = camera.take();

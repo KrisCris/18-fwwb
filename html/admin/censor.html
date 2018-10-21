@@ -42,7 +42,7 @@
                   <a class="navbar-brand" href="#"><strong>导航</strong></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="account.html"><i class="fa fa-user-circle"></i>账号信息</a>
+                  <a class="nav-link" href="index.html"><i class="fa fa-user-circle"></i>账号信息</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link active" href="#" class="list-group-item"><i class="fa fa-check-square-o"></i>注册审核<span
@@ -128,18 +128,19 @@
       info: [],
       badgeIndex: '',
     },
-    //开始时运行
+
+
     created() {
       var that = this;
       $.post("../../php/admin/fetchUncensored.php", {}).done((data) => {
         data = JSON.parse(data);
-
         data.forEach(user => {
           that.info.push(user);
         });
       })
 
     },
+
     // 点击菜单使用的函数
     methods: {
       //审核是否通过
@@ -149,9 +150,7 @@
           personId: id,
           hasPass:true,
         }).done((data) => {
-          /////
           data = JSON.parse(data);
-
           data.forEach(user => {
             that.info.push(user);
           });
@@ -163,7 +162,6 @@
           personId: id,
           hasPass:false,
         }).done((data) => {
-          /////
           data = JSON.parse(data);
           data.forEach(user => {
             that.info.push(user);
