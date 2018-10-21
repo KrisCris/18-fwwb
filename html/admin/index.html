@@ -1,46 +1,73 @@
-<!Doctype <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8" />
-    <script src="../../resource/vue/vue.js"></script>
-    <script src="../../resource/jquery/jquery.js"></script>
-    <script src="../../resource/bootstrap/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.min.css">
-    <title>人员信息</title>
+    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
+    <title>外包公司管理</title>
 </head>
 
 <body>
-    <div id="main">
-        <div class="list-group">
-            <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-left">
-                <!-- vetical with tabs control -->
-                <ul class="nav flex-column nav-tabs">
-                        <li class="nav-item">
-                                <a class="nav-link active" href="#"><i class="fa fa-user-circle"></i>账号信息</a>
-                            </li>
+    <div id="main" class="container ">
+        <!-- navigation_bar -->
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-5 mt-3 rounded sticky-top">
+            <a class="navbar-brand" href="#">CrowdSourcing</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="censor.html" class="list-group-item"><i class="fa fa-check-square-o"></i>注册审核</a>
+                        <a class="nav-link" href="censor.html">注册审核</a>
                     </li>
-                    <!-- Dropdown -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa fa-id-card-o"></i>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             人员管理
                         </a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="publisherManage.html"><i class="fa fa-send"></i>发包人员管理</a>
-                            <a class="dropdown-item" href="receiverManage.html"><i class="fa fa-coffee"></i>接包人员管理</a>
+                        <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="publisherManage.html">发包人员管理</a>
+                            <a class="dropdown-item" href="receiverManage.html">接包人员管理</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="company.html"><i class="fa fa-suitcase"></i>外包公司</a>
+                        <a class="nav-link" href="company.html">公司管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">个人信息</a>
                     </li>
                 </ul>
-            </nav>
-        </div>
+            </div>
+        </nav>
+        <!-- content -->
+
+
+
     </div>
 </body>
+<script src="../../resource/vue/vue.js"></script>
+<script src="../../resource/jquery/jquery.js"></script>
+<script src="../../resource/bootstrap/js/bootstrap.js"></script>
+<script>
+    var app = new Vue({
+        el:"#main",
+        data:{
+            //userInfo
+            group:"",
+            uuid:"",
 
+        },
+        created: function(){
+            this.group=$.cookie('group');
+            this.uuid=$.cookie('uuid');
+        },
+        methods:{
+
+        }
+    })
+</script>
+
+
+</html>
 </html>

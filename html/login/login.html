@@ -183,7 +183,7 @@
                                 $.cookie('group', 'data.data.group', { expires: 1 });//group=null,管理员；group=1,发包；group=2,接包
                                 $.cookie('uuid', 'data.data.token', { expires: 1 });
                                 switch (data.data.group) {
-                                    case null: window.location.href = "../admin/censor.html";
+                                    case null: window.location.href = "../admin/index.html";
                                         break;
                                     case "1": window.location.href = "../sender/index.html";
                                         break;
