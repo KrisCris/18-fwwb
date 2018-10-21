@@ -11,86 +11,112 @@
   <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.min.css">
   <title>注册审核</title>
-
+ 
 </head>
+<!-- 还有各个选卡之间的切换效果未完成 -->
+<!-- 还想做一个徽章，需要的话可能要改下fetch的php,而且还可以和提示框互动 -->
 
-<body>
+<body class="bg-dark">
   <div id="main">
-    <div class="list-group">
-      <!-- set items hover and background style -->
-      <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <!-- vertical with tabs control-->
-        <ul class="nav nav-tabs flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="account.html"><i class="fa fa-user-circle"></i>账号信息</a>
-            </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="#" class="list-group-item"><i class="fa fa-check-square-o"></i>注册审核</a>
-          </li>
-          <!-- Dropdown -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa fa-id-card-o"></i>
-              人员管理
-            </a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="publisherManage.html"><i class="fa fa-send"></i>发包人员管理</a>
-              <a class="dropdown-item" href="receiverManage.html"><i class="fa fa-coffee"></i>接包人员管理</a>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="company.html"><i class="fa fa-suitcase"></i>外包公司</a>
-          </li>
-
-
-        </ul>
-      </nav>
-    </div>
-    <div class="container-fluid" style="margin-top:80px">
-      <!-- //注册审核页面 -->
-      <div class="card">
-        <div class="card-header">
-          <h4>注册审核列表</h4>
+    <div class="container-fluid" style="padding: 0px; margin: 0px;">
+      <!-- overall layout setting -->
+      <div class="d-flex flex-column">
+        <div class="bg-secondary text-white">
+          <p>
+            <h2>Welcome to CrowdSourcing !!!</h2>
+            <a href="" class="float-right">注销账户</a>
+          </p>
         </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <div class="text-center">
-              <table class="table table-dark table-hover table-striped table-bordered table-sm">
-                <div>
-                  <thead>
-                    <tr>
-                      <th>姓名</th>
-                      <th>手机</th>
-                      <th>邮箱</th>
-                      <th>隶属公司</th>
-                      <th>审核</th>
-                    </tr>
-                  </thead>
-                </div>
-                <!-- 有新的待审核人员时增加到表格下 -->
-                <div>
+      </div>
+      <!-- vertical interior layout setting -->
+      <div class="container-fluid" style="padding: 0px; margin: 0px;">
+        <div class="row">
+          <!-- side bar -->
+          <!-- set the col occupies 2/12 -->
+          <div class="col-md-2" style="padding: 0px ; margin: 0px;" id="sideBar">
+            <!-- set items hover and background style -->
+            <nav class="navbar  ">
+              <!-- vertical with tabs control-->
+              <ul class="nav  flex-column">
+                <li class="nav-item">
+                  <a class="navbar-brand" href="#"><strong>导航</strong></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="account.html"><i class="fa fa-user-circle"></i>账号信息</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="#" class="list-group-item"><i class="fa fa-check-square-o"></i>注册审核<span
+                      class="badge badge-pill badge-info">{{badgeIndex}}</span></a>
+                </li>
+                <!-- Dropdown -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa fa-id-card-o"></i>
+                    人员管理
+                  </a>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="publisherManage.html"><i class="fa fa-send"></i>发包人员管理</a>
+                    <a class="dropdown-item" href="receiverManage.html"><i class="fa fa-coffee"></i>接包人员管理</a>
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="company.html"><i class="fa fa-suitcase"></i>外包公司</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <!-- set the col occupies 10 -->
+          <div class="col-md-10" style="padding: 0px; margin: 0px;">
+            <!-- card -->
+            <div class="card" style="height: 657px">
+              <div class="card-header bg-light">
+                <h3><strong>注册审核表</strong></h3>
+              </div>
+              <div class="card-body">
+                <!-- different views in unique size window -->
+                <div class="table-responsive-sm">
 
-                  <tr v-for="person in info">
-                    <td>{{person.name}}</td>
-                    <td>{{person.phone}}</td>
-                    <td>{{person.mail}}</td>
-                    <td>{{person.company}}</td>
-                    <td>
-                      <!-- <i class="fa fa-thumbs-up"></i> -->
-                      <button @click='verified(person.id,person.isCensored)'><i class="fa fa-user-plus"></i>通过</button>
-                      <button @click='refuse(person.id,person.isCensored)'><i class="fa fa-user-times"></i>通过</button>
-                      <!-- <input type="button" value="通过" @click='verified(person.id)'> -->
-                      <!-- <input type="button" value="拒绝" @click='refuse(person.id)'> -->
-                    </td>
-                  </tr>
-
+                  <div class="text-center">
+                    <!-- dark table + hover effect + grey hover + set border + small table -->
+                    <table class="table table-dark table-hover table-striped table-bordered table-sm">
+                      <div>
+                        <thead>
+                          <tr>
+                            <th>姓名</th>
+                            <th>手机</th>
+                            <th>邮箱</th>
+                            <th>隶属公司</th>
+                            <th>审核</th>
+                          </tr>
+                        </thead>
+                      </div>
+                      <!-- 有新的待审核人员时增加到表格下 -->
+                      <div>
+                        <tr v-for="person in info">
+                          <td>{{person.name}}</td>
+                          <td>{{person.phone}}</td>
+                          <td>{{person.mail}}</td>
+                          <td>{{person.company}}</td>
+                          <td>
+                            <!-- small button with the click event reload the page  -->
+                            <button class="btn btn-danger btn-sm" @click='refuse(person.id)' style="width:30%;"><i
+                                class="fa fa-user-plus"></i>拒绝</button>
+                            <button class="btn btn-success btn-sm" @click='verified(person.id)'><i class="fa fa-user-times"
+                                style="width:35%"></i>通过</button>
+                            <!-- 不行就先改回来，之前这两个还是可以用的 -->
+                            <!-- <input type="button" value="通过" @click='verified(person.id)'> -->
+                            <!-- <input type="button" value="拒绝" @click='refuse(person.id)'> -->
+                          </td>
+                        </tr>
+                      </div>
+                    </table>
+                  </div>
                 </div>
+              </div>
             </div>
-            </table>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </body>
 <script>
   // 创建一个新的 Vue 实例
@@ -100,6 +126,7 @@
     // 定义属性，并设置初始值
     data: {
       info: [],
+      badgeIndex: '',
     },
     //开始时运行
     created() {
@@ -116,12 +143,11 @@
     // 点击菜单使用的函数
     methods: {
       //审核是否通过
-      verified: function (id,censored) {
+      verified: function (id) {
         var that = this;
-        censored++;
         $.post("../../php/admin/verify.php", {
           personId: id,
-          userCensor: censored,
+          hasPass:true,
         }).done((data) => {
           /////
           data = JSON.parse(data);
@@ -131,12 +157,11 @@
           });
         })
       },
-      refuse: function (id,censored) {
+      refuse: function (id) {
         var that = this;
-        censored--;
         $.post("../../php/admin/verify.php", {
           personId: id,
-          userCensor: censored,
+          hasPass:false,
         }).done((data) => {
           /////
           data = JSON.parse(data);

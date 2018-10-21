@@ -9,38 +9,70 @@
     <script src="../../resource/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.min.css">
-    <title>人员信息</title>
+    <title>账号信息</title>
 </head>
 
-<body>
+<body class="bg-dark">
     <div id="main">
-        <div class="list-group">
-            <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-left">
-                <!-- vetical with tabs control -->
-                <ul class="nav flex-column nav-tabs">
-                        <li class="nav-item">
-                                <a class="nav-link active" href="account.html"><i class="fa fa-user-circle"></i>账号信息</a>
-                            </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="censor.html" class="list-group-item"><i class="fa fa-check-square-o"></i>注册审核</a>
-                    </li>
-                    <!-- Dropdown -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa fa-id-card-o"></i>
-                            人员管理
-                        </a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="publisherManage.html"><i class="fa fa-send"></i>发包人员管理</a>
-                            <a class="dropdown-item" href="receiverManage.html"><i class="fa fa-coffee"></i>接包人员管理</a>
+        <div class="container-fluid" style="padding: 0px; margin: 0px;">
+            <!-- overall layout setting -->
+            <div class="d-flex flex-column">
+                <div class="bg-secondary text-white">
+                    <p>
+                        <h2>Welcome to CrowdSourcing !!!</h2>
+                        <a href="" class="float-right">注销账户</a>
+                    </p>
+                </div>
+            </div>
+            <!-- vertical interior layout setting -->
+            <div class="container-fluid" style="padding: 0px; margin: 0px;">
+                <div class="row">
+                    <!-- side bar -->
+                    <!-- set the col occupies 2/12 -->
+                    <div class="col-md-2" style="padding: 0px ; margin: 0px;" id="sideBar">
+                        <!-- set items hover and background style -->
+                        <nav class="navbar  ">
+                            <!-- vertical with tabs control-->
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="navbar-brand" href="#"><strong>导航</strong></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#"><i class="fa fa-user-circle"></i>账号信息</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="censor.html" class="list-group-item"><i class="fa fa-check-square-o"></i>注册审核<span
+                                            class="badge badge-pill badge-info">{{badgeIndex}}</span></a>
+                                </li>
+                                <!-- Dropdown -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><i
+                                            class="fa fa-id-card-o"></i>
+                                        人员管理
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="publisherManage.html"><i class="fa fa-send"></i>发包人员管理</a>
+                                        <a class="dropdown-item" href="receiverManage.html"><i class="fa fa-coffee"></i>接包人员管理</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="company.html"><i class="fa fa-suitcase"></i>外包公司</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <!-- set the col occupies 10 -->
+                    <div class="col-md-10" style="padding: 0px; margin: 0px;">
+                        <!-- card -->
+                        <div class="card" style="height: 657px">
+                            <div class="card-header bg-light">
+                                <h3><strong>待添加</strong></h3>
+                            </div>
                         </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="company.html"><i class="fa fa-suitcase"></i>外包公司</a>
-                    </li>
-                </ul>
-            </nav>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 </body>
 
 </html>
