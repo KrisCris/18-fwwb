@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : locahost
+ Source Server         : MySQL
  Source Server Type    : MySQL
  Source Server Version : 50553
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 50553
  File Encoding         : 65001
 
- Date: 20/10/2018 12:35:12
+ Date: 23/10/2018 00:22:23
 */
 
 SET NAMES utf8mb4;
@@ -36,7 +36,7 @@ CREATE TABLE `administrator`  (
 -- ----------------------------
 -- Records of administrator
 -- ----------------------------
-INSERT INTO `administrator` VALUES ('Chris Wong', 'CONNECTION_LOST', '910189033', NULL, '910189033@qq.com', '110', 'be6f7cad026585081539938690', 111);
+INSERT INTO `administrator` VALUES ('admin', 'admin', 'admin', NULL, '910189033@qq.com', '110', 'b2db37feedfdeaab1540225280', 111);
 
 -- ----------------------------
 -- Table structure for company
@@ -45,14 +45,18 @@ DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company`  (
   `companyName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `regDate` int(11) NULL DEFAULT NULL,
+  `responsiblePerson` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `contact` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of company
 -- ----------------------------
-INSERT INTO `company` VALUES ('enormousFish', 1);
-INSERT INTO `company` VALUES ('tigerSpotShark', 2);
+INSERT INTO `company` VALUES ('enormousFish', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `company` VALUES ('tigerSpotShark', 2, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for message
@@ -119,25 +123,20 @@ CREATE TABLE `user`  (
   `company` int(255) NOT NULL,
   `mail` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `isCensored` int(255) NOT NULL,
+  `isCensored` int(255) NOT NULL DEFAULT 0,
   `token` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `userGroup` int(255) NULL DEFAULT NULL,
-  `identificationNum` int(11) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`, `username`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  `identificationNum` varchar(18) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 25 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('wrf', 'wrf', 'wrf', '', 2, NULL, '', 0, '', 2, NULL, NULL);
-INSERT INTO `user` VALUES ('Chris', 'hi.imhpc', 'hi.imhpc', '', 1, 'hi.imhpc@outlook.com', '13000000000000', 1, '0d928d4bf8ce0ff21539868887', 1, NULL, 123);
-INSERT INTO `user` VALUES ('543', 'reer', 'rtest', '', 2, '42', '242452', 0, NULL, 3, NULL, NULL);
-INSERT INTO `user` VALUES ('543', '453', '5hi.imhpc', '45', 2, '42', '242452', 1, 'ddfc689c1d0e3b9c1539959586', 14, 45, 5);
-INSERT INTO `user` VALUES ('543', 'fasd', '5hi.imhpc', '45', 2, '42', '242452', 0, NULL, 16, 45, 15);
-INSERT INTO `user` VALUES ('543', 'zxz', '5hi.imhpc', '45', 2, '42', '242452', -1, '', 17, 45, 22);
-INSERT INTO `user` VALUES ('543', 'ee', 'rtest', '457867', 2, '42', '242452', 0, NULL, 18, 4, 55);
-INSERT INTO `user` VALUES ('543', '156', 'rtest', '457867', 2, '42', '242452', 0, NULL, 19, 4, 11);
+INSERT INTO `user` VALUES ('ChrisWong', 'hi.imhpc', '910189033', '', -1, 'hi.imhpc@xxx.com', '13900000000', 1, NULL, 24, 1, '330103000000000000');
+INSERT INTO `user` VALUES ('接包_1', 'recev_1', 'recev_1', '', 1, '111@qq.com', '11111111111', 0, NULL, 23, 2, '111111111111111111');
+INSERT INTO `user` VALUES ('发包_1', 'post_1', 'post_1', '', -1, 'hi.imhpc@000.com', '15906670000', 0, NULL, 22, 1, '330103199810240000');
 
 -- ----------------------------
 -- Table structure for workinfo

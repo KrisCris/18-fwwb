@@ -21,9 +21,9 @@
 
 </head>
 
-<body class="bg-light">
-    <div class="container-fluid" style="margin-top: 5%">
-        <div class="row-fluid bg-light" id="main">
+<body class="bg-light" style="background-image: url(../../image/crossword.png)">
+    <div class="container-fluid" style="margin-top: 7%">
+        <div class="row-fluid" id="main">
             <div class="col-md-4  offset-md-4">
                 <div class="col-md-8 offset-md-2 ">
 
@@ -139,6 +139,7 @@
     </div>
 </body>
 <script src="../../javascript/camera.js"></script>
+<script src="../../resource/swal2/sweetalert2.all.js"></script>
 <script src="../../resource/vue/vue.js"></script>
 <script src="../../resource/jquery/jquery.js"></script>
 <script>
@@ -179,11 +180,22 @@
             usernameCls: "form-control",
         },
         created() {
+            swal({
+                    title: "Loading...",
+                    width: 250,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    showConfirmButton: false,
+                    onOpen: () => { swal.showLoading() }
+                });
             var that = this;
             // get company names for selector
             $.post("../../php/login/getCompany.php").done((data) => {
                 data = JSON.parse(data);
                 that.options = data;
+                swal.close();
             });
 
         },
@@ -249,6 +261,17 @@
                     this.stateColor = "alert alert-danger";
                 }
                 else {
+                    swal({
+                    title: "Loading...",
+                    width: 250,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    showConfirmButton: false,
+                    onOpen: () => { swal.showLoading() }
+                });
+
                     var that = this;
                     $.post("../../php/login/isDuplicated.php", {
                         phone: that.phone,
@@ -260,6 +283,7 @@
                         //     id:0,
                         //     mail:0
                         // }
+                        swal.close();
                         if (data.id == 1) {
                             that.notify = '该身份已注册！';
                             that.stateColor = "alert alert-danger";
