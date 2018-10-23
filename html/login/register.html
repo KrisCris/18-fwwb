@@ -181,15 +181,15 @@
         },
         created() {
             swal({
-                    title: "Loading...",
-                    width: 250,
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    allowEnterKey: false,
-                    showConfirmButton: false,
-                    onOpen: () => { swal.showLoading() }
-                });
+                title: "Loading...",
+                width: 250,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                showConfirmButton: false,
+                onOpen: () => { swal.showLoading() }
+            });
             var that = this;
             // get company names for selector
             $.post("../../php/login/getCompany.php").done((data) => {
@@ -217,7 +217,7 @@
                     }).done((data) => {
                         data = JSON.parse(data);
                         if (data.code == 1) {
-                            window.location.href="login.html"
+                            window.location.href = "login.html"
                             // let timerInterval
                             // swal({
                             // position: 'center',
@@ -245,7 +245,7 @@
                             //   }
                             // })
                         }
-                        else if(data.code == 0) console.log("用户名重复");
+                        else if (data.code == 0) console.log("用户名重复");
                     })
                 }
                 else {
@@ -262,15 +262,15 @@
                 }
                 else {
                     swal({
-                    title: "Loading...",
-                    width: 250,
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    allowEnterKey: false,
-                    showConfirmButton: false,
-                    onOpen: () => { swal.showLoading() }
-                });
+                        title: "Loading...",
+                        width: 250,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                        showConfirmButton: false,
+                        onOpen: () => { swal.showLoading() }
+                    });
 
                     var that = this;
                     $.post("../../php/login/isDuplicated.php", {

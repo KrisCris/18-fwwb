@@ -2,22 +2,22 @@
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
 
-  <script src="../../resource/vue/vue.js"></script>
-  <script src="../../resource/jquery/jquery.js"></script>
-  <script src="../../resource/bootstrap/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.min.css">
-  <title>注册审核</title>
+    <script src="../../resource/vue/vue.js"></script>
+    <script src="../../resource/jquery/jquery.js"></script>
+    <script src="../../resource/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.min.css">
+    <title>注册审核</title>
 
 </head>
 <!-- 还有各个选卡之间的切换效果未完成 -->
 <!-- 还想做一个徽章，需要的话可能要改下fetch的php,而且还可以和提示框互动 -->
 
 <body style="background-image: url(../../image/papper.png)">
-    <div id="main" class="container" >
+    <div id="main" class="container">
         <!-- navigation_bar -->
         <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
             <a class="navbar-brand" href="#">CrowdSourcing</a>
@@ -26,9 +26,6 @@
             </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html"><i class="fa fa-user-circle"></i>个人信息</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="fa fa-check-square-o"></i>注册审核</a>
                     </li>
@@ -43,19 +40,21 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa fa-suitcase"></i>公司管理</a>
+                        <a class="nav-link" href="company.html"><i class="fa fa-suitcase"></i>公司管理</a>
                     </li>
-                    <!-- <img src="http://static.runoob.com/images/mix/cinqueterre.jpg" class="rounded-circle" alt="Cinque Terre"
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="fa fa-user-circle"></i>个人信息</a>
+                    </li>
+                    <img src="http://static.runoob.com/images/mix/cinqueterre.jpg" class="rounded-circle" alt="Cinque Terre"
                         style="width:40px; height:40px;">
-                    <h3>welcome <span>{{name}}</span></h3>
                     <li class="nav-item ">
                         <a class="nav-link" href="#">[注销账号]</a>
-                    </li> -->
+                    </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-8">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                  </form>
+                </form>
             </div>
         </nav>
 
@@ -92,16 +91,14 @@
                                         <td>{{person.mail}}</td>
                                         <td>{{person.companyName}}</td>
                                         <td>
-                                            <div class="d-flex">
                                                 <!-- small button with the click event reload the page  -->
                                                 <button class="btn btn-danger btn-sm flex-fill" @click='refuse(person.id)'><i
-                                                        class="fa fa-user-plus"></i>拒绝</button>
+                                                    class="fa fa-user-times"></i>拒绝</button>
                                                 <button class="btn btn-success btn-sm flex-fill" @click='verified(person.id)'><i
-                                                        class="fa fa-user-times"></i>通过</button>
+                                                        class="fa fa-user-plus"></i>通过</button>
                                                 <!-- 不行就先改回来，之前这两个还是可以用的 -->
                                                 <!-- <input type="button" value="通过" @click='verified(person.id)'> -->
                                                 <!-- <input type="button" value="拒绝" @click='refuse(person.id)'> -->
-                                            </div>
                                         </td>
                                     </tr>
                                 </div>
@@ -117,57 +114,57 @@
     </div>
 </body>
 <script>
-  // 创建一个新的 Vue 实例
-  var main = new Vue({
-    // DOM 元素，挂载视图模型
-    el: '#main',
-    // 定义属性，并设置初始值
-    data: {
-      info: [],
-      badgeIndex: '',
-    },
+    // 创建一个新的 Vue 实例
+    var main = new Vue({
+        // DOM 元素，挂载视图模型
+        el: '#main',
+        // 定义属性，并设置初始值
+        data: {
+            info: [],
+            badgeIndex: '',
+        },
 
 
-    created() {
-      var that = this;
-      $.post("../../php/admin/fetchUncensored.php", {}).done((data) => {
-        data = JSON.parse(data);
-        data.forEach(user => {
-          that.info.push(user);
-        });
-      })
+        created() {
+            var that = this;
+            $.post("../../php/admin/fetchUncensored.php", {}).done((data) => {
+                data = JSON.parse(data);
+                data.forEach(user => {
+                    that.info.push(user);
+                });
+            })
 
-    },
+        },
 
-    // 点击菜单使用的函数
-    methods: {
-      //审核是否通过
-      verified: function (id) {
-        var that = this;
-        $.post("../../php/admin/verify.php", {
-          personId: id,
-          hasPass: true,
-        }).done((data) => {
-          data = JSON.parse(data);
-          data.forEach(user => {
-            that.info.push(user);
-          });
-        })
-      },
-      refuse: function (id) {
-        var that = this;
-        $.post("../../php/admin/verify.php", {
-          personId: id,
-          hasPass: false,
-        }).done((data) => {
-          data = JSON.parse(data);
-          data.forEach(user => {
-            that.info.push(user);
-          });
-        })
-      },
-    }
-  })
+        // 点击菜单使用的函数
+        methods: {
+            //审核是否通过
+            verified: function (id) {
+                var that = this;
+                $.post("../../php/admin/verify.php", {
+                    personId: id,
+                    hasPass: true,
+                }).done((data) => {
+                    data = JSON.parse(data);
+                    data.forEach(user => {
+                        that.info.push(user);
+                    });
+                })
+            },
+            refuse: function (id) {
+                var that = this;
+                $.post("../../php/admin/verify.php", {
+                    personId: id,
+                    hasPass: false,
+                }).done((data) => {
+                    data = JSON.parse(data);
+                    data.forEach(user => {
+                        that.info.push(user);
+                    });
+                })
+            },
+        }
+    })
 </script>
 
 </html>
