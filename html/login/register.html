@@ -142,6 +142,8 @@
 <script src="../../resource/swal2/sweetalert2.all.js"></script>
 <script src="../../resource/vue/vue.js"></script>
 <script src="../../resource/jquery/jquery.js"></script>
+<script src="../../resource/bootstrap/js/bootstrap.js"></script>
+<script src="../../resource/jquery/jquery.cookie.js"></script>
 <script>
     let app = new Vue({
         el: "#main",
@@ -181,15 +183,14 @@
         },
         created() {
             swal({
-                title: "Loading...",
-                width: 250,
-                showConfirmButton: false,
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                allowEnterKey: false,
-                showConfirmButton: false,
-                onOpen: () => { swal.showLoading() }
-            });
+                    title: "Loading...",
+                    width: 250,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    showConfirmButton: false,
+                    onOpen: () => { swal.showLoading() }
+                });
             var that = this;
             // get company names for selector
             $.post("../../php/login/getCompany.php").done((data) => {

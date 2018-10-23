@@ -194,8 +194,8 @@
                             // }
                             swal.close();
                             if (data.code == 1) {
-                                $.cookie('group', data.data.group, { expires: 3600, secure: false, path: '/' });//group=null,管理员；group=1,发包；group=2,接包
-                                $.cookie('uuid', data.data.token, { expires: 3600, secure: false, path: '/' });
+                                $.cookie('group', data.data.group, { expires: 1, secure: false, path: '/' });//group=null,管理员；group=1,发包；group=2,接包
+                                $.cookie('uuid', data.data.token, { expires: 1, secure: false, path: '/' });
                                 switch (data.data.group) {
                                     case null: window.location.href = "../admin/index.html";
                                         break;
