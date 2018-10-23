@@ -129,9 +129,10 @@
             var that = this;
             $.post("../../php/admin/fetchUncensored.php", {}).done((data) => {
                 data = JSON.parse(data);
-                data.forEach(user => {
-                    that.info.push(user);
-                });
+                that.info = data;
+                // data.forEach(user => {
+                //     that.info.push(user);
+                // });
             })
 
         },

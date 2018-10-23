@@ -2,52 +2,145 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
     <title>外包公司</title>
 </head>
 
-<body  style="background-image: url(../../image/papper.png)">
+<body style="background-image: url(../../image/papper.png)">
     <div id="main" class="container ">
         <!-- navigation_bar -->
-        <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-5 mt-3 rounded sticky-top">
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
             <a class="navbar-brand" href="#">CrowdSourcing</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <div class="collapse navbar-collapse clearfix" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="censor.html">注册审核</a>
+                        <a class="nav-link" href="censor.html"><i class="fa fa-check-square-o">&nbsp;</i>注册审核</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-id-card-o"></i>
                             人员管理
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="publisherManage.html">发包人员管理</a>
-                            <a class="dropdown-item" href="receiverManage.html">接包人员管理</a>
+                            <a class="dropdown-item" href="publisherManage.html"><i class="fa fa-send">&nbsp;</i>发包人员管理</a>
+                            <a class="dropdown-item" href="receiverManage.html"><i class="fa fa-coffee">&nbsp;</i>接包人员管理</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="company.html">公司管理</a>
+                        <a class="nav-link" href="#"><i class="fa fa-building-o">&nbsp;</i>公司管理</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">个人信息</a>
+                        <a class="nav-link" href="index.html"><i class="fa fa-user-circle">&nbsp;</i>个人信息</a>
                     </li>
                 </ul>
             </div>
+            <div class="float-right">
+                <!-- <a class="text-muted" href="#">[注销账号]</a> -->
+                <img src="http://static.runoob.com/images/mix/img_avatar.png" class="rounded-circle" alt="Cinque Terre"
+                    style="width:40px; height:40px;"><span>&nbsp;</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary">注销</button>
+
+            </div>
         </nav>
         <!-- content -->
-        
+        <div class="row">
+            <div class="col">
+                <div class="card rounded shadow">
+                    <div class="card-body">
+                        <h4 class="card-title">公司列表</h4>
+                        <table class="table table-hover text-center">
+                            <thead>
+                                <tr>
+                                    <th style="width:20%">公司名称</th>
+                                    <th style="width:20%">注册时间</th>
+                                    <th style="width:20%">地址</th>
+                                    <th style="width:20%">负责人</th>
+                                    <th style="width:20%">联系方式</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="company in companies">
+                                    <td v-text="company.companyName"></td>
+                                    <td v-text="company.regDate"></td>
+                                    <td v-text="company.address"></td>
+                                    <td v-text="company.responsiblePerson"></td>
+                                    <td v-text="company.contact"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-
+        <p>{{uuid}}</p>
+        <p>{{group}}</p>
     </div>
 </body>
+<script src="../../javascript/camera.js"></script>
+<script src="../../resource/swal2/sweetalert2.all.js"></script>
 <script src="../../resource/vue/vue.js"></script>
 <script src="../../resource/jquery/jquery.js"></script>
-<script src="../../resource/bootstrap/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.min.css">
+<script src="../../resource/bootstrap/js/bootstrap.js"></script>
+<script src="../../resource/jquery/jquery.cookie.js"></script>
+<script>
+    var app = new Vue({
+        el:"#main",
+        data:{
+            companies:[],
+            //cookies
+            group:"",
+            uuid:"",
+        },
+        created(){
+            this.group = $.cookie('group');
+            this.uuid = $.cookie('uuid');
+            var that = this;
+            $.post("../../php/checkState.php", {
+                uuid: $.cookie('group'),
+                group: $.cookie('uuid'),
+            }).done((data) => {
+                //name
+                //code:表里有这个token，1；没有0
+                // swal.close();
+                if (data.code == 0) {
+                    let timerInterval
+                    swal({
+                        title: '请登录',
+                        html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+                        timer: 7000,
+                        onOpen: () => {
+                            swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                swal.getContent().querySelector('strong')
+                                    .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                            }, 1000)
+                        },
+                        onClose: () => {
+                            clearInterval(timerInterval)
+                        }
+                    }).then(() => {
+                        window.location.href = "../login/login.html";
+                    })
+                }
+                else{
+                    console.log("aaaaaaaaaaaaaaaaa!!!!!!!!");
+                }
+            });
 
+            $.post("../../php/admin/fetchCompany.php").done((data)=>{
+                that.companies = data;
+            });
+        },
+        methods:{
+            
+        },
+    })
+</script>
 </html>

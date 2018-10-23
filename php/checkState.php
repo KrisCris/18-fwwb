@@ -14,6 +14,6 @@
 
   $code=empty($data)?0:1;
 
-  echo json_encode($code);
+  echo json_encode(["code"=>$code]);
 
 ?>
