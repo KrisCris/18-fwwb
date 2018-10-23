@@ -9,7 +9,7 @@
     <title>外包公司管理</title>
 </head>
 
-<body>
+<body style="background-image: url(../../image/papper.png)">
     <div id="main" class="container ">
         <!-- navigation_bar -->
         <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-5 mt-3 rounded sticky-top">
@@ -23,7 +23,8 @@
                         <a class="nav-link" href="censor.html">注册审核</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
                             人员管理
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
@@ -41,29 +42,155 @@
             </div>
         </nav>
         <!-- content -->
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card shadow mb-3">
+                    <img class="card-img-top" src="http://static.runoob.com/images/mix/img_avatar.png" alt="Card image"
+                        style="width:100%">
+                    <div class="card-body">
+                        <h4 class="card-title text-center" v-text="name"></h4>
+                        <p class="card-text">Some example information.</p>
+                        <a href="#" class="btn btn-primary">See Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="card shadow">
+                            <img class="card-img-top" alt="">
+                            <div class="card-body">
+                                <h4 class="card-title">待办事项</h4>
+                                <div class="row">
+                                    <div class="col-lg-3 card  border-top-0 border-left-0 border-bottom-0">
+                                        <br>
+                                        <p v-text="censorNum" style="font-size: 25px;" class=" text-center font-weight-bold text-primary"></p>
+                                        <p class="text-center">待审核</p>
+                                    </div>
+                                    <div class="col-lg-3 card border-top-0 border-left-0 border-bottom-0">
+                                        <br>
+                                        <p style="font-size: 25px; " class=" text-center font-weight-bold text-primary">13</p>
+                                        <p class="text-center">待xxxx</p>
+                                    </div>
+                                    <div class="col-lg-3 card border-top-0 border-left-0 border-bottom-0">
+                                        <br>
+                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-primary">2</p>
+                                        <p class="text-center">待xxxx</p>
+                                    </div>
+                                    <div class="col-lg-3 card border-0">
+                                        <br>
+                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-primary">8</p>
+                                        <p class="text-center">待xxxx</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                </div>
+
+                <div class="row  mb-3">
+                    <div class="col">
+                        <div class="card shadow">
+                            <img class="card-img-top" alt="">
+                            <div class="card-body">
+                                <h4 class="card-title">??????</h4>
+                                <div class="row">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card shadow ">
+                    <img class="card-img-top" src="" alt="">
+                    <div class="card-body">
+                        <h4 class="card-title">Title</h4>
+                        <p class="card-text">Body</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+<p>{{uuid}}</p>
+<p>{{group}}</p>
 
 
     </div>
 </body>
+<script src="../../javascript/camera.js"></script>
+<script src="../../resource/swal2/sweetalert2.all.js"></script>
 <script src="../../resource/vue/vue.js"></script>
 <script src="../../resource/jquery/jquery.js"></script>
 <script src="../../resource/bootstrap/js/bootstrap.js"></script>
 <script src="../../resource/jquery/jquery.cookie.js"></script>
 <script>
     var app = new Vue({
-        el:"#main",
-        data:{
+        el: "#main",
+        data: {
+            censorNum: 0,
             //userInfo
-            group:"",
-            uuid:"",
+            name: "Test",
+            group: "",
+            uuid: "",
 
         },
-        created: function(){
-            this.group=$.cookie('group');
-            this.uuid=$.cookie('uuid');
+        created: function () {
+            this.group = $.cookie('group');
+            this.uuid = $.cookie('uuid');
+            var that = this;
+            swal({
+                title: "载入中",
+                width: 250,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                onOpen: () => { swal.showLoading() }
+            });
+            $.post("../../php/checkState.php", {
+                uuid: that.uuid,
+                group: that.group,
+            }).done((data) => {
+                //name
+                //code:表里有这个token，1；没有0
+                swal.close();
+                if (data.code == 0) {
+                    let timerInterval
+                    swal({
+                        title: '请登录',
+                        html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+                        timer: 7000,
+                        onOpen: () => {
+                            swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                swal.getContent().querySelector('strong')
+                                    .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                            }, 1000)
+                        },
+                        onClose: () => {
+                            clearInterval(timerInterval)
+                        }
+                    }).then(() => {
+                        window.location.href="../login/login.html";
+                    })
+                }
+                else{
+                    that.name = data.name;
+                }
+
+
+                
+
+            });
         },
-        methods:{
+        methods: {
 
         }
     })
@@ -71,4 +198,5 @@
 
 
 </html>
+
 </html>
