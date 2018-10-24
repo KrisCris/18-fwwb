@@ -91,56 +91,76 @@
 <script src="../../resource/jquery/jquery.cookie.js"></script>
 <script>
     var app = new Vue({
-        el:"#main",
-        data:{
-            companies:[],
+        el: "#main",
+        data: {
+            companies: [],
             //cookies
-            group:"",
-            uuid:"",
+            group: 0,
+            uuid: 0,
         },
-        created(){
+        created() {
             this.group = $.cookie('group');
-            this.uuid = $.cookie('uuid');
-            var that = this;
-            $.post("../../php/checkState.php", {
-                uuid: $.cookie('group'),
-                group: $.cookie('uuid'),
-            }).done((data) => {
-                //name
-                //code:表里有这个token，1；没有0
-                // swal.close();
-                if (data.code == 0) {
-                    let timerInterval
-                    swal({
-                        title: '请登录',
-                        html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
-                        timer: 7000,
-                        onOpen: () => {
-                            swal.showLoading()
-                            timerInterval = setInterval(() => {
-                                swal.getContent().querySelector('strong')
-                                    .textContent = parseInt((swal.getTimerLeft()) / 1000)
-                            }, 1000)
-                        },
-                        onClose: () => {
-                            clearInterval(timerInterval)
-                        }
-                    }).then(() => {
-                        window.location.href = "../login/login.html";
-                    })
-                }
-                else{
-                    console.log("aaaaaaaaaaaaaaaaa!!!!!!!!");
-                }
-            });
+            if ($.cookie('uuid') == null) {
+                let timerInterval
+                swal({
+                    title: '请登录',
+                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                    timer: 5000,
+                    onOpen: () => {
+                        swal.showLoading()
+                        // timerInterval = setInterval(() => {
+                        //     swal.getContent().querySelector('strong')
+                        //         .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                        // }, 1000)
+                    },
+                    onClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then(() => {
+                    window.location.href = "../login/login.html";
+                })
+            }
+            else {
+                this.uuid = $.cookie('uuid');
+                var that = this;
+                $.post("../../php/checkState.php", {
+                    uuid: that.uuid,
+                    group: "admin",
+                }).done((data) => {
+                    //name
+                    //code:表里有这个token，1；没有0
+                    // swal.close();
+                    data = JSON.parse(data);
+                    if (data.code == 0) {
+                        let timerInterval
+                        swal({
+                            title: '请登录',
+                            html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                            timer: 7000,
+                            onOpen: () => {
+                                swal.showLoading()
+                                // timerInterval = setInterval(() => {
+                                //     swal.getContent().querySelector('strong')
+                                //         .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                                // }, 1000)
+                            },
+                            onClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then(() => {
+                            window.location.href = "../login/login.html";
+                        })
+                    }
+                });
 
-            $.post("../../php/admin/fetchCompany.php").done((data)=>{
-                that.companies = data;
-            });
-        },
-        methods:{
-            
-        },
-    })
+                $.post("../../php/admin/fetchCompany.php").done((data) => {
+                    that.companies = data;
+                });
+            },
+            methods: {
+
+            },
+        })
 </script>
+
 </html>

@@ -5,7 +5,7 @@
   $group=$_POST["group"];
   $code;
 
-  if($group==null){
+  if($group=="admin"){
     $data=get("administrator","token",$uuid);
   }
   else{
