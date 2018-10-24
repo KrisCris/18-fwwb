@@ -4,7 +4,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <link href="https://cdn.bootcss.com/limonte-sweetalert2/7.28.5/sweetalert2.css" rel="stylesheet">
     <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
 
@@ -158,27 +157,14 @@
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: '确定删除！',
-                    cancelButtonText: '取消删除！',
-                    confirmButtonClass: 'btn btn-success',
-                    cancelButtonClass: 'btn btn-danger',
-                    buttonsStyling: false
                 }).then(function () {
                     swal(
-                        '已删除！',
+                        '删除！',
                         '你的文件已经被删除。',
                         'success'
                     );
-                }, function (dismiss) {
-                    // dismiss的值可以是'cancel', 'overlay',
-                    // 'close', 'timer'
-                    if (dismiss === '') {
-                        swal(
-                            '已取消！',
-                            '你的虚拟文件是安全的:)',
-                            'error'
-                        );
-                    }
                 })
+
             }
         }
     })

@@ -27,7 +27,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-id-card-o">&nbsp;</i>
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-id-card-o"></i>
                             人员管理
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
@@ -59,10 +59,10 @@
         <!-- content -->
         <div class="container-fluid shadow bg-light" style="padding: 0px; margin: 0px;">
             <!-- card -->
-            <div class="card bg-muted" style="height: 600px ;">
+            <div class="card bg-muted clearfix" style="height: 600px ;">
                 <div class="card-header">
-                    <button class="btn btn-danger btn-sm flex-fill" @click='refuse(person.id)'><i class="fa fa-user-times">&nbsp;</i>拒绝</button>
-                    <button class="btn btn-success btn-sm flex-fill" @click='verified(person.id)'><i class="fa fa-user-plus">&nbsp;</i>通过</button>
+                    <button class="btn btn-danger btn-sm flex-fill float-right  mr-2" @click='refuse(person.id)'><i class="fa fa-user-times">&nbsp;</i>拒绝</button>
+                    <button class="btn btn-success btn-sm flex-fill float-right mr-2" @click='verified(person.id)'><i class="fa fa-user-plus">&nbsp;</i>通过</button>
                 </div>
                 <div class="card-body" style="padding: 0px; margin: 0px;">
                     <!-- different views in unique size window -->
