@@ -28,7 +28,7 @@ else if(!empty($data_admin)){
         $data_admin[0]['token']=substr(md5(mt_rand(0,1000)),5,16).time();
         set("administrator","username",$username,[["token",$data_admin[0]['token']]]); 
         $datamsg=array(
-            "group"=>null,
+            "group"=>"admin",
             "token"=>$data_admin[0]['token']
         );
     }
