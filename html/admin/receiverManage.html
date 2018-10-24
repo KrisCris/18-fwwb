@@ -3,18 +3,16 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8" />
-    <script src="../../resource/vue/vue.js"></script>
-    <script src="../../resource/jquery/jquery.js"></script>
-    <script src="../../resource/bootstrap/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.min.css">
+    <meta charset="utf-8">
+    <link href="https://cdn.bootcss.com/limonte-sweetalert2/7.28.5/sweetalert2.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
+
     <title>接包人员管理</title>
 </head>
 
 <body style="background-image: url(../../image/papper.png)">
     <div id="main" class="container">
-        <!-- navigation_bar -->
         <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
             <a class="navbar-brand" href="#">CrowdSourcing</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -23,7 +21,7 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="censor.html"><i class="fa fa-check-square-o"></i>注册审核</a>
+                        <a class="nav-link" href="censor.html"><i class="fa fa-check-square-o m">&nbsp;</i>注册审核</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -31,103 +29,159 @@
                             人员管理
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="publisherManage.html"><i class="fa fa-send"></i>发包人员管理</a>
-                            <a class="dropdown-item" href="#"><i class="fa fa-coffee"></i>接包人员管理</a>
+                            <a class="dropdown-item" href="publisherManage.html"><i class="fa fa-send">&nbsp;</i>发包人员管理</a>
+                            <a class="dropdown-item" href="#"><i class="fa fa-coffee">&nbsp;</i>接包人员管理</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="company.html"><i class="fa fa-suitcase"></i>公司管理</a>
+                        <a class="nav-link" href="company.html"><i class="fa fa-building-o">&nbsp;</i>公司管理</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html"><i class="fa fa-user-circle"></i>个人信息</a>
+                        <a class="nav-link" href="index.html"><i class="fa fa-user-circle">&nbsp;</i>个人信息</a>
                     </li>
-                    <img src="http://static.runoob.com/images/mix/cinqueterre.jpg" class="rounded-circle" alt="Cinque Terre"
-                        style="width:40px; height:40px;">
-                    <li class="nav-item ">
-                        <a class="nav-link" href="#">[注销账号]</a>
-                    </li>
+
                 </ul>
-                <form class="form-inline my-2 my-lg-8">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
+            </div>
+            <div class="float-right">
+                <!-- <a class="text-muted" href="#">[注销账号]</a> -->
+                <img src="http://static.runoob.com/images/mix/img_avatar.png" class="rounded-circle" alt="Cinque Terre"
+                    style="width:40px; height:40px;"><span>&nbsp;</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;"><i class="fa fa-power-off">&nbsp;</i>注销</button>
             </div>
         </nav>
-
+        <h3>接包人员管理</h3>
         <!-- content -->
         <div class="container-fluid shadow bg-light" style="padding: 0px; margin: 0px;">
             <!-- card -->
-            <div class="card bg-muted" style="height: 657px ;">
-                    <div class="card-header">
-                            <form style="padding:0px;margin:0px">
-                                <div class="custom-control  custom-control-inline">
-                                    <h3>接包人员管理</h3>
-                                </div>
-                                <button class="btn btn-success btn-sm" @click='new'><i class="fa fa-user-plus"></i>新增人员</button>
-                            </form>
-                        </div>
-                <div class="card-body" style="padding: 0px; margin: 0px; ">
-                    <!-- different views in unique size window -->
-                    <div class="table-responsive">
+            <div class="card bg-muted" style="height: 657px;">
+                <div class="card-header clearfix">
+                    <div v-if="visual">
+                        <button class="btn btn-danger btn-sm float-left mr-2" @click="add"><i class="fa fa-times-circle">&nbsp;</i>取消</button>
+                        <button class="btn btn-success btn-sm float-left mr-2" @click="confirm"><i class="fa fa-user-plus">&nbsp;</i>通过</button>
+                    </div>
+                    <div v-else>
+                        <button class="btn btn-success btn-sm float-left mr-2" @click="add"><i class="fa fa-user-plus">&nbsp;</i>新增人员</button>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary btn-sm float-left mr-2" @click="remove"><i class="fa fa-user-times">&nbsp;</i>移除</button>
+                    </div>
+                </div>
 
+                <div class="card-body" style="padding: 0px; margin: 0px;">
+                    <!-- different views in unique size window -->
+                    <div class="table-responsive rounded">
                         <div class="text-center">
                             <!-- dark table + hover effect + grey hover + set border + small table -->
-                            <table class="table table-dark table-hover table-striped table-bordered table-sm ">
-                                <div>
-                                    <thead>
-                                        <tr>
-                                            <th>用户名</th>
-                                            <th>姓名</th>
-                                            <th>手机</th>
-                                            <th>邮箱</th>
-                                            <th>隶属公司</th>
-                                            <th>修改</th>
-                                        </tr>
-                                    </thead>
-                                </div>
-
-                                <!-- add a new publisher by administrator -->
-                                <div>
-                                    <tr v-if="visual">
-                                        <td><input type="text" class="form-control" placeholder="Name"></td>
-                                        <td><input type="text" class="form-control" placeholder="Username"></td>
-                                        <td><input type="text" class="form-control" placeholder="PhoneNumber"></td>
-                                        <td><input type="text" class="form-control" placeholder="E-mail"></td>
-                                        <td><select class="custom-select-sm">
-                                                <option selected value=0>请选择公司</option>
-                                                <option v-for="option in options" v-bind:value="option.id">
-                                                    {{ option.companyName }}
-                                                </option>
-                                            </select></td>
-                                        <td><button class="btn btn-primary btn-sm flex-fill" @click='verified(person.id)'><i
-                                                    class="fa fa-user-plus"></i>通过</button></td>
+                            <table class="table table-hover table-striped table-sm ">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="form-check-input" value="" style="width: 10%">全选</th>
+                                        <th style="width:18%;">用户名</th>
+                                        <th style="width:18%;">姓名</th>
+                                        <th style="width:18%;">手机</th>
+                                        <th style="width:18%;">邮箱</th>
+                                        <th style="width:18%;">公司</th>
                                     </tr>
-                                </div>
-                                <div>
+                                </thead>
+                                <!-- add a new publisher by administrator -->
+                                <tbody>
+                                    <tr v-if="visual" class="clearfix">
+                                        <td class="input-group-sm"><input type="checkbox" class="form-check-input"
+                                                value=""></td>
+                                        <td class="input-group-sm"><input type="text" class="form-control mx-auto"
+                                                placeholder="Name" style="border: 0px;width: 80%;text-align:center"></td>
+                                        <td class="input-group-sm"><input type="text" class="form-control mx-auto"
+                                                placeholder="Username" style="border: 0px;width: 80%;text-align:center"></td>
+                                        <td class="input-group-sm"><input type="text" class="form-control mx-auto"
+                                                placeholder="PhoneNumber" style="border: 0px;width: 80%;text-align:center"></td>
+                                        <td class="input-group-sm"><input type="text" class="form-control mx-auto"
+                                                placeholder="E-mail" style="border: 0px;width: 80%;text-align:center"></td>
+                                        <td>
+                                            <select class="custom-select-sm">
+                                                <option>请选择公司</option>
+                                        </td>
+
+                                    </tr>
                                     <tr v-for="person in info">
+                                        <td><input type="checkbox" class="form-check-input" value=""></td>
                                         <td>{{person.name}}</td>
                                         <td>{{person.username}}</td>
                                         <td>{{person.phone}}</td>
                                         <td>{{person.mail}}</td>
-                                        <td>{{person.companyName}}</td>
-                                        <td>
-                                            <!-- small button with the click event reload the page  -->
-                                            <button class="btn btn-danger btn-sm flex-fill" @click='refuse(person.id)'><i
-                                                    class="fa fa-user-times"></i>删除</button>
-
-                                        </td>
                                     </tr>
-                                </div>
+                                </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
     </div>
 </body>
+<script src="../../resource/swal2/sweetalert2.all.js"></script>
+<script src="../../resource/vue/vue.js"></script>
+<script src="../../resource/jquery/jquery.js"></script>
+<script src="../../resource/bootstrap/js/bootstrap.js"></script>
+<script>
+    var main = new Vue({
+        el: '#main',
+        data: {
+            info: [],
+            visual: false,
+        },
+        created() {
+            var that = this;
+            $.post("../../php/admin/fetchPublisher.php", {}).done((data) => {
+                data = JSON.parse(data);
+                that.info = data;
+            })
+
+        },
+        methods: {
+            add: function () {
+                this.visual = !this.visual;
+            },
+            confirm: function () {
+                this.visual = false;
+                swal(
+                    '添加成功',
+                    '点击OK继续',
+                    'success'
+                )
+            },
+            remove: function () {
+                swal({
+                    title: '确定删除吗？',
+                    text: '你将无法恢复它！',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '确定删除！',
+                    cancelButtonText: '取消删除！',
+                    confirmButtonClass: 'btn btn-success',
+                    cancelButtonClass: 'btn btn-danger',
+                    buttonsStyling: false
+                }).then(function () {
+                    swal(
+                        '已删除！',
+                        '你的文件已经被删除。',
+                        'success'
+                    );
+                }, function (dismiss) {
+                    // dismiss的值可以是'cancel', 'overlay',
+                    // 'close', 'timer'
+                    if (dismiss === '') {
+                        swal(
+                            '已取消！',
+                            '你的虚拟文件是安全的:)',
+                            'error'
+                        );
+                    }
+                })
+            }
+        }
+    })
+</script>
 
 </html>
