@@ -65,6 +65,13 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <!-- <tr v-if="seen">
+                                    <td><input type="text" class="form-control" placeholder="" v-model="companyName"></td>
+                                    <td><input type="text" class="form-control" placeholder="" v-model="regDate"></td>
+                                    <td><input type="text" class="form-control" placeholder="" v-model="address"></td>
+                                    <td><input type="text" class="form-control" placeholder="" v-model="responsiblePerson"></td>
+                                    <td><input type="text" class="form-control" placeholder="" v-model="contact"></td>
+                                </tr> -->
                                 <tr v-for="company in companies">
                                     <td v-text="company.companyName"></td>
                                     <td v-text="company.regDate"></td>
@@ -94,9 +101,16 @@
         el: "#main",
         data: {
             companies: [],
+            // seen = false,
             //cookies
             group: 0,
             uuid: 0,
+            //add
+            companyName:"",
+            address:"",
+            contact:"",
+            regDate:"",
+            responsiblePerson:"",
         },
         created() {
             this.group = $.cookie('group');
@@ -152,15 +166,17 @@
                         })
                     }
                 });
-
-                $.post("../../php/admin/fetchCompany.php").done((data) => {
+                $.post("../../php/fetchCompany.php").done((data) => {
+                    data = JSON.parse(data);
                     that.companies = data;
                 });
-            },
-            methods: {
+            }
+        },
 
-            },
-        })
+        methods: {
+
+        },
+    })
 </script>
 
 </html>

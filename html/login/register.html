@@ -193,7 +193,7 @@
                 });
             var that = this;
             // get company names for selector
-            $.post("../../php/login/getCompany.php").done((data) => {
+            $.post("../../php/fetchCompany.php").done((data) => {
                 data = JSON.parse(data);
                 that.options = data;
                 swal.close();
