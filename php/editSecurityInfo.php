@@ -26,9 +26,8 @@
   else{
     $data=get("user","token",$uuid);
     $exist=(!empty($data))?1:0;
-    if($exist){
-        $hasgroup=($data[0]["userGroup"]==$group)?1:0;                            //第二级多查一遍group
-        if($hasgroup&&$data[0]["password"]==$password){
+    if($exist){                           
+        if($data[0]["password"]==$password){
             set("user", "token", $uuid,[[$type,$newPassword]]);
             $code=1;
         }

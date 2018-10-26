@@ -24,7 +24,7 @@
 
   else{
     $data=get("user","token",$uuid);
-    if(!empty($data)&&$data[0]["userGroup"]==$group){       //第二级多查一下组别是否正常
+    if(!empty($data)){       //第二级多查一下组别是否正常
         $img=$data[0]["facialData"];
         $name=$data[0]["name"];
         $username=$data[0]["username"];
