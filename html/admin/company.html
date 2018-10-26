@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
-    <title>外包公司</title>
+    <title>外包公司管理</title>
 </head>
 
 <body style="background-image: url(../../image/papper.png)">
@@ -42,10 +42,10 @@
             </div>
             <div class="float-right">
                 <!-- <a class="text-muted" href="#">[注销账号]</a> -->
-                <img src="http://static.runoob.com/images/mix/img_avatar.png" class="rounded-circle" alt="Cinque Terre"
-                    style="width:40px; height:40px;"><span>&nbsp;</span>
-                <button type="button" class="btn btn-sm btn-outline-secondary"style="border: 0;"><i class="fa fa-power-off">&nbsp;</i>注销</button>
-
+                <a href="index.html"><img src="http://static.runoob.com/images/mix/img_avatar.png" class="rounded-circle"
+                        alt="Cinque Terre" style="width:40px; height:40px;"><span>&nbsp;</span></a>
+                <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
+                        class="fa fa-power-off">&nbsp;</i>注销</button>
             </div>
         </nav>
         <!-- content -->
@@ -54,14 +54,15 @@
                 <div class="card rounded shadow">
                     <div class="card-body">
                         <h4 class="card-title">公司列表</h4>
-                        <table class="table table-hover text-center">
+                        <table class="table table-hover ">
                             <thead>
                                 <tr>
-                                    <th style="width:20%">公司名称</th>
-                                    <th style="width:20%">注册时间</th>
-                                    <th style="width:20%">地址</th>
-                                    <th style="width:20%">负责人</th>
-                                    <th style="width:20%">联系方式</th>
+                                    <th><input type="checkbox"></th>
+                                    <th style="width:20%"><i class="fa fa-building-o">&nbsp;</i>公司名称</th>
+                                    <th style="width:20%"><i class="fa fa-calendar">&nbsp;</i>注册时间</th>
+                                    <th style="width:20%"><i class="fa fa-map-marker">&nbsp;</i>地址</th>
+                                    <th style="width:20%"><i class="fa fa-user-o">&nbsp;</i>负责人</th>
+                                    <th style="width:20%"><i class="fa fa-commenting-o">&nbsp;</i>联系方式</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -73,6 +74,7 @@
                                     <td><input type="text" class="form-control" placeholder="" v-model="contact"></td>
                                 </tr> -->
                                 <tr v-for="company in companies">
+                                    <td><input type="checkbox" v-model="companyList"></td>
                                     <td v-text="company.companyName"></td>
                                     <td v-text="company.regDate"></td>
                                     <td v-text="company.address"></td>
@@ -106,11 +108,13 @@
             group: 0,
             uuid: 0,
             //add
-            companyName:"",
-            address:"",
-            contact:"",
-            regDate:"",
-            responsiblePerson:"",
+            companyName: "",
+            address: "",
+            contact: "",
+            regDate: "",
+            responsiblePerson: "",
+            //
+            companyList: [],
         },
         created() {
             this.group = $.cookie('group');
@@ -139,7 +143,7 @@
                 var that = this;
                 $.post("../../php/checkState.php", {
                     uuid: that.uuid,
-                    group: "admin",
+                    group: that.group,
                 }).done((data) => {
                     //name
                     //code:表里有这个token，1；没有0
@@ -174,6 +178,18 @@
         },
 
         methods: {
+            logout: function () {
+                var that = this;
+                $.post("../../php/logout.php", {
+                    uuid : that.uuid,
+                    group : "admin",
+                }).done(() => {
+                    $.cookie("uuid", null,{ expires: 1, secure: false, path: '/' });
+                    $.cookie("group", null,{ expires: 1, secure: false, path: '/' });
+                    window.location.href = "../login/login.html";
+                })
+            },
+
 
         },
     })

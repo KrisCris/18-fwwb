@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
+    <title>修改资料</title>
+</head>
+
+<body style="background-image: url(../../image/papper.png)">
+    <div id="main" class="container ">
+        <div class="row mb-2">
+            <div class="col-md-6 offset-md-3">
+                <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
+                    <a class="navbar-brand" href="#">CrowdSourcing</a>
+                    <div class="collapse navbar-collapse ">
+                        
+                    </div>
+                    <div class="float-right">
+                        <img :src="img" class="rounded-circle" alt="Cinque Terre" style="width:40px; height:40px;"><span>&nbsp;</span>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="window.history.back()"><i
+                                class="fa fa-power-off">&nbsp;</i>返回</button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6 offset-md-3">
+                <div class="row">
+                    <div class="col">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <h4 class="card-title border-bottom pb-3">头像</h4>
+                                <div class="text-center mt-3 mb-3">
+                                    <img class="align-right mr-1" :src="img" style="width:45%; vertical-align: bottom;">
+                                    <img class="align-right mr-1" :src="img" style="width:30%; vertical-align: bottom;">
+                                    <img class="align-right" :src="img" style="width:15%; vertical-align: bottom;">
+                                </div>
+                                <button class="btn btn-primary btn-block" disabled>修改头像</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col">
+                        <div class="card shadow text-left">
+                            <div class="card-body">
+                                <h4 class="card-title border-bottom pb-3">基本</h4>
+                                <div>
+                                    <p v-text="'账号：'+username"></p>
+                                </div>
+                                <div>
+                                    <!-- <p v-text="账号类型：'+this.group"></p> -->
+                                </div>
+                                <div>
+                                    <p v-text="'所属公司：'+company"></p>
+                                </div>
+                                <div>
+                                    <p v-text="'姓名：'+name"></p>
+                                </div>
+                                <div>
+                                    <p v-show="!showPhone" v-text="'手机号：'+phone"></p>
+                                    <div class="input-group mb-3" v-show="showPhone">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-phone"></i>&nbsp;</span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="输入新的手机号" v-model="newPhone">
+                                    </div>
+                                    <button class="btn btn-primary btn-block" v-show="!showPhone" @click="showPhone=!showPhone">修改手机号</button>
+                                    <div class="clearfix">
+                                        <button class="btn btn-secondary float-left" style="width:48%;" v-show="showPhone"
+                                            @click="showPhone=!showPhone">取消</button>
+                                        <button class="btn btn-success float-right" style="width:48%;" v-show=" showPhone"
+                                            @click="edit('phone',newPhone)">确认修改</button>
+                                    </div>
+
+                                </div>
+                                <div class="mt-3">
+                                    <p v-text="'邮箱：'+mail" v-show="!showMail"></p>
+                                    <div class="input-group mb-3" v-show="showMail">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-envelope-o"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="输入新的邮箱" v-model="newMail">
+                                    </div>
+                                    <button class="btn btn-primary btn-block" v-show="!showMail" @click="showMail=!showMail">修改邮箱</button>
+                                    <div class="clearfix">
+                                        <button class="btn btn-secondary float-left" style="width:48%;" v-show="showMail"
+                                            @click="showMail=!showMail">取消</button>
+                                        <button class="btn btn-success float-right" style="width:48%;" v-show="showMail"
+                                            @click="edit('mail',newMail)">确认修改</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4 mb-5">
+                    <div class="col">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <h4 class="card-title border-bottom pb-3">安全</h4>
+                                <div>
+                                    <p class="mb-3">面部信息</p>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div v-if="!showCam" style="line-height:300px;text-align: center;width: 100%; height:250px;background-color: rgb(155, 155, 155); border-radius: 5px">
+                                                <i class="fa fa-camera" style="font-size: 50px;"></i>
+                                            </div>
+                                            <div id="camera" style="border-radius: 5px;background-color: rgb(155, 155, 155);"></div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <button class="btn btn-primary btn-block" disabled>修改面部信息</button>
+                                </div>
+                                <div>
+                                    <p class="mb-3 mt-3 pt-2 border-top">密码</p>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text "><i class="fa fa-key"></i></span>
+                                        </div>
+                                        <input type="password" name="password1" style="display:none" />
+                                        <input v-model="password" type="password" class="form-control" placeholder="请输入原始密码">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text "><i class="fa fa-key"></i></span>
+                                        </div>
+
+                                        <input type="password" name="password1" style="display:none" />
+                                        <input v-model="newPassword" type="password" class="form-control" placeholder="请输入新密码">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-key"></i></span>
+                                        </div>
+
+                                        <input type="password" name="password1" style="display:none" />
+                                        <input v-model="newPassword2" type="password" class="form-control" placeholder="请再次输入密码">
+                                    </div>
+                                    <button class="btn btn-primary btn-block" @click="newPass()">修改密码</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+<script src="../../javascript/camera.js"></script>
+<script src="../../resource/swal2/sweetalert2.all.js"></script>
+<script src="../../resource/vue/vue.js"></script>
+<script src="../../resource/jquery/jquery.js"></script>
+<script src="../../resource/bootstrap/js/bootstrap.js"></script>
+<script src="../../resource/jquery/jquery.cookie.js"></script>
+<script>
+    var app = new Vue({
+        el: "#main",
+        data: {
+            img: "http://static.runoob.com/images/mix/img_avatar.png",
+            username: "hi_imhpc",
+            name: "Chris Wong",
+            group: "发包人员",
+            company: "好大的鱼",
+            phone: "15906670000",
+            mail: "hi.imhpc@outlook.com",
+            password: "",
+            newPassword: "",
+            newPassword2: "",
+            newPhone: "",
+            newMail: "",
+            //cookies
+            cUuid: "",
+            cGroup: "",
+            //visual stuff
+            showPhone: false,
+            showCam: false,
+            showMail: false,
+        },
+        created() {
+            this.cGroup = $.cookie('group');
+            if ($.cookie('uuid') == null) {
+                let timerInterval
+                swal({
+                    title: '请登录',
+                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                    timer: 5000,
+                    onOpen: () => {
+                        swal.showLoading()
+                        // timerInterval = setInterval(() => {
+                        //     swal.getContent().querySelector('strong')
+                        //         .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                        // }, 1000)
+                    },
+                    onClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then(() => {
+                    window.location.href = "../login/login.html";
+                })
+            }
+            else {
+                this.cUuid = $.cookie('uuid');
+                var that = this;
+                $.post("../../php/checkState.php", {
+                    uuid: that.cUuid,
+                    group: that.cGroup,
+                }).done((data) => {
+                    //name
+                    //code:表里有这个token，1；没有0
+                    // swal.close();
+                    data = JSON.parse(data);
+                    if (data.code == 0) {
+                        let timerInterval
+                        swal({
+                            title: '请登录',
+                            html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                            timer: 7000,
+                            onOpen: () => {
+                                swal.showLoading()
+                                // timerInterval = setInterval(() => {
+                                //     swal.getContent().querySelector('strong')
+                                //         .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                                // }, 1000)
+                            },
+                            onClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then(() => {
+                            window.location.href = "../login/login.html";
+                        })
+                    }
+                });
+            }
+            if (this.cGroup == "admin") this.group = "管理员";
+            else if (this.cGroup == 1) this.group = "发包人员";
+            else if (this.cGroup == 2) this.group = "接包人员";
+            $.post("../../php/userInfo.php", {
+                uuid: that.cUuid,
+                group: that.cGroup,
+            }).done((data) => {
+                data = JSON.parse(data);
+                that.img = data.img;
+                that.name = data.name;
+                that.username = data.username;
+                that.company = data.company;
+                that.phone = data.phone;
+                that.mail = data.mail;
+
+
+
+            })
+        },
+        methods: {
+            edit: function (category, value) {
+                var that = this;
+                console.log(category + "   " + value);
+                if (((category == "mail") && (value.match(/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/) === null)) || ((category == "phone") && (value.match(/^1\d{10}$/) === null))) {
+                    swal({
+                        title: "格式不正确",
+                        type: "error",
+                        confirmButtonText: "重新输入",
+                    });
+                    this.newMail = "";
+                    this.newPhone = "";
+                }
+                else {
+                    $.post("../../php/editProfile.php", {
+                        group: that.cGroup,
+                        uuid: that.cUuid,
+                        category: category,
+                        value: value,
+                    }).done((data) => {
+                        data = JSON.parse(data);
+                        if (data.code == 1) {
+                            switch (category) {
+                                case "mail":
+                                    that.mail = that.newMail;
+                                    break;
+                                case "phone":
+                                    that.phone = that.newMail;
+                                    break;
+                                default: window.window.location.reload();
+                            }
+                        }
+                        else {
+                            swal({
+                                title: "出错了！",
+                                text: "修改的过程中遇到了一些问题，请刷新页面后重试！",
+                                type: "error",
+                                confirmButtonText: "刷新",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                onClose: window.location.reload(),
+                            });
+                        }
+                    })
+                }
+
+            },
+
+            newFacial: function () {
+
+            },
+            newPass: function () {
+                var that = this;
+                if (this.newPassword != this.newPassword2) {
+                    swal({
+                        text: "两次密码输入不相同！",
+                        type: "error",
+                        confirmButtonText: "好",
+                    })
+                    this.newPassword = "";
+                    this.newPassword2 = "";
+                }
+                else if (this.newPassword == this.password) {
+                    swal({
+                        text: "请勿输入相同的密码！",
+                        type: "error",
+                        confirmButtonText: "好",
+                    })
+                    this.newPassword = "";
+                    this.newPassword2 = "";
+                }
+                else {
+                    $.post("../../php/editSecurityInfo.php", {
+                        type: "password",
+                        group: that.cGroup,
+                        uuid: that.cUuid,
+                        password: that.password,
+                        newPassword: that.newPassword,
+                    }).done((data) => {
+                        data = JSON.parse(data);
+                        if (data.code == 1) {
+                            that.password = "";
+                            that.newPassword = "";
+                            that.newPassword2 = "";
+                            let timerInterval;
+                            swal({
+                                title: '修改成功！',
+                                type: "success",
+                                timer: 500,
+                                onClose: () => {
+                                    clearInterval(timerInterval)
+                                }
+                            })
+
+                        }
+                        else if (data.code == 0) {
+                            that.password = "";
+                            that.newPassword = "";
+                            that.newPassword2 = "";
+                            swal({
+                                text: "原密码错误！",
+                                type: "error",
+                                confirmButtonText: "好",
+                            })
+                        }
+                    })
+                }
+
+            },
+
+            newImg: function () {
+
+            }
+        }
+
+    });
+    var camera = new Camera('camera', {
+        needEdit: true,
+        imageType: 'png',
+        width: 500,
+        height: 300,
+    });
+</script>
+
+</html>
