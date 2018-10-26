@@ -53,11 +53,23 @@
             <div class="col">
                 <div class="card rounded shadow">
                     <div class="card-body">
-                        <h4 class="card-title">公司列表</h4>
-                        <table class="table table-hover ">
-                            <thead>
-                                <tr>
-                                    <th><input type="checkbox"></th>
+                        <h4 class="card-title border-bottom pb-3">公司列表</h4>
+                        <div class="btn-group btn-block mb-3">
+                            <button class="btn btn-primary" style="width:15%;" :disabled="!addable" v-if="!seen" @click="showAdd()">新增</button>
+                            <button class="btn btn-success" style="width:15%;" v-if="seen" @click="addCompany()"><i
+                                    class="fa fa-check"></i></button>
+                            <button class="btn btn-danger " style="width:15%;" v-if="seen" @click="showAdd()"><i class="fa fa-remove"></i></button>
+                            <button class="btn btn-primary" style="width:15%;" v-if="!seen" :disabled="!editable"
+                                @click="editCompany()">修改</button>
+                            <button class="btn btn-danger" style="width:15%;" v-if="!seen" :disabled="!deleble" @click="removeCompany()">删除</button>
+                        </div>
+
+
+                        <table class="table table-hover rounded">
+                            <thead class="thead-light">
+                                <tr class="">
+                                    <th><input type="checkbox" v-model="hasCheckAll" @click="checkAll()" style="text-align: center"
+                                            :disabled="!checkable"></th>
                                     <th style="width:20%"><i class="fa fa-building-o">&nbsp;</i>公司名称</th>
                                     <th style="width:20%"><i class="fa fa-calendar">&nbsp;</i>注册时间</th>
                                     <th style="width:20%"><i class="fa fa-map-marker">&nbsp;</i>地址</th>
@@ -66,20 +78,27 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- <tr v-if="seen">
+                                <tr v-if="seen">
+                                    <td></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="companyName"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="regDate"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="address"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="responsiblePerson"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="contact"></td>
-                                </tr> -->
+                                </tr>
                                 <tr v-for="company in companies">
-                                    <td><input type="checkbox" v-model="companyList"></td>
+                                    <td><input type="checkbox" v-model="companyList" :value="company.id" @change="checkIndividual()"
+                                            :disabled="!checkable"></td>
                                     <td v-text="company.companyName"></td>
                                     <td v-text="company.regDate"></td>
                                     <td v-text="company.address"></td>
                                     <td v-text="company.responsiblePerson"></td>
                                     <td v-text="company.contact"></td>
+                                    <td ></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -90,6 +109,7 @@
 
         <p>{{uuid}}</p>
         <p>{{group}}</p>
+        <p>{{companyList}}</p>
     </div>
 </body>
 <script src="../../javascript/camera.js"></script>
@@ -115,6 +135,13 @@
             responsiblePerson: "",
             //
             companyList: [],
+            hasCheckAll: false,
+            //
+            addable: true,
+            deleble: false,
+            editable: false,
+            checkable: true,
+            seen: false,
         },
         created() {
             this.group = $.cookie('group');
@@ -181,17 +208,163 @@
             logout: function () {
                 var that = this;
                 $.post("../../php/logout.php", {
-                    uuid : that.uuid,
-                    group : "admin",
+                    uuid: that.uuid,
+                    group: "admin",
                 }).done(() => {
-                    $.cookie("uuid", null,{ expires: 1, secure: false, path: '/' });
-                    $.cookie("group", null,{ expires: 1, secure: false, path: '/' });
+                    $.cookie("uuid", null, { expires: 1, secure: false, path: '/' });
+                    $.cookie("group", null, { expires: 1, secure: false, path: '/' });
                     window.location.href = "../login/login.html";
                 })
             },
 
+            checkAll: function () {
+                if (this.companyList.length == 1) {
+                    this.addable = false;
+                    this.editable = true;
+                    this.deleble = true;
+                }
+                if (!this.hasCheckAll) {
+                    this.companyList = [];
+                    this.companies.forEach((company) => {
+                        this.companyList.push(company.id);
+                    });
+                    this.hasCheckAll = !this.hasCheckAll;
+                    this.addable = false;
+                    this.editable = false;
+                    this.deleble = true;
+                }
+                else {
+                    this.companyList = [];
+                    this.hasCheckAll = !this.hasCheckAll;
+                    this.addable = true;
+                    this.editable = false;
+                    this.deleble = false;
+                }
+            },
 
-        },
+            checkIndividual: function () {
+                if (this.companyList.length == this.companies.length)
+                    this.hasCheckAll = true;
+                else
+                    this.hasCheckAll = false;
+                if (this.companyList.length == 1) {
+                    this.addable = false;
+                    this.editable = true;
+                    this.deleble = true;
+                }
+                else if (this.companyList.length > 1) {
+                    this.addable = false;
+                    this.editable = false;
+                    this.deleble = true;
+                }
+                else {
+                    this.addable = true;
+                    this.editable = false;
+                    this.deleble = false;
+                }
+
+            },
+
+            showAdd: function () {
+                this.seen = !this.seen;
+                this.checkable = !this.checkable;
+                this.companyName = "";
+                this.address = "";
+                this.contact = "";
+                this.regDate = "";
+                this.responsiblePerson = "";
+            },
+
+            addCompany: function () {
+                var that = this;
+                swal({
+                    title: "Loading...",
+                    width: 300,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    showConfirmButton: false,
+                    onOpen: () => { swal.showLoading() }
+                });
+                $.post("../../php/admin/addCompany.php", {
+                    companyName: that.companyName,
+                    regDate: that.regDate,
+                    responsiblePerson: that.responsiblePerson,
+                    address: that.address,
+                    contact: that.contact,
+                }).done((data) => {
+                    swal.close();
+                    data = JSON.parse(data);
+                    if (data.code == 1) {
+                        $.post("../../php/fetchCompany.php").done((data) => {
+                            data = JSON.parse(data);
+                            that.companies = data;
+                        });
+                    }
+                    else {
+                        swal({
+                            title: "未知错误！",
+                            type: "error",
+                            text: "请刷新页面后重试！",
+                            confirmButtonText: "刷新",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            onClose: window.location.reload(),
+                        })
+                    }
+                })
+            },
+
+            removeCompany: function () {
+                var that = this;
+                swal({
+                    title: '确定要删除该公司吗？',
+                    type: 'question',
+                    allowOutsideClick: false,
+                    showCancelButton: true,
+                    confirmButtonColor: '#93c47d',
+                    cancelButtonColor: '#ca5943',
+                    confirmButtonText: "确认",
+                    cancelButtonText: "取消"
+                    //我估计result就是有没有确认,.value就是true/false
+                }).then((result) => {
+                    if (result.value) {
+                        swal({
+                            title: '删除中',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            showCloseButton: false,
+                            onOpen: () => {
+                                swal.showLoading()
+                            }
+                        })
+                        $.post("../../php/admin/removeCompany.php", {
+                            companyList: that.companyList,
+                        }).done((data) => {
+                            data = JSON.parse(data);
+                            if (data.code == 1) {
+                                $.post("../../php/fetchCompany.php").done((data) => {
+                                    data = JSON.parse(data);
+                                    that.companies = data;
+                                });
+                                swal({
+                                    title: "删除成功！",
+                                    type: "success",
+                                    timer: 1000,
+                                })
+
+                            }
+                        })
+                    }
+                });
+            },
+
+            editCompany: function () {
+
+            }
+        }
+
     })
 </script>
 
