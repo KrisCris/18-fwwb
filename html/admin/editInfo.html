@@ -19,7 +19,7 @@
 
                     </div>
                     <div class="float-right">
-                        <img :src="img" class="rounded-circle" alt="Cinque Terre" style="width:40px; height:40px;"><span>&nbsp;</span>
+                        <img :src="img" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
                         <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="window.history.back()"><i
                                 class="fa fa-power-off">&nbsp;</i>返回</button>
                     </div>
@@ -55,7 +55,7 @@
                                     <p v-text="'账号：'+username"></p>
                                 </div>
                                 <div>
-                                    <!-- <p v-text="账号类型：'+this.group"></p> -->
+                                    <p v-text="'账号类型：'+type"></p>
                                 </div>
                                 <div>
                                     <p v-text="'所属公司：'+company"></p>
@@ -167,12 +167,12 @@
         el: "#main",
         data: {
             img: "http://static.runoob.com/images/mix/img_avatar.png",
-            username: "hi_imhpc",
-            name: "Chris Wong",
-            group: "发包人员",
-            company: "好大的鱼",
-            phone: "15906670000",
-            mail: "hi.imhpc@outlook.com",
+            username: "",
+            name: "",
+            type: "",
+            company: "",
+            phone: "",
+            mail: "",
             password: "",
             newPassword: "",
             newPassword2: "",
@@ -187,6 +187,16 @@
             showMail: false,
         },
         created() {
+            swal({
+                title: "Loading...",
+                width: 250,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                showConfirmButton: false,
+                onOpen: () => { swal.showLoading() }
+            });
             this.cGroup = $.cookie('group');
             if ($.cookie('uuid') == null) {
                 let timerInterval
@@ -241,20 +251,24 @@
                     }
                 });
             }
-            if (this.cGroup == "admin") this.group = "管理员";
-            else if (this.cGroup == 1) this.group = "发包人员";
-            else if (this.cGroup == 2) this.group = "接包人员";
             $.post("../../php/userInfo.php", {
                 uuid: that.cUuid,
                 group: that.cGroup,
             }).done((data) => {
                 data = JSON.parse(data);
-                that.img = data.img;
+                // that.img = data.img;
+                that.img = "http://static.runoob.com/images/mix/img_avatar.png";
                 that.name = data.name;
                 that.username = data.username;
-                that.company = data.company;
+                if (that.cGroup == "admin");
+                else
+                    that.company = data.company;
                 that.phone = data.phone;
                 that.mail = data.mail;
+                if (this.cGroup == "admin") { this.type = "管理员"; this.company = "ArcSoft"; }
+                else if (this.cGroup == 1) this.type = "发包人员";
+                else if (this.cGroup == 2) this.type = "接包人员";
+                swal.close();
 
 
 
@@ -274,23 +288,47 @@
                     this.newPhone = "";
                 }
                 else {
+                    swal({
+                        title: "Loading...",
+                        width: 250,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                        showConfirmButton: false,
+                        onOpen: () => { swal.showLoading() }
+                    });
                     $.post("../../php/editProfile.php", {
                         group: that.cGroup,
                         uuid: that.cUuid,
                         category: category,
                         value: value,
                     }).done((data) => {
+                        swal.close();
                         data = JSON.parse(data);
                         if (data.code == 1) {
                             switch (category) {
                                 case "mail":
                                     that.mail = that.newMail;
+                                    that.showMail = !that.showMail;
                                     break;
                                 case "phone":
-                                    that.phone = that.newMail;
+                                    that.phone = that.newPhone;
+                                    that.showPhone = !that.showPhone;
                                     break;
                                 default: window.window.location.reload();
                             }
+                            let timerInterval;
+                            swal({
+                                title: '修改成功！',
+                                showConfirmButton: false,
+                                type: "success",
+                                timer: 1000,
+                                onClose: () => {
+                                    clearInterval(timerInterval)
+                                }
+                            })
+
                         }
                         else {
                             swal({
@@ -332,6 +370,16 @@
                     this.newPassword2 = "";
                 }
                 else {
+                    swal({
+                        title: "Loading...",
+                        width: 250,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                        showConfirmButton: false,
+                        onOpen: () => { swal.showLoading() }
+                    });
                     $.post("../../php/editSecurityInfo.php", {
                         type: "password",
                         group: that.cGroup,
@@ -339,6 +387,7 @@
                         password: that.password,
                         newPassword: that.newPassword,
                     }).done((data) => {
+                        swal.close();
                         data = JSON.parse(data);
                         if (data.code == 1) {
                             that.password = "";
@@ -347,8 +396,9 @@
                             let timerInterval;
                             swal({
                                 title: '修改成功！',
+                                showConfirmButton: false,
                                 type: "success",
-                                timer: 500,
+                                timer: 1000,
                                 onClose: () => {
                                     clearInterval(timerInterval)
                                 }
