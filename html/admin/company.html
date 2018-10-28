@@ -69,7 +69,7 @@
                             <thead class="thead-light">
                                 <tr class="">
                                     <th><input type="checkbox" v-model="hasCheckAll" @click="checkAll()" style="text-align: center"
-                                            :disabled="!checkable"style="width:2.5%"></th>
+                                            :disabled="!checkable" style="width:2.5%"></th>
                                     <th style="width:19.5%"><i class="fa fa-building-o">&nbsp;</i>公司名称</th>
                                     <th style="width:19.5%"><i class="fa fa-calendar">&nbsp;</i>注册时间</th>
                                     <th style="width:19.5%"><i class="fa fa-map-marker">&nbsp;</i>地址</th>
@@ -155,13 +155,13 @@
                 swal({
                     title: '请登录',
                     html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
-                    timer: 5000,
+                    timer: 5500,
                     onOpen: () => {
                         swal.showLoading()
-                        // timerInterval = setInterval(() => {
-                        //     swal.getContent().querySelector('strong')
-                        //         .textContent = parseInt((swal.getTimerLeft()) / 1000)
-                        // }, 1000)
+                        timerInterval = setInterval(() => {
+                            swal.getContent().querySelector('strong')
+                                .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                        }, 100)
                     },
                     onClose: () => {
                         clearInterval(timerInterval)
@@ -177,22 +177,19 @@
                     uuid: that.uuid,
                     group: that.group,
                 }).done((data) => {
-                    //name
-                    //code:表里有这个token，1；没有0
-                    // swal.close();
                     data = JSON.parse(data);
                     if (data.code == 0) {
                         let timerInterval
                         swal({
                             title: '请登录',
                             html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
-                            timer: 7000,
+                            timer: 5500,
                             onOpen: () => {
                                 swal.showLoading()
-                                // timerInterval = setInterval(() => {
-                                //     swal.getContent().querySelector('strong')
-                                //         .textContent = parseInt((swal.getTimerLeft()) / 1000)
-                                // }, 1000)
+                                timerInterval = setInterval(() => {
+                                    swal.getContent().querySelector('strong')
+                                        .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                                }, 100)
                             },
                             onClose: () => {
                                 clearInterval(timerInterval)
@@ -201,12 +198,15 @@
                             window.location.href = "../login/login.html";
                         })
                     }
+                    else {
+                        $.post("../../php/fetchCompany.php").done((data) => {
+                            data = JSON.parse(data);
+                            that.companies = data;
+                            swal.close();
+                        });
+                    }
                 });
-                $.post("../../php/fetchCompany.php").done((data) => {
-                    data = JSON.parse(data);
-                    that.companies = data;
-                    swal.close();
-                });
+
             }
         },
 
@@ -326,7 +326,7 @@
                 var that = this;
                 swal({
                     title: '确定要删除该公司吗？',
-                    type: 'question',
+                    type: 'warning',
                     allowOutsideClick: false,
                     showCancelButton: true,
                     confirmButtonColor: '#CE252A',
@@ -341,7 +341,7 @@
                             allowOutsideClick: false,
                             showConfirmButton: false,
                             showCloseButton: false,
-                            width:300,
+                            width: 300,
                             onOpen: () => {
                                 swal.showLoading()
                             }

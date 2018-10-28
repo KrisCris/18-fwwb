@@ -4,12 +4,12 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="../resource/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../resource/font-awesome-4.7.0/css/font-awesome.css">
     <title>修改资料</title>
 </head>
 
-<body style="background-image: url(../../image/papper.png)">
+<body style="background-image: url(../image/papper.png)">
     <div id="main" class="container ">
         <div class="row mb-2">
             <div class="col-md-6 offset-md-3">
@@ -156,12 +156,12 @@
     </div>
 </body>
 
-<script src="../../javascript/camera.js"></script>
-<script src="../../resource/swal2/sweetalert2.all.js"></script>
-<script src="../../resource/vue/vue.js"></script>
-<script src="../../resource/jquery/jquery.js"></script>
-<script src="../../resource/bootstrap/js/bootstrap.js"></script>
-<script src="../../resource/jquery/jquery.cookie.js"></script>
+<script src="../javascript/camera.js"></script>
+<script src="../resource/swal2/sweetalert2.all.js"></script>
+<script src="../resource/vue/vue.js"></script>
+<script src="../resource/jquery/jquery.js"></script>
+<script src="../resource/bootstrap/js/bootstrap.js"></script>
+<script src="../resource/jquery/jquery.cookie.js"></script>
 <script>
     var app = new Vue({
         el: "#main",
@@ -203,25 +203,25 @@
                 swal({
                     title: '请登录',
                     html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
-                    timer: 5000,
+                    timer: 5500,
                     onOpen: () => {
                         swal.showLoading()
-                        // timerInterval = setInterval(() => {
-                        //     swal.getContent().querySelector('strong')
-                        //         .textContent = parseInt((swal.getTimerLeft()) / 1000)
-                        // }, 1000)
+                        timerInterval = setInterval(() => {
+                            swal.getContent().querySelector('strong')
+                                .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                        }, 100)
                     },
                     onClose: () => {
                         clearInterval(timerInterval)
                     }
                 }).then(() => {
-                    window.location.href = "../login/login.html";
+                    window.location.href = "login/login.html";
                 })
             }
             else {
                 this.cUuid = $.cookie('uuid');
                 var that = this;
-                $.post("../../php/checkState.php", {
+                $.post("../php/checkState.php", {
                     uuid: that.cUuid,
                     group: that.cGroup,
                 }).done((data) => {
@@ -234,24 +234,24 @@
                         swal({
                             title: '请登录',
                             html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
-                            timer: 7000,
+                            timer: 5500,
                             onOpen: () => {
                                 swal.showLoading()
-                                // timerInterval = setInterval(() => {
-                                //     swal.getContent().querySelector('strong')
-                                //         .textContent = parseInt((swal.getTimerLeft()) / 1000)
-                                // }, 1000)
+                                timerInterval = setInterval(() => {
+                                    swal.getContent().querySelector('strong')
+                                        .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                                }, 100)
                             },
                             onClose: () => {
                                 clearInterval(timerInterval)
                             }
                         }).then(() => {
-                            window.location.href = "../login/login.html";
+                            window.location.href = "login/login.html";
                         })
                     }
                 });
             }
-            $.post("../../php/userInfo.php", {
+            $.post("../php/userInfo.php", {
                 uuid: that.cUuid,
                 group: that.cGroup,
             }).done((data) => {
@@ -266,7 +266,7 @@
                 that.phone = data.phone;
                 that.mail = data.mail;
                 if (this.cGroup == "admin") { this.type = "管理员"; this.company = "ArcSoft"; }
-                else if (this.cGroup == 1) this.type = "发包人员";
+                else if (this.cGroup == 1) { this.type = "发包人员"; this.company = "ArcSoft"; }
                 else if (this.cGroup == 2) this.type = "接包人员";
                 swal.close();
 
@@ -298,7 +298,7 @@
                         showConfirmButton: false,
                         onOpen: () => { swal.showLoading() }
                     });
-                    $.post("../../php/editProfile.php", {
+                    $.post("../php/editProfile.php", {
                         group: that.cGroup,
                         uuid: that.cUuid,
                         category: category,
@@ -380,7 +380,7 @@
                         showConfirmButton: false,
                         onOpen: () => { swal.showLoading() }
                     });
-                    $.post("../../php/editSecurityInfo.php", {
+                    $.post("../php/editSecurityInfo.php", {
                         type: "password",
                         group: that.cGroup,
                         uuid: that.cUuid,

@@ -20,7 +20,7 @@
             <div class="collapse navbar-collapse " id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="publish.html"><i class="fa fa-paste">&nbsp;</i>项目发布</a>
+                        <a class="nav-link" href="#"><i class="fa fa-paste">&nbsp;</i>项目发布</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -33,7 +33,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa fa-user-circle">&nbsp;</i>个人信息</a>
+                        <a class="nav-link" href="index.html"><i class="fa fa-user-circle">&nbsp;</i>个人信息</a>
                     </li>
                 </ul>
             </div>
@@ -45,58 +45,6 @@
 
             </div>
         </nav>
-
-        <!-- content -->
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="card shadow mb-3">
-                    <a href="../editInfo.html"><img class="card-img-top" :src="img" style="width:100%"></a>
-                    <div class="card-body">
-                        <h4 class="card-title text-center">NAME</h4>
-                        <p class="card-text">Some example information.</p>
-                        <a href="../editInfo.html" class="btn btn-primary">修改资料</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-9">
-                <div class="row mb-3">
-                    <div class="col">
-                        <div class="card shadow">
-                            <img class="card-img-top">
-                            <div class="card-body">
-                                <h4 class="card-title">待办事项</h4>
-                                <div class="row">
-                                    <div class="col-lg-3 card  border-top-0 border-left-0 border-bottom-0">
-                                        <br>
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-info">5</p>
-                                        <p class="text-center">待审核</p>
-                                    </div>
-                                    <div class="col-lg-3 card border-top-0 border-left-0 border-bottom-0">
-                                        <br>
-                                        <p style="font-size: 25px; " class=" text-center font-weight-bold text-primary">13</p>
-                                        <p class="text-center">进行中</p>
-                                    </div>
-                                    <div class="col-lg-3 card border-top-0 border-left-0 border-bottom-0">
-                                        <br>
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-success">2</p>
-                                        <p class="text-center">已完成</p>
-                                    </div>
-                                    <div class="col-lg-3 card border-0">
-                                        <br>
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-danger">8</p>
-                                        <p class="text-center">延迟</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <p>{{uuid}}</p>
-        <p>{{group}}</p>
-
-
     </div>
 </body>
 <script src="../../javascript/camera.js"></script>
@@ -120,7 +68,7 @@
                 let timerInterval
                 swal({
                     title: '请登录',
-                    html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
                     timer: 5500,
                     onOpen: () => {
                         swal.showLoading()
@@ -157,7 +105,7 @@
                         let timerInterval
                         swal({
                             title: '请登录',
-                            html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+                            html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
                             timer: 5500,
                             onOpen: () => {
                                 swal.showLoading()

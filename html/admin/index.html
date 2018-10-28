@@ -53,11 +53,11 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="card shadow mb-3">
-                    <a href="editInfo.html"><img class="card-img-top" :src="img" style="width:100%"></a>
+                    <a href="../editInfo.html"><img class="card-img-top" :src="img" style="width:100%"></a>
                     <div class="card-body">
                         <h4 class="card-title text-center" v-text="name"></h4>
                         <p class="card-text">Some example information.</p>
-                        <a href="editInfo.html" class="btn btn-primary">修改资料</a>
+                        <a href="../editInfo.html" class="btn btn-primary">修改资料</a>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                 <div class="row mb-3">
                     <div class="col">
                         <div class="card shadow">
-                            <img class="card-img-top" >
+                            <img class="card-img-top">
                             <div class="card-body">
                                 <h4 class="card-title">待办事项</h4>
                                 <div class="row">
@@ -155,14 +155,14 @@
                 let timerInterval
                 swal({
                     title: '请登录',
-                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
-                    timer: 5000,
+                    html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+                    timer: 5500,
                     onOpen: () => {
                         swal.showLoading()
-                        // timerInterval = setInterval(() => {
-                        //     swal.getContent().querySelector('strong')
-                        //         .textContent = parseInt((swal.getTimerLeft()) / 1000)
-                        // }, 1000)
+                        timerInterval = setInterval(() => {
+                            swal.getContent().querySelector('strong')
+                                .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                        }, 100)
                     },
                     onClose: () => {
                         clearInterval(timerInterval)
@@ -173,7 +173,6 @@
             }
             else {
                 this.uuid = $.cookie('uuid');
-
                 var that = this;
                 // swal({
                 //     title: "载入中",
@@ -196,14 +195,14 @@
                         let timerInterval
                         swal({
                             title: '请登录',
-                            html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
-                            timer: 5000,
+                            html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+                            timer: 5500,
                             onOpen: () => {
                                 swal.showLoading()
-                                // timerInterval = window.setInterval(() => {
-                                //     swal.getContent().querySelector('strong')
-                                //         .textContent = parseInt((swal.getTimerLeft()) / 1000)
-                                // }, 1000)
+                                timerInterval = setInterval(() => {
+                                    swal.getContent().querySelector('strong')
+                                        .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                                }, 100)
                             },
                             onClose: () => {
                                 clearInterval(timerInterval)
@@ -213,7 +212,7 @@
                         })
                     }
                     else {
-                        that.name = data.name;
+                        //获取信息
                     }
                 });
             }
