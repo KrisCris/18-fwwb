@@ -2,25 +2,25 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8" />
     <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
-
     <title>接包人员管理</title>
 </head>
 
 <body style="background-image: url(../../image/papper.png)">
-    <div id="main" class="container">
+    <div id="main" class="container ">
+        <!-- navigation_bar -->
         <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
             <a class="navbar-brand" href="#">CrowdSourcing</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <div class="collapse navbar-collapse clearfix" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="censor.html"><i class="fa fa-check-square-o m">&nbsp;</i>注册审核</a>
+                        <a class="nav-link" href="censor.html"><i class="fa fa-check-square-o">&nbsp;</i>注册审核</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -38,135 +38,344 @@
                     <li class="nav-item">
                         <a class="nav-link" href="index.html"><i class="fa fa-user-circle">&nbsp;</i>个人信息</a>
                     </li>
-
                 </ul>
             </div>
             <div class="float-right">
                 <!-- <a class="text-muted" href="#">[注销账号]</a> -->
-                <img src="http://static.runoob.com/images/mix/img_avatar.png" class="rounded-circle" alt="Cinque Terre"
-                    style="width:40px; height:40px;"><span>&nbsp;</span>
-                <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;"><i class="fa fa-power-off">&nbsp;</i>注销</button>
+                <a href="index.html"><img src="http://static.runoob.com/images/mix/img_avatar.png" class="rounded-circle"
+                        alt="Cinque Terre" style="width:40px; height:40px;"><span>&nbsp;</span></a>
+                <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
+                        class="fa fa-power-off">&nbsp;</i>注销</button>
             </div>
         </nav>
-        <h3>接包人员管理</h3>
         <!-- content -->
-        <div class="container-fluid shadow bg-light" style="padding: 0px; margin: 0px;">
-            <!-- card -->
-            <div class="card bg-muted" style="height: 657px;">
-                <div class="card-header clearfix">
-                    <div v-if="visual">
-                        <button class="btn btn-danger btn-sm float-left mr-2" @click="add"><i class="fa fa-times-circle">&nbsp;</i>取消</button>
-                        <button class="btn btn-success btn-sm float-left mr-2" @click="confirm"><i class="fa fa-user-plus">&nbsp;</i>通过</button>
-                    </div>
-                    <div v-else>
-                        <button class="btn btn-success btn-sm float-left mr-2" @click="add"><i class="fa fa-user-plus">&nbsp;</i>新增人员</button>
-                    </div>
-                    <div>
-                        <button class="btn btn-primary btn-sm float-left mr-2" @click="remove"><i class="fa fa-user-times">&nbsp;</i>移除</button>
-                    </div>
-                </div>
-
-                <div class="card-body" style="padding: 0px; margin: 0px;">
-                    <!-- different views in unique size window -->
-                    <div class="table-responsive rounded">
-                        <div class="text-center">
-                            <!-- dark table + hover effect + grey hover + set border + small table -->
-                            <table class="table table-hover table-striped table-sm ">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" class="form-check-input" value="" style="width: 10%">全选</th>
-                                        <th style="width:18%;">用户名</th>
-                                        <th style="width:18%;">姓名</th>
-                                        <th style="width:18%;">手机</th>
-                                        <th style="width:18%;">邮箱</th>
-                                        <th style="width:18%;">公司</th>
-                                    </tr>
-                                </thead>
-                                <!-- add a new publisher by administrator -->
-                                <tbody>
-                                    <tr v-if="visual" class="clearfix">
-                                        <td class="input-group-sm"><input type="checkbox" class="form-check-input"
-                                                value=""></td>
-                                        <td class="input-group-sm"><input type="text" class="form-control mx-auto"
-                                                placeholder="Name" style="border: 0px;width: 80%;text-align:center"></td>
-                                        <td class="input-group-sm"><input type="text" class="form-control mx-auto"
-                                                placeholder="Username" style="border: 0px;width: 80%;text-align:center"></td>
-                                        <td class="input-group-sm"><input type="text" class="form-control mx-auto"
-                                                placeholder="PhoneNumber" style="border: 0px;width: 80%;text-align:center"></td>
-                                        <td class="input-group-sm"><input type="text" class="form-control mx-auto"
-                                                placeholder="E-mail" style="border: 0px;width: 80%;text-align:center"></td>
-                                        <td>
-                                            <select class="custom-select-sm">
-                                                <option>请选择公司</option>
-                                        </td>
-
-                                    </tr>
-                                    <tr v-for="person in info">
-                                        <td><input type="checkbox" class="form-check-input" value=""></td>
-                                        <td>{{person.name}}</td>
-                                        <td>{{person.username}}</td>
-                                        <td>{{person.phone}}</td>
-                                        <td>{{person.mail}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+        <div class="row">
+            <div class="col">
+                <div class="card rounded shadow">
+                    <div class="card-body">
+                        <h4 class="card-title border-bottom pb-3">公司列表</h4>
+                        <div class="btn-group btn-block mb-3">
+                            <button class="btn btn-primary" style="width:15%;" :disabled="!addable" v-if="!seen" @click="showAdd()">新增</button>
+                            <button class="btn btn-success" style="width:15%;" v-if="seen" @click="addReceiver()"><i
+                                    class="fa fa-check"></i></button>
+                            <button class="btn btn-danger " style="width:15%;" v-if="seen" @click="showAdd()"><i class="fa fa-remove"></i></button>
+                            <button class="btn btn-primary" style="width:15%;" v-if="!seen" :disabled="!editable"
+                                @click="editReceiver()">修改</button>
+                            <button class="btn btn-danger" style="width:15%;" v-if="!seen" :disabled="!deleble" @click="removeReceiver()">删除</button>
                         </div>
+
+
+                        <table class="table table-hover rounded">
+                            <thead class="thead-light">
+                                <tr class="">
+                                    <th><input type="checkbox" v-model="hasCheckAll" @click="checkAll()" style="text-align: center"
+                                            :disabled="!checkable" style="width:2.5%"></th>
+                                    <th style="width:24.3%"><i class="fa fa-building-o">&nbsp;</i>用户名</th>
+                                    <th style="width:24.3%"><i class="fa fa-calendar">&nbsp;</i>姓名</th>
+                                    <th style="width:24.3%"><i class="fa fa-map-marker">&nbsp;</i>手机</th>
+                                    <th style="width:24.3%"><i class="fa fa-user-o">&nbsp;</i>邮件</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-if="seen">
+                                    <td></td>
+                                    <td><input type="text" class="form-control" placeholder="" v-model="userName"></td>
+                                    <td><input type="text" class="form-control" placeholder="" v-model="name"></td>
+                                    <td><input type="text" class="form-control" placeholder="" v-model="phone"></td>
+                                    <td><input type="text" class="form-control" placeholder="" v-model="mail"></td>
+                                </tr>
+                                <tr v-for="reciver in receivers">
+                                    <td><input type="checkbox" v-model="receiverList" :value="receiver.id" @change="checkIndividual()"
+                                            :disabled="!checkable"></td>
+                                    <td v-text="receiver.userName"></td>
+                                    <td v-text="receiver.name"></td>
+                                    <td v-text="receiver.phone"></td>
+                                    <td v-text="receiver.mail"></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+
+        <p>{{uuid}}</p>
+        <p>{{group}}</p>
+        <p>{{receiverList}}</p>
     </div>
 </body>
 <script src="../../resource/swal2/sweetalert2.all.js"></script>
 <script src="../../resource/vue/vue.js"></script>
 <script src="../../resource/jquery/jquery.js"></script>
 <script src="../../resource/bootstrap/js/bootstrap.js"></script>
+<script src="../../resource/jquery/jquery.cookie.js"></script>
 <script>
-    var main = new Vue({
-        el: '#main',
+    var app = new Vue({
+        el: "#main",
         data: {
-            info: [],
-            visual: false,
+            receivers: [],
+            // seen = false,
+            //cookies
+            group: 0,
+            uuid: 0,
+            //add
+            userName: "",
+            name: "",
+            phone: "",
+            mail: "",
+            //
+            receiverList: [],
+            hasCheckAll: false,
+            //
+            addable: true,
+            deleble: false,
+            editable: false,
+            checkable: true,
+            seen: false,
         },
         created() {
-            var that = this;
-            $.post("../../php/admin/fetchPublisher.php", {}).done((data) => {
-                data = JSON.parse(data);
-                that.info = data;
-            })
-
-        },
-        methods: {
-            add: function () {
-                this.visual = !this.visual;
-            },
-            confirm: function () {
-                this.visual = false;
-                swal(
-                    '添加成功',
-                    '点击OK继续',
-                    'success'
-                )
-            },
-            remove: function () {
+            swal({
+                title: "Loading...",
+                width: 250,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                showConfirmButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            });
+            this.group = $.cookie('group');
+            if ($.cookie('uuid') == null) {
+                let timerInterval
                 swal({
-                    title: '确定删除吗？',
-                    text: '你将无法恢复它！',
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: '确定删除！',
-                }).then(function () {
-                    swal(
-                        '删除！',
-                        '你的文件已经被删除。',
-                        'success'
-                    );
+                    title: '请登录',
+                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                    timer: 5500,
+                    onOpen: () => {
+                        swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            swal.getContent().querySelector('strong')
+                                .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                        }, 100)
+                    },
+                    onClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then(() => {
+                    window.location.href = "../login/login.html";
                 })
+            } else {
+                this.uuid = $.cookie('uuid');
+                var that = this;
+                $.post("../../php/checkState.php", {
+                    uuid: that.uuid,
+                    group: that.group,
+                }).done((data) => {
+                    swal.close();
+                    data = JSON.parse(data);
+                    if (data.code == 0) {
+                        let timerInterval
+                        swal({
+                            title: '请登录',
+                            html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                            timer: 5500,
+                            onOpen: () => {
+                                swal.showLoading()
+                                timerInterval = setInterval(() => {
+                                    swal.getContent().querySelector('strong')
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
+                                }, 100)
+                            },
+                            onClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then(() => {
+                            window.location.href = "../login/login.html";
+                        })
+                    } else {
+                        // $.post("../../php/admin/fetchReceiver.php").done((data) => {
+                        //     data = JSON.parse(data);
+                        //     that.companies = data;
+                        //     swal.close();
+                        // });
+                    }
+                });
+
+            }
+        },
+
+        methods: {
+            logout: function () {
+                var that = this;
+                $.post("../../php/logout.php", {
+                    uuid: that.uuid,
+                    group: "admin",
+                }).done(() => {
+                    $.cookie("uuid", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    $.cookie("group", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    window.location.href = "../login/login.html";
+                })
+            },
+
+            checkAll: function () {
+                if (this.companyList.length == 1) {
+                    this.addable = false;
+                    this.editable = true;
+                    this.deleble = true;
+                }
+                if (!this.hasCheckAll) {
+                    this.companyList = [];
+                    this.companies.forEach((company) => {
+                        this.companyList.push(company.id);
+                    });
+                    this.hasCheckAll = !this.hasCheckAll;
+                    this.addable = false;
+                    this.editable = false;
+                    this.deleble = true;
+                } else {
+                    this.companyList = [];
+                    this.hasCheckAll = !this.hasCheckAll;
+                    this.addable = true;
+                    this.editable = false;
+                    this.deleble = false;
+                }
+            },
+
+            checkIndividual: function () {
+                if (this.companyList.length == this.companies.length)
+                    this.hasCheckAll = true;
+                else
+                    this.hasCheckAll = false;
+                if (this.companyList.length == 1) {
+                    this.addable = false;
+                    this.editable = true;
+                    this.deleble = true;
+                } else if (this.companyList.length > 1) {
+                    this.addable = false;
+                    this.editable = false;
+                    this.deleble = true;
+                } else {
+                    this.addable = true;
+                    this.editable = false;
+                    this.deleble = false;
+                }
+
+            },
+
+            showAdd: function () {
+                this.seen = !this.seen;
+                this.checkable = !this.checkable;
+                this.companyName = "";
+                this.address = "";
+                this.contact = "";
+                this.regDate = "";
+                this.responsiblePerson = "";
+            },
+
+            addCompany: function () {
+                var that = this;
+                swal({
+                    title: "Loading...",
+                    width: 300,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    showConfirmButton: false,
+                    onOpen: () => {
+                        swal.showLoading()
+                    }
+                });
+                $.post("../../php/admin/addReceiver.php", {
+                    companyName: that.companyName,
+                    regDate: that.regDate,
+                    responsiblePerson: that.responsiblePerson,
+                    address: that.address,
+                    contact: that.contact,
+                }).done((data) => {
+                    swal.close();
+                    data = JSON.parse(data);
+                    if (data.code == 1) {
+                        $.post("../../php/admin/fetchReceiver.php").done((data) => {
+                            data = JSON.parse(data);
+                            that.companies = data;
+                        });
+                    } else {
+                        swal({
+                            title: "未知错误！",
+                            type: "error",
+                            text: "请刷新页面后重试！",
+                            confirmButtonText: "刷新",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            onClose: window.location.reload(),
+                        })
+                    }
+                })
+            },
+
+            removeCompany: function () {
+                var that = this;
+                swal({
+                    title: '确定要删除该公司吗？',
+                    type: 'warning',
+                    allowOutsideClick: false,
+                    showCancelButton: true,
+                    confirmButtonColor: '#CE252A',
+                    cancelButtonColor: '#257FED',
+                    confirmButtonText: "确认",
+                    cancelButtonText: "取消"
+                    //我估计result就是有没有确认,.value就是true/false
+                }).then((result) => {
+                    if (result.value) {
+                        swal({
+                            title: '删除中',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            showCloseButton: false,
+                            width: 300,
+                            onOpen: () => {
+                                swal.showLoading()
+                            }
+                        })
+                        $.post("../../php/admin/removeReceiver.php", {
+                            companyList: that.companyList,
+                        }).done((data) => {
+                            data = JSON.parse(data);
+                            if (data.code == 1) {
+                                $.post("../../php/admin/fetchReceiver.php").done((data) => {
+                                    data = JSON.parse(data);
+                                    that.companies = data;
+                                });
+                                swal({
+                                    title: "删除成功！",
+                                    type: "success",
+                                    showConfirmButton: false,
+                                    timer: 1000,
+                                })
+
+                            }
+                        })
+                    }
+                });
+            },
+
+            editCompany: function () {
 
             }
         }
+
     })
 </script>
 

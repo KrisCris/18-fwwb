@@ -9,8 +9,6 @@
     <title>注册审核</title>
 
 </head>
-<!-- 还有各个选卡之间的切换效果未完成 -->
-<!-- 还想做一个徽章，需要的话可能要改下fetch的php,而且还可以和提示框互动 -->
 
 <body style="background-image: url(../../image/papper.png)">
     <div id="main" class="container">
@@ -42,10 +40,6 @@
                         <a class="nav-link" href="index.html"><i class="fa fa-user-circle">&nbsp;</i>个人信息</a>
                     </li>
                 </ul>
-                <!-- <form class="form-inline my-2 my-lg-8">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form> -->
             </div>
             <div class="float-right">
                 <!-- <a class="text-muted" href="#">[注销账号]</a> -->
@@ -61,8 +55,8 @@
             <!-- card -->
             <div class="card bg-muted clearfix" style="height: 600px ;">
                 <div class="card-header">
-                    <button class="btn btn-danger btn-sm flex-fill float-right  mr-2" @click='refuse(person.id)'><i class="fa fa-user-times">&nbsp;</i>拒绝</button>
-                    <button class="btn btn-success btn-sm flex-fill float-right mr-2" @click='verified(person.id)'><i class="fa fa-user-plus">&nbsp;</i>通过</button>
+                    <button class="btn btn-danger btn-sm flex-fill float-right  mr-2" style="width:20%;" @click='refuse(person.id)'><i class="fa fa-user-times">&nbsp;</i>拒绝</button>
+                    <button class="btn btn-success btn-sm flex-fill float-right mr-2" style="width:20%;" @click='verified(person.id)'><i class="fa fa-user-plus">&nbsp;</i>通过</button>
                 </div>
                 <div class="card-body" style="padding: 0px; margin: 0px;">
                     <!-- different views in unique size window -->
@@ -90,13 +84,6 @@
                                         <td>{{person.phone}}</td>
                                         <td>{{person.mail}}</td>
                                         <td>{{person.companyName}}</td>
-                                        <!-- <td> -->
-                                            <!-- small button with the click event reload the page  -->
-
-                                            <!-- 不行就先改回来，之前这两个还是可以用的 -->
-                                            <!-- <input type="button" value="通过" @click='verified(person.id)'> -->
-                                            <!-- <input type="button" value="拒绝" @click='refuse(person.id)'> -->
-                                        <!-- </td> -->
                                     </tr>
                                 </div>
                             </table>
@@ -169,3 +156,4 @@
 </script>
 
 </html>
+
