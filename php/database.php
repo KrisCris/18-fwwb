@@ -18,9 +18,9 @@ function get($table,$label="",$value=""){
         $statement = "SELECT * FROM $table WHERE $label = '$value'";
     }
     $result = $con->query($statement);
-    if($result->num_rows<=0)return array();
+    if($result->num_rows<=0)return [];
 
-    $data=array();
+    $data=[];
     while($row = $result->fetch_assoc()){
         array_push($data,$row);
     }
