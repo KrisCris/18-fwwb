@@ -45,61 +45,57 @@
                 <!-- <a class="text-muted" href="#">[注销账号]</a> -->
                 <img src="http://static.runoob.com/images/mix/img_avatar.png" class="rounded-circle" alt="Cinque Terre"
                     style="width:40px; height:40px;"><span>&nbsp;</span>
-                <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;"><i class="fa fa-power-off">&nbsp;</i>注销</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i class="fa fa-power-off">&nbsp;</i>注销</button>
 
             </div>
         </nav>
-        <h3><strong>注册审核表</strong></h3>
         <!-- content -->
-        <div class="container-fluid shadow bg-light" style="padding: 0px; margin: 0px;">
-            <!-- card -->
-            <div class="card bg-muted clearfix" style="height: 600px ;">
-                <div class="card-header">
-                    <button class="btn btn-danger btn-sm flex-fill float-right  mr-2" style="width:20%;" @click='refuse(person.id)'><i class="fa fa-user-times">&nbsp;</i>拒绝</button>
-                    <button class="btn btn-success btn-sm flex-fill float-right mr-2" style="width:20%;" @click='verified(person.id)'><i class="fa fa-user-plus">&nbsp;</i>通过</button>
-                </div>
-                <div class="card-body" style="padding: 0px; margin: 0px;">
-                    <!-- different views in unique size window -->
-                    <div class="table-responsive">
-
-                        <div class="text-center">
-                            <!-- dark table + hover effect + grey hover + set border + small table -->
-                            <table class="table  table-hover table-striped table-sm ">
-                                <div>
-                                    <thead>
-                                        <tr>
-                                            <th><input type="checkbox" class="form-check-input" value="">全选</th>
-                                            <th>姓名</th>
-                                            <th>手机</th>
-                                            <th>邮箱</th>
-                                            <th>隶属公司</th>
-                                        </tr>
-                                    </thead>
-                                </div>
-                                <!-- 有新的待审核人员时增加到表格下 -->
-                                <div>
-                                    <tr v-for="person in info">
-                                        <td><input type="checkbox" class="form-check-input" value=""></td>
-                                        <td>{{person.name}}</td>
-                                        <td>{{person.phone}}</td>
-                                        <td>{{person.mail}}</td>
-                                        <td>{{person.companyName}}</td>
-                                    </tr>
-                                </div>
-                            </table>
+        <div class="row">
+            <div class="col">
+                <div class="card rounded shadow">
+                    <div class="card-body">
+                        <h4 class="card-title border-bottom pb-3">待审核人员列表</h4>
+                        <div class="btn-group btn-block mb-3">
+                            <button class="btn btn-danger" style="width:15%;" @click="refuse(person.id)"><i class="fa fa-user-times">&nbsp;</i>拒绝</button>
+                            <button class="btn btn-success" style="width:15%;" @click="verified(person.id)"><i class="fa fa-user-plus">&nbsp;</i>通过</button>
                         </div>
+
+                        <table class="table table-hover rounded">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th><input type="checkbox" v-model="hasCheckAll" @click="checkAll()" style="text-align: center"
+                                            :disabled="!checkable" style="width:2.5%"></th>
+                                    <th style="width:24.3%"><i class="fa fa-user-o">&nbsp;</i>姓名</th>
+                                    <th style="width:24.3%"><i class="fa fa-phone">&nbsp;</i>手机</th>
+                                    <th style="width:24.3%"><i class="fa fa-envelope-o">&nbsp;</i>邮箱</th>
+                                    <th style="width:24.3%"><i class="fa fa-building-o">&nbsp;</i>公司</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="person in info">
+                                    <td><input type="checkbox"value=""></td>
+                                    <td v-text="person.name"></td>
+                                    <td v-text="person.phone"></td>
+                                    <td v-text="person.mail"></td>
+                                    <td v-text="person.companyName"></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+
+
+
         </div>
-
-
-
     </div>
 </body>
+<script src="../../resource/swal2/sweetalert2.all.js"></script>
 <script src="../../resource/vue/vue.js"></script>
 <script src="../../resource/jquery/jquery.js"></script>
 <script src="../../resource/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../resource/jquery/jquery.cookie.js"></script>
+
 <script>
     // 创建一个新的 Vue 实例
     var main = new Vue({
@@ -109,23 +105,201 @@
         data: {
             info: [],
             badgeIndex: '',
+            hasCheckAll: false,
+            //
+            addable: true,
+            deleble: false,
+            editable: false,
+            checkable: true,
+            seen: false,
+
         },
-
-
         created() {
-            var that = this;
-            $.post("../../php/admin/fetchUncensored.php", {}).done((data) => {
-                data = JSON.parse(data);
-                that.info = data;
-                // data.forEach(user => {
-                //     that.info.push(user);
-                // });
-            })
+            swal({
+                title: "Loading...",
+                width: 250,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                showConfirmButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            });
+            this.group = $.cookie('group');
+            if ($.cookie('uuid') == null) {
+                let timerInterval
+                swal({
+                    title: '请登录',
+                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                    timer: 5500,
+                    onOpen: () => {
+                        swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            swal.getContent().querySelector('strong')
+                                .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                        }, 100)
+                    },
+                    onClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then(() => {
+                    window.location.href = "../login/login.html";
+                })
+            } else {
+                this.uuid = $.cookie('uuid');
+                var that = this;
+                $.post("../../php/checkState.php", {
+                    uuid: that.uuid,
+                    group: that.group,
+                }).done((data) => {
+                    swal.close();
+                    data = JSON.parse(data);
+                    if (data.code == 0) {
+                        let timerInterval
+                        swal({
+                            title: '请登录',
+                            html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                            timer: 5500,
+                            onOpen: () => {
+                                swal.showLoading()
+                                timerInterval = setInterval(() => {
+                                    swal.getContent().querySelector('strong')
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
+                                }, 100)
+                            },
+                            onClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then(() => {
+                            window.location.href = "../login/login.html";
+                        })
+                    } else {
+                        $.post("../../php/admin/fetchUncensored.php", {}).done((data) => {
+                            data = JSON.parse(data);
+                            that.info = data;
+                            swal.close();
+                        });
+                    }
+                });
 
+            }
         },
+
 
         // 点击菜单使用的函数
         methods: {
+            logout: function () {
+                var that = this;
+                $.post("../../php/logout.php", {
+                    uuid: that.uuid,
+                    group: "admin",
+                }).done(() => {
+                    $.cookie("uuid", null, { expires: 1, secure: false, path: '/' });
+                    $.cookie("group", null, { expires: 1, secure: false, path: '/' });
+                    window.location.href = "../login/login.html";
+                })
+            },
+
+            checkAll: function () {
+                if (this.companyList.length == 1) {
+                    this.addable = false;
+                    this.editable = true;
+                    this.deleble = true;
+                }
+                if (!this.hasCheckAll) {
+                    this.companyList = [];
+                    this.companies.forEach((company) => {
+                        this.companyList.push(company.id);
+                    });
+                    this.hasCheckAll = !this.hasCheckAll;
+                    this.addable = false;
+                    this.editable = false;
+                    this.deleble = true;
+                }
+                else {
+                    this.companyList = [];
+                    this.hasCheckAll = !this.hasCheckAll;
+                    this.addable = true;
+                    this.editable = false;
+                    this.deleble = false;
+                }
+            },
+
+            checkIndividual: function () {
+                if (this.companyList.length == this.companies.length)
+                    this.hasCheckAll = true;
+                else
+                    this.hasCheckAll = false;
+                if (this.companyList.length == 1) {
+                    this.addable = false;
+                    this.editable = true;
+                    this.deleble = true;
+                }
+                else if (this.companyList.length > 1) {
+                    this.addable = false;
+                    this.editable = false;
+                    this.deleble = true;
+                }
+                else {
+                    this.addable = true;
+                    this.editable = false;
+                    this.deleble = false;
+                }
+
+            },
+
+            showAdd: function () {
+                this.seen = !this.seen;
+                this.checkable = !this.checkable;
+                this.userName = "";
+                this.name = "";
+                this.phone = "";
+                this.mail = "";
+            },
+
+            addPublisher: function () {
+                var that = this;
+                swal({
+                    title: "Loading...",
+                    width: 300,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    showConfirmButton: false,
+                    onOpen: () => { swal.showLoading() }
+                });
+                $.post("../../php/admin/addPublisher.php", {
+                    companyName: that.companyName,
+                    regDate: that.regDate,
+                    responsiblePerson: that.responsiblePerson,
+                    address: that.address,
+                    contact: that.contact,
+                }).done((data) => {
+                    swal.close();
+                    data = JSON.parse(data);
+                    if (data.code == 1) {
+                        $.post("../../php/admin/fetchPublisher.php").done((data) => {
+                            data = JSON.parse(data);
+                            that.companies = data;
+                        });
+                    }
+                    else {
+                        swal({
+                            title: "未知错误！",
+                            type: "error",
+                            text: "请刷新页面后重试！",
+                            confirmButtonText: "刷新",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            onClose: window.location.reload(),
+                        })
+                    }
+                })
+            },
             //审核是否通过
             verified: function (id) {
                 var that = this;
@@ -156,4 +330,3 @@
 </script>
 
 </html>
-

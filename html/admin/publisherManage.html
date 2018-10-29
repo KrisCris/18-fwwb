@@ -53,7 +53,7 @@
             <div class="col">
                 <div class="card rounded shadow">
                     <div class="card-body">
-                        <h4 class="card-title border-bottom pb-3">公司列表</h4>
+                        <h4 class="card-title border-bottom pb-3">发包人员列表</h4>
                         <div class="btn-group btn-block mb-3">
                             <button class="btn btn-primary" style="width:15%;" :disabled="!addable" v-if="!seen" @click="showAdd()">新增</button>
                             <button class="btn btn-success" style="width:15%;" v-if="seen" @click="addPublisher()"><i
@@ -70,10 +70,10 @@
                                 <tr class="">
                                     <th><input type="checkbox" v-model="hasCheckAll" @click="checkAll()" style="text-align: center"
                                             :disabled="!checkable" style="width:2.5%"></th>
-                                    <th style="width:24.3%"><i class="fa fa-building-o">&nbsp;</i>用户名</th>
-                                    <th style="width:24.3%"><i class="fa fa-calendar">&nbsp;</i>姓名</th>
-                                    <th style="width:24.3%"><i class="fa fa-map-marker">&nbsp;</i>手机</th>
-                                    <th style="width:24.3%"><i class="fa fa-user-o">&nbsp;</i>邮件</th>
+                                    <th style="width:24.3%"><i class="fa fa-child">&nbsp;</i>用户名</th>
+                                    <th style="width:24.3%"><i class="fa fa-user-o">&nbsp;</i>姓名</th>
+                                    <th style="width:24.3%"><i class="fa fa-phone">&nbsp;</i>手机</th>
+                                    <th style="width:24.3%"><i class="fa fa-envelope-o">&nbsp;</i>邮件</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -89,8 +89,8 @@
                                             :disabled="!checkable"></td>
                                     <td v-text="publisher.userName"></td>
                                     <td v-text="publisher.name"></td>
-                                    <td v-text="Publisher.phone"></td>
-                                    <td v-text="Publisher.mail"></td>
+                                    <td v-text="publisher.phone"></td>
+                                    <td v-text="publisher.mail"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -195,11 +195,11 @@
                         })
                     }
                     else {
-                        // $.post("../../php/admin/fetchPublisher.php").done((data) => {
-                        //     data = JSON.parse(data);
-                        //     that.companies = data;
-                        //     swal.close();
-                        // });
+                        $.post("../../php/admin/fetchPublisher.php").done((data) => {
+                            data = JSON.parse(data);
+                            that.companies = data;
+                            swal.close();
+                        });
                     }
                 });
 
@@ -270,14 +270,13 @@
             showAdd: function () {
                 this.seen = !this.seen;
                 this.checkable = !this.checkable;
-                this.companyName = "";
-                this.address = "";
-                this.contact = "";
-                this.regDate = "";
-                this.responsiblePerson = "";
+                this.userName = "";
+                this.name = "";
+                this.phone = "";
+                this.mail = "";
             },
 
-            addCompany: function () {
+            addPublisher: function () {
                 var that = this;
                 swal({
                     title: "Loading...",
@@ -318,10 +317,10 @@
                 })
             },
 
-            removeCompany: function () {
+            removePublisher: function () {
                 var that = this;
                 swal({
-                    title: '确定要删除该公司吗？',
+                    title: '确定要删除该这位发包人员吗？',
                     type: 'warning',
                     allowOutsideClick: false,
                     showCancelButton: true,
