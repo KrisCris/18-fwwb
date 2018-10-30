@@ -303,10 +303,17 @@
                     swal.close();
                     data = JSON.parse(data);
                     if (data.code == 1) {
+                        swal({
+                            title: "添加成功！",
+                            type: "success",
+                            showConfirmButton: false,
+                            timer: 1000,
+                        })
                         $.post("../../php/fetchCompany.php").done((data) => {
                             data = JSON.parse(data);
                             that.companies = data;
                         });
+                        that.seen = false;
                     }
                     else {
                         swal({
@@ -316,8 +323,11 @@
                             confirmButtonText: "刷新",
                             allowOutsideClick: false,
                             allowEscapeKey: false,
-                            onClose: window.location.reload(),
-                        })
+                            showConfirmButton:false,
+                            timer:1000,
+                        }).then(()=>{
+                            window.location.reload();
+                        });
                     }
                 })
             },
@@ -332,7 +342,7 @@
                     confirmButtonColor: '#CE252A',
                     cancelButtonColor: '#257FED',
                     confirmButtonText: "确认",
-                    cancelButtonText: "取消"
+                    cancelButtonText: "取消",
                     //我估计result就是有没有确认,.value就是true/false
                 }).then((result) => {
                     if (result.value) {
@@ -361,7 +371,7 @@
                                     showConfirmButton: false,
                                     timer: 1000,
                                 })
-
+                                that.companyList = [];
                             }
                         })
                     }

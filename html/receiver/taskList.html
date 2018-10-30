@@ -40,63 +40,40 @@
             </div>
             <div class="float-right">
                 <!-- <a class="text-muted" href="#">[注销账号]</a> -->
-                <img :src="img" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
+                <img :src="portrait" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
                 <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
                         class="fa fa-power-off">&nbsp;</i>注销</button>
             </div>
         </nav>
-
         <!-- content -->
         <div class="row">
-            <div class="col-lg-3">
-                <div class="card shadow mb-3">
-                    <a href="../editInfo.html"><img class="card-img-top" :src="img" style="width:100%"></a>
+            <div class="col">
+                <div class="card rounded shadow">
                     <div class="card-body">
-                        <h4 class="card-title text-center">NAME</h4>
-                        <p class="card-text text-center"><i class="fa fa-id-card">&nbsp;&nbsp;</i>接包人员</p>
-                        <a href="../editInfo.html" class="btn btn-primary btn-block btn-sm">修改资料</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-9">
-                <div class="row mb-3">
-                    <div class="col">
-                        <div class="card shadow">
-                            <img class="card-img-top">
-                            <div class="card-body">
-                                <h4 class="card-title">待办事项</h4>
-                                <div class="row">
-                                    <div class="col-lg-3 card  border-top-0 border-left-0 border-bottom-0">
-                                        <br>
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-info">5</p>
-                                        <p class="text-center">待完成</p>
-                                    </div>
-                                    <div class="col-lg-3 card border-top-0 border-left-0 border-bottom-0">
-                                        <br>
-                                        <p style="font-size: 25px; " class=" text-center font-weight-bold text-primary">13</p>
-                                        <p class="text-center">审核中</p>
-                                    </div>
-                                    <div class="col-lg-3 card border-top-0 border-left-0 border-bottom-0">
-                                        <br>
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-success">2</p>
-                                        <p class="text-center">新任务</p>
-                                    </div>
-                                    <div class="col-lg-3 card border-0">
-                                        <br>
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-danger">8</p>
-                                        <p class="text-center">延迟</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <h4 class="card-title border-bottom pb-3" v-text="'state'"></h4>
+                        <table class="table table-hover rounded">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>任务名称</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>开始日期</th>
+                                    <th>截止日期</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="task in tasks">
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
         <p>{{uuid}}</p>
         <p>{{group}}</p>
-
-
+        <p>{{taskState}}</p>
     </div>
 </body>
 <script src="../../javascript/camera.js"></script>
@@ -112,7 +89,11 @@
             //user
             group: null,
             uuid: null,
-            img: "http://static.runoob.com/images/mix/img_avatar.png",
+            portrait: "http://static.runoob.com/images/mix/img_avatar.png",
+            //prj
+            tasks: [],
+            taskState: "",
+            type: "a",
         },
         created: function () {
             this.group = $.cookie('group');
@@ -175,13 +156,15 @@
                         })
                     }
                     else {
-                        //获取信息
+                        that.taskState = getQueryString("state");
+                        that.fetchTask();
                     }
                 });
 
             }
             //end of else
         },
+
         methods: {
             logout: function () {
                 var that = this;
@@ -194,9 +177,26 @@
                     window.location.href = "../login/login.html";
                 })
             },
+            //task->prj
+            fetchTask: function () {
+                var that = this;
+                $.post("../../php/receiver/fetchTask.php", {
+                    taskState: that.taskState,
+                    uuid: that.uuid,
+                }).done((data) => {
+                    data = JSON.parse(data);
+                    tasks = data;
+                })
+            }
 
         }
     })
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
 </script>
 
 </html>
