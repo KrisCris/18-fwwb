@@ -59,7 +59,7 @@
                             <button class="btn btn-success" style="width:15%;" v-if="seen" @click="addCompany()"><i
                                     class="fa fa-check"></i></button>
                             <button class="btn btn-danger " style="width:15%;" v-if="seen" @click="showAdd()"><i class="fa fa-remove"></i></button>
-                            <button class="btn btn-primary" style="width:15%;" v-if="!seen" :disabled="!editable"
+                            <button class="btn btn-primary disabled" style="width:15%;" v-if="!seen" :disabled="!editable"
                                 @click="editCompany()">修改</button>
                             <button class="btn btn-danger" style="width:15%;" v-if="!seen" :disabled="!deleble" @click="removeCompany()">删除</button>
                         </div>
@@ -273,7 +273,7 @@
 
             showAdd: function () {
                 this.seen = !this.seen;
-                this.checkable = !this.checkable;
+                this.checkable = true;
                 this.companyName = "";
                 this.address = "";
                 this.contact = "";

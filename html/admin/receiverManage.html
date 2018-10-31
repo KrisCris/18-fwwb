@@ -96,7 +96,7 @@
                                     <td v-text="receiver.phone"></td>
                                     <td v-text="receiver.mail"></td>
                                     <td><select>
-                                            <optio>请选择公司</optio>
+                                            <option>请选择公司</option>
                                             </option>
                                         </select></td>
                                 </tr>
@@ -292,7 +292,7 @@
                 this.userName = "";
                 this.name = "";
                 this.phone = "";
-                this.rmail = "";
+                this.mail = "";
                 this.company = 0;
             },
 
@@ -311,11 +311,11 @@
                     }
                 });
                 $.post("../../php/admin/addReceiver.php", {
-                    companyName: that.companyName,
-                    regDate: that.regDate,
-                    responsiblePerson: that.responsiblePerson,
-                    address: that.address,
-                    contact: that.contact,
+                    username: that.username,
+                    name: that.name,
+                    phone: that.phone,
+                    mail: that.mail,
+                    companyList: that.companyList,
                 }).done((data) => {
                     swal.close();
                     data = JSON.parse(data);
