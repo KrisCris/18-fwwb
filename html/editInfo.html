@@ -101,6 +101,37 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row mt-4">
+                    <div class="col">
+                        <div class="card shadow text-left">
+                            <div class="card-body">
+                                <h4 class="card-title border-bottom pb-3">擅长技能</h4>
+                                <div>
+
+                                    <div>
+                                        <button class="btn btn-success btn-sm">前端</button>
+                                        <button class="btn btn-success btn-sm">Html 5</button>
+                                        <button class="btn btn-success btn-sm">CSS</button>
+                                        <button class="btn btn-success btn-sm">Javascript</button>
+                                        <button class="btn btn-success btn-sm">Angular.js</button>
+                                        <button class="btn btn-success btn-sm">Vue.js</button>
+                                    </div>
+                                </div>
+                                <br>
+                                <div>
+                                    <button class="btn btn-info btn-sm">后端</button>
+                                    <button class="btn btn-info btn-sm">PHP</button>
+                                    <button class="btn btn-info btn-sm">SQL</button>
+                                </div>
+                                <br>
+                                <button class='btn btn-block btn-primary' disabled>修改</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="row mt-4 mb-5">
                     <div class="col">
                         <div class="card shadow">
@@ -195,7 +226,9 @@
                 allowEscapeKey: false,
                 allowEnterKey: false,
                 showConfirmButton: false,
-                onOpen: () => { swal.showLoading() }
+                onOpen: () => {
+                    swal.showLoading()
+                }
             });
             this.cGroup = $.cookie('group');
             if ($.cookie('uuid') == null) {
@@ -217,8 +250,7 @@
                 }).then(() => {
                     window.location.href = "login/login.html";
                 })
-            }
-            else {
+            } else {
                 this.cUuid = $.cookie('uuid');
                 var that = this;
                 $.post("../php/checkState.php", {
@@ -239,7 +271,8 @@
                                 swal.showLoading()
                                 timerInterval = setInterval(() => {
                                     swal.getContent().querySelector('strong')
-                                        .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
                                 }, 100)
                             },
                             onClose: () => {
@@ -265,9 +298,13 @@
                     that.company = data.company;
                 that.phone = data.phone;
                 that.mail = data.mail;
-                if (this.cGroup == "admin") { this.type = "管理员"; this.company = "ArcSoft"; }
-                else if (this.cGroup == 1) { this.type = "发包人员"; this.company = "ArcSoft"; }
-                else if (this.cGroup == 2) this.type = "接包人员";
+                if (this.cGroup == "admin") {
+                    this.type = "管理员";
+                    this.company = "ArcSoft";
+                } else if (this.cGroup == 1) {
+                    this.type = "发包人员";
+                    this.company = "ArcSoft";
+                } else if (this.cGroup == 2) this.type = "接包人员";
                 swal.close();
 
 
@@ -278,7 +315,8 @@
             edit: function (category, value) {
                 var that = this;
                 console.log(category + "   " + value);
-                if (((category == "mail") && (value.match(/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/) === null)) || ((category == "phone") && (value.match(/^1\d{10}$/) === null))) {
+                if (((category == "mail") && (value.match(/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/) === null)) ||
+                    ((category == "phone") && (value.match(/^1\d{10}$/) === null))) {
                     swal({
                         title: "格式不正确",
                         type: "error",
@@ -286,8 +324,7 @@
                     });
                     this.newMail = "";
                     this.newPhone = "";
-                }
-                else {
+                } else {
                     swal({
                         title: "Loading...",
                         width: 250,
@@ -296,7 +333,9 @@
                         allowEscapeKey: false,
                         allowEnterKey: false,
                         showConfirmButton: false,
-                        onOpen: () => { swal.showLoading() }
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
                     });
                     $.post("../php/editProfile.php", {
                         group: that.cGroup,
@@ -316,7 +355,8 @@
                                     that.phone = that.newPhone;
                                     that.showPhone = !that.showPhone;
                                     break;
-                                default: window.window.location.reload();
+                                default:
+                                    window.window.location.reload();
                             }
                             let timerInterval;
                             swal({
@@ -329,8 +369,7 @@
                                 }
                             })
 
-                        }
-                        else {
+                        } else {
                             swal({
                                 title: "出错了！",
                                 text: "修改的过程中遇到了一些问题，请刷新页面后重试！",
@@ -359,8 +398,7 @@
                     })
                     this.newPassword = "";
                     this.newPassword2 = "";
-                }
-                else if (this.newPassword == this.password) {
+                } else if (this.newPassword == this.password) {
                     swal({
                         text: "请勿输入相同的密码！",
                         type: "error",
@@ -368,8 +406,7 @@
                     })
                     this.newPassword = "";
                     this.newPassword2 = "";
-                }
-                else {
+                } else {
                     swal({
                         title: "Loading...",
                         width: 250,
@@ -378,7 +415,9 @@
                         allowEscapeKey: false,
                         allowEnterKey: false,
                         showConfirmButton: false,
-                        onOpen: () => { swal.showLoading() }
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
                     });
                     $.post("../php/editSecurityInfo.php", {
                         type: "password",
@@ -404,8 +443,7 @@
                                 }
                             })
 
-                        }
-                        else if (data.code == 0) {
+                        } else if (data.code == 0) {
                             that.password = "";
                             that.newPassword = "";
                             that.newPassword2 = "";

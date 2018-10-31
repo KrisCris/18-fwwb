@@ -10,7 +10,7 @@
 </head>
 
 <body style="background-image: url(../../image/papper.png)">
-    <div id="main" class="container ">
+    <div id="main" class="container">
         <!-- navigation_bar -->
         <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
             <a class="navbar-brand" href="#">CrowdSourcing</a>
@@ -20,7 +20,7 @@
             <div class="collapse navbar-collapse " id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="task.html?state=today"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>今日工作</a>
+                        <a class="nav-link" href="prjList.html?state=today"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>今日工作</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -28,10 +28,10 @@
                             所有任务
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="taskList.html?state=1"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
-                            <a class="dropdown-item" href="taskList.html?state=2"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
-                            <a class="dropdown-item" href="taskList.html?state=3"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
-                        </div>  
+                            <a class="dropdown-item" href="prjList.html?state=1"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
+                            <a class="dropdown-item" href="prjList.html?state=2"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
+                            <a class="dropdown-item" href="prjList.html?state=3"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="index.html"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
@@ -48,18 +48,27 @@
 
         <!-- project items cards -->
         <div class="row">
-            <div class="col-sm-3" v-for="n in 10 ">
-                <div class="card mb-4">
-                    <img class="card-img-top" src="../../image/timg.jpg" alt="Card image cap">
+            <div class="col-md-3 col-sm-6" v-for="n in 8">
+
+                <div class="card mb-4 rounded shadow">
+                    <img class="card-img-top" src="../../image/timg.jpg" >
                     <div class="card-body">
-                        <h5 class="card-title">projectName</h5>
-                        <p class="card-text">breif</p>
-                        <a href="#" class="btn btn-primary">查看任务</a>
+                            <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:40%"></div>
+                                  </div>
+                        <h5 class="card-title" v-text=""></h5>
+                        <p class="card-text ">开始日期:<span v-text=""></span></p>
+                        <p class="card-text">截止日期:<span v-text=""></span></p>
+                       
+                        <a href="taskList.html" class="btn btn-success btn-block">查看任务</a>
+                
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
+
 
 </body>
 <script src="../../resource/swal2/sweetalert2.all.js"></script>
@@ -79,6 +88,7 @@
             tasks: [],
             taskState: "",
             type: "a",
+
         },
         created: function () {
             this.group = $.cookie('group');
@@ -101,8 +111,7 @@
                 }).then(() => {
                     window.location.href = "../login/login.html";
                 })
-            }
-            else {
+            } else {
                 this.uuid = $.cookie('uuid');
                 var that = this;
                 swal({
@@ -112,7 +121,9 @@
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     allowEnterKey: false,
-                    onOpen: () => { swal.showLoading() }
+                    onOpen: () => {
+                        swal.showLoading()
+                    }
                 });
                 $.post("../../php/checkState.php", {
                     uuid: that.uuid,
@@ -130,7 +141,8 @@
                                 swal.showLoading()
                                 timerInterval = setInterval(() => {
                                     swal.getContent().querySelector('strong')
-                                        .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
                                 }, 100)
                             },
                             onClose: () => {
@@ -139,10 +151,15 @@
                         }).then(() => {
                             window.location.href = "../login/login.html";
                         })
-                    }
+                    } 
                     else {
                         that.taskState = getQueryString("state");
                         that.fetchTask();
+                        $.post("../../php/fetchTask.php").done((data)=>{
+                            data = JSON.parse(data);
+                            that.tasks = data;
+                            swal.close();
+                        });
                     }
                 });
 
@@ -156,11 +173,20 @@
                     uuid: that.uuid,
                     group: "admin",
                 }).done(() => {
-                    $.cookie("uuid", null, { expires: 1, secure: false, path: '/' });
-                    $.cookie("group", null, { expires: 1, secure: false, path: '/' });
+                    $.cookie("uuid", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    $.cookie("group", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
                     window.location.href = "../login/login.html";
                 })
             },
+
 
         }
     })
