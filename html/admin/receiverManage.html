@@ -80,25 +80,22 @@
                             <tbody>
                                 <tr v-if="seen">
                                     <td></td>
-                                    <td><input type="text" class="form-control" placeholder="" v-model="userName"></td>
+                                    <td><input type="text" class="form-control" placeholder="" v-model="username"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="name"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="phone"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="mail"></td>
-                                    <td><select>
-                                            <option>请选择公司</option>
+                                    <td><select class="form-control" v-model="selected">
+                                            <option v-for="company in companies" v-text="company.companyName"></option>
                                         </select></td>
                                 </tr>
                                 <tr v-for="reciver in receivers">
-                                    <td><input type="checkbox" v-model="receiverList" :value="receiver.id" @change="checkIndividual()"
+                                    <td><input type="checkbox" v-modƒel="receiverList" :value="receiver.id" @change="checkIndividual()"
                                             :disabled="!checkable"></td>
-                                    <td v-text="receiver.userName"></td>
+                                    <td v-text="receiver.username"></td>
                                     <td v-text="receiver.name"></td>
                                     <td v-text="receiver.phone"></td>
                                     <td v-text="receiver.mail"></td>
-                                    <td><select>
-                                            <option>请选择公司</option>
-                                            </option>
-                                        </select></td>
+                                    <td v-text="receiver.company"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -121,18 +118,18 @@
     var app = new Vue({
         el: "#main",
         data: {
-            receivers: [],
             companies: [],
+            receivers: [],
             // seen = false,
             //cookies
             group: 0,
             uuid: 0,
             //add
-            userName: "",
+            username: "",
             name: "",
             phone: "",
             mail: "",
-            company: 0,
+            selected: "",
             //
             receiverList: [],
             hasCheckAll: false,
@@ -209,11 +206,11 @@
                             window.location.href = "../login/login.html";
                         })
                     } else {
-                        // $.post("../../php/admin/fetchReceiver.php").done((data) => {
-                        //     data = JSON.parse(data);
-                        //     that.companies = data;
-                        //     swal.close();
-                        // });
+                        $.post("../../php/admin/fetchReceiver.php").done((data) => {
+                            data = JSON.parse(data);
+                            that.receivers = data;
+                            swal.close();
+                        });
                     }
                 });
 
@@ -242,22 +239,22 @@
             },
 
             checkAll: function () {
-                if (this.companyList.length == 1) {
+                if (this.receiverList.length == 1) {
                     this.addable = false;
                     this.editable = true;
                     this.deleble = true;
                 }
                 if (!this.hasCheckAll) {
-                    this.companyList = [];
-                    this.companies.forEach((company) => {
-                        this.companyList.push(company.id);
+                    this.receiverList = [];
+                    this.companies.forEach((receiver) => {
+                        this.receiverList.push(receiver.id);
                     });
                     this.hasCheckAll = !this.hasCheckAll;
                     this.addable = false;
                     this.editable = false;
                     this.deleble = true;
                 } else {
-                    this.companyList = [];
+                    this.receiverList = [];
                     this.hasCheckAll = !this.hasCheckAll;
                     this.addable = true;
                     this.editable = false;
@@ -266,15 +263,15 @@
             },
 
             checkIndividual: function () {
-                if (this.companyList.length == this.companies.length)
+                if (this.receiverList.length == this.receivers.length)
                     this.hasCheckAll = true;
                 else
                     this.hasCheckAll = false;
-                if (this.companyList.length == 1) {
+                if (this.receiverList.length == 1) {
                     this.addable = false;
                     this.editable = true;
                     this.deleble = true;
-                } else if (this.companyList.length > 1) {
+                } else if (this.receiverList.length > 1) {
                     this.addable = false;
                     this.editable = false;
                     this.deleble = true;
@@ -289,11 +286,15 @@
             showAdd: function () {
                 this.seen = !this.seen;
                 this.checkable = !this.checkable;
-                this.userName = "";
+                this.username = "";
                 this.name = "";
                 this.phone = "";
                 this.mail = "";
                 this.company = 0;
+                $.post("../../php/fetchCompany.php").done((data) => {
+                    data = JSON.parse(data);
+                    this.companies = data;
+                });
             },
 
             addReciver: function () {
@@ -315,14 +316,14 @@
                     name: that.name,
                     phone: that.phone,
                     mail: that.mail,
-                    companyList: that.companyList,
+                    companyName: that.selected,
                 }).done((data) => {
                     swal.close();
                     data = JSON.parse(data);
                     if (data.code == 1) {
                         $.post("../../php/admin/fetchReceiver.php").done((data) => {
                             data = JSON.parse(data);
-                            that.companies = data;
+                            that.receivers = data;
                         });
                     } else {
                         swal({
@@ -363,13 +364,13 @@
                             }
                         })
                         $.post("../../php/admin/removeReceiver.php", {
-                            companyList: that.companyList,
+                            receiverList: that.receiverList,
                         }).done((data) => {
                             data = JSON.parse(data);
                             if (data.code == 1) {
                                 $.post("../../php/admin/fetchReceiver.php").done((data) => {
                                     data = JSON.parse(data);
-                                    that.companies = data;
+                                    that.receivers = data;
                                 });
                                 swal({
                                     title: "删除成功！",
@@ -377,16 +378,14 @@
                                     showConfirmButton: false,
                                     timer: 1000,
                                 })
-
+                                that.receiverList = [];
                             }
                         })
                     }
                 });
             },
 
-            editCompany: function () {
 
-            }
         }
 
     })

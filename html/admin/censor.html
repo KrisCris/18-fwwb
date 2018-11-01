@@ -44,7 +44,7 @@
             <div class="float-right">
                 <!-- <a class="text-muted" href="#">[注销账号]</a> -->
                 <a href="index.html"><img src="http://static.runoob.com/images/mix/img_avatar.png" class="rounded-circle"
-                    alt="Cinque Terre" style="width:40px; height:40px;"><span>&nbsp;</span></a>
+                        alt="Cinque Terre" style="width:40px; height:40px;"><span>&nbsp;</span></a>
                 <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
                         class="fa fa-power-off">&nbsp;</i>注销</button>
 
@@ -74,7 +74,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="person in info">
-                                    <td><input type="checkbox" v-model="companyList" :value="company.id" @change="checkIndividual()"
+                                    <td><input type="checkbox" v-model="uncensorList" :value="person.id" @change="checkIndividual()"
                                             :disabled="!checkable"></td>
                                     <td v-text="person.name"></td>
                                     <td v-text="person.phone"></td>
@@ -212,22 +212,22 @@
             },
 
             checkAll: function () {
-                if (this.companyList.length == 1) {
+                if (this.uncensorList.length == 1) {
                     this.addable = false;
                     this.editable = true;
                     this.deleble = true;
                 }
                 if (!this.hasCheckAll) {
-                    this.companyList = [];
-                    this.companies.forEach((company) => {
-                        this.companyList.push(company.id);
+                    this.uncensorList = [];
+                    this.info.forEach((person) => {
+                        this.uncensorList.push(person.id);
                     });
                     this.hasCheckAll = !this.hasCheckAll;
                     this.addable = false;
                     this.editable = false;
                     this.deleble = true;
                 } else {
-                    this.companyList = [];
+                    this.uncensorList = [];
                     this.hasCheckAll = !this.hasCheckAll;
                     this.addable = true;
                     this.editable = false;
@@ -236,15 +236,15 @@
             },
 
             checkIndividual: function () {
-                if (this.companyList.length == this.companies.length)
+                if (this.uncensorList.length == this.info.length)
                     this.hasCheckAll = true;
                 else
                     this.hasCheckAll = false;
-                if (this.companyList.length == 1) {
+                if (this.uncensorList.length == 1) {
                     this.addable = false;
                     this.editable = true;
                     this.deleble = true;
-                } else if (this.companyList.length > 1) {
+                } else if (this.uncensorList.length > 1) {
                     this.addable = false;
                     this.editable = false;
                     this.deleble = true;
@@ -256,57 +256,7 @@
 
             },
 
-            showAdd: function () {
-                this.seen = !this.seen;
-                this.checkable = !this.checkable;
-                //clear the text 
-                this.userName = "";
-                this.name = "";
-                this.phone = "";
-                this.mail = "";
-            },
 
-            addPublisher: function () {
-                var that = this;
-                swal({
-                    title: "Loading...",
-                    width: 300,
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    allowEnterKey: false,
-                    showConfirmButton: false,
-                    onOpen: () => {
-                        swal.showLoading()
-                    }
-                });
-                $.post("../../php/admin/addPublisher.php", {
-                    username: that.username,
-                    name: that.name,
-                    phone: that.phone,
-                    mail: that.mail,
-                    companyList: that.companyList,
-                }).done((data) => {
-                    swal.close();
-                    data = JSON.parse(data);
-                    if (data.code == 1) {
-                        $.post("../../php/admin/fetchPublisher.php").done((data) => {
-                            data = JSON.parse(data);
-                            that.companies = data;
-                        });
-                    } else {
-                        swal({
-                            title: "未知错误！",
-                            type: "error",
-                            text: "请刷新页面后重试！",
-                            confirmButtonText: "刷新",
-                            allowOutsideClick: false,
-                            allowEscapeKey: false,
-                            onClose: window.location.reload(),
-                        })
-                    }
-                })
-            },
             //审核是否通过
             verified: function (id) {
                 var that = this;
