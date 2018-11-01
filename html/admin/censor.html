@@ -86,9 +86,6 @@
                     </div>
                 </div>
             </div>
-
-
-
         </div>
     </div>
 </body>
@@ -158,7 +155,6 @@
                     uuid: that.uuid,
                     group: that.group,
                 }).done((data) => {
-                    swal.close();
                     data = JSON.parse(data);
                     if (data.code == 0) {
                         let timerInterval

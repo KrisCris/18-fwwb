@@ -21,5 +21,5 @@ foreach($companyList as $each){
 echo $json=json_encode(array(
     "code"=>$code,  
 ));
-
+// auther：hgz
 ?>

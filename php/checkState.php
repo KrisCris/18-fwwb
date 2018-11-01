@@ -15,5 +15,5 @@
   $code=empty($data)?0:1;
 
   echo json_encode(["code"=>$code]);
-
+// auther：hgz
 ?>

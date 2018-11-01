@@ -26,5 +26,5 @@ $json=json_encode(array(
     "code"=>$code,   
 )); 
 echo $json; 
- 
+ // auther：hgz
 ?>

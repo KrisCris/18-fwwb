@@ -4,4 +4,5 @@
     $sql="SELECT * FROM company";
     $data=sql_str($sql);
     echo json_encode($data);
+    // auther：hgz
 ?>
