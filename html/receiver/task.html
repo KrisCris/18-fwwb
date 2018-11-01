@@ -1,0 +1,143 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
+    <title>任务查看</title>
+</head>
+
+<body style="background-image: url(../../image/papper.png)">
+    <div id="main" class="container">
+        <!-- simple bar -->
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
+            <a class="navbar-brand" href="#">CrowdSourcing</a>
+            <div class="collapse navbar-collapse ">
+            </div>
+            <div class="float-right">
+                <img src="http://static.runoob.com/images/mix/img_avatar.png" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="window.history.back()"><i
+                        class="fa fa-reply">&nbsp;</i>返回</button>
+            </div>
+        </nav>
+        <div class="row">
+            <div class="col">
+                <div class="card rounded shadow">
+                    <div class="card-title bg-secondary">
+                        <h4 v-text="task.name"></h4>
+                        <div class="btn-group mt-0 float-right">
+                            <button class="btn btn-success" v-if="seen" @click="startWork">开始工作</button>
+                            <button class="btn btn-danger" v-if="!seen" @click="endWork">结束工作</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3>工作需求</h3>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+
+<script src="../../javascript/camera.js"></script>
+<script src="../../resource/swal2/sweetalert2.all.js"></script>
+<script src="../../resource/vue/vue.js"></script>
+<script src="../../resource/jquery/jquery.js"></script>
+<script src="../../resource/bootstrap/js/bootstrap.js"></script>
+<script src="../../resource/jquery/jquery.cookie.js"></script>
+<script>
+    var app = new Vue({
+        el: "#main",
+        data: {
+            task: [],
+            name: '',
+            seen: true,
+        },
+        // created() {
+        //     swal({
+        //         title: "Loading...",
+        //         width: 250,
+        //         showConfirmButton: false,
+        //         allowOutsideClick: false,
+        //         allowEscapeKey: false,
+        //         allowEnterKey: false,
+        //         showConfirmButton: false,
+        //         onOpen: () => {
+        //             swal.showLoading()
+        //         }
+        //     });
+        //     this.group = $.cookie('group');
+        //     if ($.cookie('uuid') == null) {
+        //         let timerInterval
+        //         swal({
+        //             title: '请登录',
+        //             html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+        //             timer: 5500,
+        //             onOpen: () => {
+        //                 swal.showLoading()
+        //                 timerInterval = setInterval(() => {
+        //                     swal.getContent().querySelector('strong')
+        //                         .textContent = parseInt((swal.getTimerLeft()) / 1000)
+        //                 }, 100)
+        //             },
+        //             onClose: () => {
+        //                 clearInterval(timerInterval)
+        //             }
+        //         }).then(() => {
+        //             window.location.href = "../login/login.html";
+        //         })
+        //     } else {
+        //         this.uuid = $.cookie('uuid');
+        //         var that = this;
+        //         $.post("../../php/checkState.php", {
+        //             uuid: that.uuid,
+        //             group: that.group,
+        //         }).done((data) => {
+        //             data = JSON.parse(data);
+        //             if (data.code == 0) {
+        //                 let timerInterval
+        //                 swal({
+        //                     title: '请登录',
+        //                     html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+        //                     timer: 5500,
+        //                     onOpen: () => {
+        //                         swal.showLoading()
+        //                         timerInterval = setInterval(() => {
+        //                             swal.getContent().querySelector('strong')
+        //                                 .textContent = parseInt((swal.getTimerLeft()) /
+        //                                     1000)
+        //                         }, 100)
+        //                     },
+        //                     onClose: () => {
+        //                         clearInterval(timerInterval)
+        //                     }
+        //                 }).then(() => {
+        //                     window.location.href = "../login/login.html";
+        //                 })
+        //             } else {
+        //                 // $.post("../../php/fetchCompany.php").done((data) => {
+        //                 //     data = JSON.parse(data);
+        //                 //     that.companies = data;
+        //                 //     swal.close();
+        //                 // });
+        //             }
+        //         });
+
+        //     }
+        // },
+        methods: {
+            //开始工作的时候用计时器提示已经开始工作
+            startWork: function() {
+                this.seen=false;
+            },
+            //结束工作的时候显示本次工作时常
+            endWork: function() {
+                this.seen= true;
+            },
+        }
+    })
+</script>
+
+</html>

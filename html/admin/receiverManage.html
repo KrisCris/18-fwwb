@@ -84,12 +84,12 @@
                                     <td><input type="text" class="form-control" placeholder="" v-model="name"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="phone"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="mail"></td>
-                                    <td><select class="form-control" v-model="selected">
-                                            <option v-for="company in companies" v-text="company.companyName"></option>
+                                    <td><select class="form-control" >
+                                            <option v-for="company in companies" v-model="selected" v-text="company.companyName"></option>
                                         </select></td>
                                 </tr>
-                                <tr v-for="reciver in receivers">
-                                    <td><input type="checkbox" v-modƒel="receiverList" :value="receiver.id" @change="checkIndividual()"
+                                <tr v-for="receiver in receivers">
+                                    <td><input type="checkbox" v-model="receiverList" :value="receiver.id" @change="checkIndividual()"
                                             :disabled="!checkable"></td>
                                     <td v-text="receiver.username"></td>
                                     <td v-text="receiver.name"></td>
@@ -107,8 +107,10 @@
         <p>{{uuid}}</p>
         <p>{{group}}</p>
         <p>{{receiverList}}</p>
+        <p>{{selected}}</p>
     </div>
 </body>
+<script src="../../javascript/camera.js"></script>
 <script src="../../resource/swal2/sweetalert2.all.js"></script>
 <script src="../../resource/vue/vue.js"></script>
 <script src="../../resource/jquery/jquery.js"></script>
@@ -246,14 +248,15 @@
                 }
                 if (!this.hasCheckAll) {
                     this.receiverList = [];
-                    this.companies.forEach((receiver) => {
+                    this.receivers.forEach((receiver) => {
                         this.receiverList.push(receiver.id);
                     });
                     this.hasCheckAll = !this.hasCheckAll;
                     this.addable = false;
                     this.editable = false;
                     this.deleble = true;
-                } else {
+                }
+                else {
                     this.receiverList = [];
                     this.hasCheckAll = !this.hasCheckAll;
                     this.addable = true;
@@ -271,11 +274,13 @@
                     this.addable = false;
                     this.editable = true;
                     this.deleble = true;
-                } else if (this.receiverList.length > 1) {
+                }
+                else if (this.receiverList.length > 1) {
                     this.addable = false;
                     this.editable = false;
                     this.deleble = true;
-                } else {
+                }
+                else {
                     this.addable = true;
                     this.editable = false;
                     this.deleble = false;
@@ -297,7 +302,7 @@
                 });
             },
 
-            addReciver: function () {
+            addReceiver: function () {
                 var that = this;
                 swal({
                     title: "Loading...",

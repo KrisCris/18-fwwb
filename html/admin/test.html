@@ -1,0 +1,81 @@
+<!Doctype <!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
+</head>
+
+<body>
+    <div  id="app">
+	<p>
+		全选：
+	</p>
+	<input type="checkbox" id="checkbox" v-model="checked" @change="changeAllChecked()">
+	<label for="checkbox">
+		{{checked}}
+	</label>
+	<p>
+		多个复选框：
+	</p>
+	<input type="checkbox"  value="Runoob" v-model="checkedNames">
+	<label for="runoob">
+		Runoob
+	</label>
+	<input type="checkbox" value="Google" v-model="checkedNames">
+	<label for="google">
+		Google
+	</label>
+	<input type="checkbox" value="Taobao" v-model="checkedNames">
+	<label for="taobao">
+		taobao
+	</label>
+	<br>
+	<span>
+		选择的值为:{{checkedNames}}
+	</span>
+</div>
+</body>
+
+
+<script src="../../resource/swal2/sweetalert2.all.js"></script>
+<script src="../../resource/vue/vue.js"></script>
+<script src="../../resource/jquery/jquery.js"></script>
+<script src="../../resource/bootstrap/js/bootstrap.js"></script>
+<script src="../../resource/jquery/jquery.cookie.js"></script>
+<script>
+var main = new Vue({
+	el: '#app',
+	data: {
+        //是否全选的参数
+		checked: false,
+		checkedNames: [],
+      
+		checkedArr: ["Runoob", "Taobao", "Google"]
+	},
+	methods: {
+		changeAllChecked: function() {
+            //如果没有全选，那么全选
+			if (this.checked) {
+				this.checkedNames = this.checkedArr
+			}
+            //如果没全选，那么清空， 
+            else {
+				this.checkedNames = []
+			}
+		}
+	},
+	watch: {
+		"checkedNames": function() {
+			if (this.checkedNames.length == this.checkedArr.length) {
+				this.checked = true
+			} else {
+				this.checked = false
+			}
+		}
+	}
+})
+</script>
+</html>

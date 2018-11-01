@@ -197,7 +197,7 @@
                     else {
                         $.post("../../php/admin/fetchPublisher.php").done((data) => {
                             data = JSON.parse(data);
-                            that.companies = data;
+                            that.publishers = data;
                             swal.close();
                         });
                     }
@@ -227,7 +227,7 @@
                 }
                 if (!this.hasCheckAll) {
                     this.publisherList = [];
-                    this.companies.forEach((publisher) => {
+                    this.publishers.forEach((publisher) => {
                         this.publisherList.push(publisher.id);
                     });
                     this.hasCheckAll = !this.hasCheckAll;
