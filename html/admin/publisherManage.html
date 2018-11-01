@@ -79,7 +79,7 @@
                             <tbody>
                                 <tr v-if="seen">
                                     <td></td>
-                                    <td><input type="text" class="form-control" placeholder="" v-model="userName"></td>
+                                    <td><input type="text" class="form-control" placeholder="" v-model="username"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="name"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="phone"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="mail"></td>
@@ -87,7 +87,7 @@
                                 <tr v-for="publisher in publishers">
                                     <td><input type="checkbox" v-model="publisherList" :value="publisher.id" @change="checkIndividual()"
                                             :disabled="!checkable"></td>
-                                    <td v-text="publisher.userName"></td>
+                                    <td v-text="publisher.username"></td>
                                     <td v-text="publisher.name"></td>
                                     <td v-text="publisher.phone"></td>
                                     <td v-text="publisher.mail"></td>
@@ -119,7 +119,7 @@
             group: 0,
             uuid: 0,
             //add
-            userName: "",
+            username: "",
             name: "",
             phone: "",
             mail: "",
@@ -270,7 +270,7 @@
             showAdd: function () {
                 this.seen = !this.seen;
                 this.checkable = !this.checkable;
-                this.userName = "";
+                this.username = "";
                 this.name = "";
                 this.phone = "";
                 this.mail = "";
@@ -289,7 +289,7 @@
                     onOpen: () => { swal.showLoading() }
                 });
                 $.post("../../php/admin/addPublisher.php", {
-                    userName: that.userName,
+                    username: that.username,
                     name: that.name,
                     phone: that.phone,
                     mail: that.mail,

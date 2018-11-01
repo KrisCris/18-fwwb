@@ -80,7 +80,7 @@
                             <tbody>
                                 <tr v-if="seen">
                                     <td></td>
-                                    <td><input type="text" class="form-control" placeholder="" v-model="userName"></td>
+                                    <td><input type="text" class="form-control" placeholder="" v-model="username"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="name"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="phone"></td>
                                     <td><input type="text" class="form-control" placeholder="" v-model="mail"></td>
@@ -91,7 +91,7 @@
                                 <tr v-for="reciver in receivers">
                                     <td><input type="checkbox" v-modƒel="receiverList" :value="receiver.id" @change="checkIndividual()"
                                             :disabled="!checkable"></td>
-                                    <td v-text="receiver.userName"></td>
+                                    <td v-text="receiver.username"></td>
                                     <td v-text="receiver.name"></td>
                                     <td v-text="receiver.phone"></td>
                                     <td v-text="receiver.mail"></td>
@@ -125,7 +125,7 @@
             group: 0,
             uuid: 0,
             //add
-            userName: "",
+            username: "",
             name: "",
             phone: "",
             mail: "",
@@ -286,7 +286,7 @@
             showAdd: function () {
                 this.seen = !this.seen;
                 this.checkable = !this.checkable;
-                this.userName = "";
+                this.username = "";
                 this.name = "";
                 this.phone = "";
                 this.mail = "";
