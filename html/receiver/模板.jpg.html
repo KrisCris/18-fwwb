@@ -54,7 +54,6 @@
         <!-- test -->
         <p>{{uuid}}</p>
         <p>{{group}}</p>
-        <p>{{state}}</p>
     </div>
 
 </body>
@@ -72,11 +71,9 @@
             group: null,
             uuid: null,
             portrait: "http://static.runoob.com/images/mix/img_avatar.png",
-            state:"",
         },
         created: function () {
             this.group = $.cookie('group');
-            this.state = getQueryString("state");
             if ($.cookie('uuid') == null) {
                 let timerInterval
                 swal({
