@@ -14,31 +14,89 @@
         <!-- simple bar -->
         <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
             <a class="navbar-brand" href="#">CrowdSourcing</a>
-            <div class="collapse navbar-collapse ">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse " id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="taskList.html?state=recent"><i class="fa fa-calendar-check-o">&nbsp;&nbsp;</i>近日任务</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-pie-chart"></i>
+                            所有任务
+                        </a>
+                        <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="taskList.html?state=0"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
+                            <a class="dropdown-item" href="taskList.html?state=2"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
+                            <a class="dropdown-item" href="taskList.html?state=1"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
+                    </li>
+                </ul>
             </div>
             <div class="float-right">
-                <img src="http://static.runoob.com/images/mix/img_avatar.png" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
+                <img :src="img" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
                 <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="window.history.back()"><i
                         class="fa fa-reply">&nbsp;</i>返回</button>
             </div>
         </nav>
-        <div class="row">
-            <div class="col">
-                <div class="card rounded shadow">
-                    <div class="card-title bg-secondary">
-                        <h4 v-text="task.name"></h4>
-                        <div class="btn-group mt-0 float-right">
-                            <button class="btn btn-success" v-if="seen" @click="startWork">开始工作</button>
-                            <button class="btn btn-danger" v-if="!seen" @click="endWork">结束工作</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h3>工作需求</h3>
-                        
-                    </div>
+        <div class="card rounded shadow mb-4">
+            <div class="card-body">
+                <!-- taskName -->
+                <h4 v-text="task.taskName"></h4>
+                <!-- button-group -->
+                <div class="btn-group float-right">
+                    <button class="btn btn-primary " v-if="seen" @click="startWork">开始工作</button>
+                    <button class="btn btn-danger" v-if="!seen" @click="endWork">结束工作</button>
                 </div>
             </div>
         </div>
+        <!-- 任务需求 -->
+        <div class="card rounded shadow mb-4">
+            <div class="card-body">
+                <div class="card-title">
+                    <h3>任务要求</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <h4>信息</h4>
+                        <textarea id="area" rows="5" class="form-control rounded mb-3" v-model="workDescription"
+                            readonly></textarea>
+                    </li>
+                    <li class="list-group-item">
+                        <h4>附件</h4>
+                        <!-- 下载文件 -->
+                        <a :href="resource" download="test.png">点击下载任务资源</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 完成任务发送 -->
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="card-title">
+                    <h3>任务上传</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <h4>信息</h4>
+                        <textarea cols="60" rows="5" class="form-control rounded mb-3" v-model="description"></textarea>
+                    </li>
+                    <li class="list-group-item">
+                        <h4>附件</h4>
+                        <input type="file" id="file_input" class="rounded">
+                        <button class="btn-primary float-right rounded" @click="upload">提交</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <p>{{description}}</p>
+    
+    </div>
 </body>
 
 <script src="../../javascript/camera.js"></script>
@@ -51,9 +109,18 @@
     var app = new Vue({
         el: "#main",
         data: {
+            //user
+            group: null,
+            uuid: null,
+            img: "http://static.runoob.com/images/mix/img_avatar.png",
+            portrait: "http://static.runoob.com/images/mix/img_avatar.png",
+            //
             task: [],
-            name: '',
+            taskName: '',
+            workDescription: '',
+            description: '',
             seen: true,
+            resource: 'http://www.baidu.com',
         },
         // created() {
         //     swal({
@@ -129,13 +196,79 @@
         // },
         methods: {
             //开始工作的时候用计时器提示已经开始工作
-            startWork: function() {
-                this.seen=false;
+            startWork: function () {
+                swal({
+                    title: '开始工作',
+                    text: '期间您将随机接受检测！',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '开始记录工作时常！',
+                    cancelButtonText: '再等等...',
+                }).then((result) => {
+                    if (result.value) {
+                        swal(
+                            '开始工作！',
+                            '时常已开始计算',
+                            'success'
+                        );
+                        this.seen = false;
+                        $("#area").val("233");
+                    }
+                })
+
             },
+
             //结束工作的时候显示本次工作时常
-            endWork: function() {
-                this.seen= true;
+            endWork: function () {
+                swal({
+                    title: '结束工作',
+                    text: '请及时上传完成的文件！',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '结束计时！',
+                    cancelButtonText: '再工作一会儿...',
+                }).then((result) => {
+                    if (result.value) {
+                        swal(
+                            '工作结束！',
+                            '时常已记录',
+                            'success'
+                        );
+                        this.seen = true;
+                    }
+                })
+
             },
+            upload: function () {
+                var form_data = new FormData();
+                var file_data = $("#file_input").prop("files")[0];
+                form_data.append("file", file_data);
+                form_data.append("description", this.description);
+                $.ajax({
+                    type: "POST",
+                    url: "../../php/receiver/upload.php",
+                    dataType: "json",
+                    processData: false, // 注意：让jQuery不要处理数据
+                    contentType: false, // 注意：让jQuery不要设置contentType
+                    data: form_data,
+                }).success(function (msg) {
+                    swal(
+                        '提交成功！',
+                        '请等待管理员审核',
+                        'success'
+                    )
+                }).fail(function (msg) {
+                    swal(
+                        '提交失败！',
+                        '请尝试重新上传',
+                        'error'
+                    )
+                });
+            }
         }
     })
 </script>
