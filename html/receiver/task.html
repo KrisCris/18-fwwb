@@ -9,7 +9,7 @@
     <title>任务查看</title>
 </head>
 
-<body style="background-image: url(../../image/papper.png)" onbeforeunload="return closeAlert()">
+<body style="background-image: url(../../image/papper.png)" >
     <div id="main" class="container">
         <!-- simple bar -->
         <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
@@ -64,13 +64,13 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <h4>信息</h4>
-                        <textarea id="area" rows="5" class="form-control rounded mb-3" v-model="workDescription"
+                        <textarea id="area" rows="5" class="form-control rounded mb-3" v-model="description"
                             readonly></textarea>
                     </li>
                     <li class="list-group-item">
                         <h4>附件</h4>
                         <!-- 下载文件 -->
-                        <a :href="source" :download="workFileName" class="float-right" v-model="workFileName"></a>
+                        <a :href="source" :download="workFileName" class="float-right" v-text="workFileName"></a>
                     </li>
                 </ul>
             </div>
@@ -84,7 +84,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <h4>信息</h4>
-                        <textarea cols="60" rows="5" class="form-control rounded mb-3" v-model="description"></textarea>
+                        <textarea cols="60" rows="5" class="form-control rounded mb-3" v-model="workDescription"></textarea>
                     </li>
                     <li class="list-group-item">
                         <h4>附件</h4>
@@ -94,7 +94,7 @@
                 </ul>
             </div>
         </div>
-        <p>{{description}}</p>
+        <p>{{workDescription}}</p>
         <p>{{startTime}}</p>
         <p>{{endTime}}</p>
     </div>
@@ -127,6 +127,7 @@
             jump: '',
             source: 'http://www.baidu.com',
             workFileName: '',
+            facialCensor: 0,
         },
         created() {
             swal({
@@ -261,7 +262,7 @@
                         var endTime = new Date();
                         this.endTime = endTime.getTime();
                         this.endTime = parseInt(this.endTime / 1000);
-
+                        this.facialCensor = 0;
 
                         $post("../../php/receiver/recordTime.php", {
                             endTime: this.endTime,
@@ -274,7 +275,7 @@
                 var form_data = new FormData();
                 var file_data = $("#file_input").prop("files")[0];
                 form_data.append("file", file_data);
-                form_data.append("description", this.description);
+                form_data.append("WorkDescription", this.workDescription);
                 $.ajax({
                     type: "POST",
                     url: "../../php/receiver/upload.php",
@@ -289,7 +290,7 @@
                         'success'
                     )
                     //清空
-                    this.description = "";
+                    this.WorkDescription = "";
                 }).fail(function () {
                     swal(
                         '提交失败！',
