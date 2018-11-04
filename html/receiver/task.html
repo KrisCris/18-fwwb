@@ -9,7 +9,7 @@
     <title>任务查看</title>
 </head>
 
-<body style="background-image: url(../../image/papper.png)">
+<body style="background-image: url(../../image/papper.png)" onbeforeunload="return closeAlert()">
     <div id="main" class="container">
         <!-- simple bar -->
         <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
@@ -20,7 +20,7 @@
             <div class="collapse navbar-collapse " id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="taskList.html?state=recent"><i class="fa fa-calendar-check-o">&nbsp;&nbsp;</i>近日任务</a>
+                        <a class="nav-link" href="taskList.html?state=recent" :target="jump"><i class="fa fa-calendar-check-o">&nbsp;&nbsp;</i>近日任务</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -28,20 +28,20 @@
                             所有任务
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="taskList.html?state=0"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
-                            <a class="dropdown-item" href="taskList.html?state=2"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
-                            <a class="dropdown-item" href="taskList.html?state=1"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
+                            <a class="dropdown-item" href="taskList.html?state=0" :target="jump"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
+                            <a class="dropdown-item" href="taskList.html?state=2" :target="jump"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
+                            <a class="dropdown-item" href="taskList.html?state=1" :target="jump"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
+                        <a class="nav-link" href="index.html" :target="jump"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
                     </li>
                 </ul>
             </div>
             <div class="float-right">
                 <img :src="img" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
-                <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="window.history.back()"><i
-                        class="fa fa-reply">&nbsp;</i>返回</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
+                        class="fa fa-power-off">&nbsp;</i>注销</button>
             </div>
         </nav>
         <div class="card rounded shadow mb-4">
@@ -70,7 +70,7 @@
                     <li class="list-group-item">
                         <h4>附件</h4>
                         <!-- 下载文件 -->
-                        <a :href="resource" download="test.png">点击下载任务资源</a>
+                        <a :href="source" :download="workFileName" class="float-right" v-model="workFileName"></a>
                     </li>
                 </ul>
             </div>
@@ -95,7 +95,8 @@
             </div>
         </div>
         <p>{{description}}</p>
-    
+        <p>{{startTime}}</p>
+        <p>{{endTime}}</p>
     </div>
 </body>
 
@@ -114,92 +115,103 @@
             uuid: null,
             img: "http://static.runoob.com/images/mix/img_avatar.png",
             portrait: "http://static.runoob.com/images/mix/img_avatar.png",
+            taskId: '',
             //
             task: [],
             taskName: '',
             workDescription: '',
             description: '',
+            startTime: '',
+            endTime: '',
             seen: true,
-            resource: 'http://www.baidu.com',
+            jump: '',
+            source: 'http://www.baidu.com',
+            workFileName: '',
         },
-        // created() {
-        //     swal({
-        //         title: "Loading...",
-        //         width: 250,
-        //         showConfirmButton: false,
-        //         allowOutsideClick: false,
-        //         allowEscapeKey: false,
-        //         allowEnterKey: false,
-        //         showConfirmButton: false,
-        //         onOpen: () => {
-        //             swal.showLoading()
-        //         }
-        //     });
-        //     this.group = $.cookie('group');
-        //     if ($.cookie('uuid') == null) {
-        //         let timerInterval
-        //         swal({
-        //             title: '请登录',
-        //             html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
-        //             timer: 5500,
-        //             onOpen: () => {
-        //                 swal.showLoading()
-        //                 timerInterval = setInterval(() => {
-        //                     swal.getContent().querySelector('strong')
-        //                         .textContent = parseInt((swal.getTimerLeft()) / 1000)
-        //                 }, 100)
-        //             },
-        //             onClose: () => {
-        //                 clearInterval(timerInterval)
-        //             }
-        //         }).then(() => {
-        //             window.location.href = "../login/login.html";
-        //         })
-        //     } else {
-        //         this.uuid = $.cookie('uuid');
-        //         var that = this;
-        //         $.post("../../php/checkState.php", {
-        //             uuid: that.uuid,
-        //             group: that.group,
-        //         }).done((data) => {
-        //             data = JSON.parse(data);
-        //             if (data.code == 0) {
-        //                 let timerInterval
-        //                 swal({
-        //                     title: '请登录',
-        //                     html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
-        //                     timer: 5500,
-        //                     onOpen: () => {
-        //                         swal.showLoading()
-        //                         timerInterval = setInterval(() => {
-        //                             swal.getContent().querySelector('strong')
-        //                                 .textContent = parseInt((swal.getTimerLeft()) /
-        //                                     1000)
-        //                         }, 100)
-        //                     },
-        //                     onClose: () => {
-        //                         clearInterval(timerInterval)
-        //                     }
-        //                 }).then(() => {
-        //                     window.location.href = "../login/login.html";
-        //                 })
-        //             } else {
-        //                 // $.post("../../php/fetchCompany.php").done((data) => {
-        //                 //     data = JSON.parse(data);
-        //                 //     that.companies = data;
-        //                 //     swal.close();
-        //                 // });
-        //             }
-        //         });
+        created() {
+            swal({
+                title: "Loading...",
+                width: 250,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                showConfirmButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            });
+            this.group = $.cookie('group');
+            if ($.cookie('uuid') == null) {
+                let timerInterval
+                swal({
+                    title: '请登录',
+                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                    timer: 5500,
+                    onOpen: () => {
+                        swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            swal.getContent().querySelector('strong')
+                                .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                        }, 100)
+                    },
+                    onClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then(() => {
+                    window.location.href = "../login/login.html";
+                })
+            } else {
+                this.uuid = $.cookie('uuid');
+                var that = this;
+                $.post("../../php/checkState.php", {
+                    uuid: that.uuid,
+                    group: that.group,
+                }).done((data) => {
+                    data = JSON.parse(data);
+                    if (data.code == 0) {
+                        let timerInterval
+                        swal({
+                            title: '请登录',
+                            html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                            timer: 5500,
+                            onOpen: () => {
+                                swal.showLoading()
+                                timerInterval = setInterval(() => {
+                                    swal.getContent().querySelector('strong')
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
+                                }, 100)
+                            },
+                            onClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then(() => {
+                            window.location.href = "../login/login.html";
+                        })
+                    } else {
+                        swal.close();
+                        $.post("../../php/fetchWorkInfo.php", {
+                            //返回taskId
+                            taskId: getQueryString(this.taskId),
+                        }).done((data) => {
+                            data = JSON.parse(data);
+                            that.task = data;
+                            that.source = that.task.workInfo.downloadPath;//路径
+                            that.workFileName = that.task.workInfo.workFileName;//文件名
+                            swal.close();
+                        })
+                    }
+                });
 
-        //     }
-        // },
+            }
+        },
         methods: {
             //开始工作的时候用计时器提示已经开始工作
             startWork: function () {
                 swal({
                     title: '开始工作',
-                    text: '期间您将随机接受检测！',
+                    text: '工作期间请不要离开页面！',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -215,9 +227,15 @@
                         );
                         this.seen = false;
                         $("#area").val("233");
+                        var startTime = new Date();
+                        this.startTime = startTime.getTime();
+                        this, startTime = parseInt(this.startTime / 1000);
+                        this.jump = "_blank";
+                        $post("../../php/receiver/recordTime.php", {
+                            startTime: this.startTime,
+                        })
                     }
                 })
-
             },
 
             //结束工作的时候显示本次工作时常
@@ -239,6 +257,15 @@
                             'success'
                         );
                         this.seen = true;
+                        this.jump = '';
+                        var endTime = new Date();
+                        this.endTime = endTime.getTime();
+                        this.endTime = parseInt(this.endTime / 1000);
+
+
+                        $post("../../php/receiver/recordTime.php", {
+                            endTime: this.endTime,
+                        })
                     }
                 })
 
@@ -255,22 +282,56 @@
                     processData: false, // 注意：让jQuery不要处理数据
                     contentType: false, // 注意：让jQuery不要设置contentType
                     data: form_data,
-                }).success(function (msg) {
+                }).success(function () {
                     swal(
                         '提交成功！',
                         '请等待管理员审核',
                         'success'
                     )
-                }).fail(function (msg) {
+                    //清空
+                    this.description = "";
+                }).fail(function () {
                     swal(
                         '提交失败！',
                         '请尝试重新上传',
                         'error'
                     )
                 });
-            }
+            },
+            logout: function () {
+                var that = this;
+                $.post("../../php/logout.php", {
+                    uuid: that.uuid,
+                    group: "admin",
+                }).done(() => {
+                    $.cookie("uuid", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    $.cookie("group", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    window.location.href = "../login/login.html";
+                })
+            },
+            closeAlert: function () {
+                swal(
+                    '提交失败！',
+                    '请尝试重新上传',
+                    'error'
+                )
+            },
         }
     })
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
 </script>
 
 </html>
