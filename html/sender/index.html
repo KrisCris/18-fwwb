@@ -24,22 +24,33 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-pie-chart"></i>
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-tasks"></i>
                             项目管理
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="workingon.html"><i class="	fa fa-spinner">&nbsp;&nbsp;</i>进行中的项目</a>
-                            <a class="dropdown-item" href="accomplished.html"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
+                            <a class="dropdown-item" href=""><i class="	fa fa-spinner">&nbsp;&nbsp;</i>进行中项目</a>
+                            <a class="dropdown-item" href=""><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-calendar"></i>
+                            任务进度
+                        </a>
+                        <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href=""><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
+                            <a class="dropdown-item" href=""><i class="fa fa-info-circle">&nbsp;&nbsp;</i>待审核</a>
+                            <a class="dropdown-item" href=""><i class="fa fa-warning">&nbsp;&nbsp;</i>已延期</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa fa-user-circle">&nbsp;</i>个人信息</a>
+                        <a class="nav-link" href="#"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
                     </li>
                 </ul>
             </div>
             <div class="float-right">
                 <!-- <a class="text-muted" href="#">[注销账号]</a> -->
-                <img :src="img" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
+                <img :src="portrait" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
                 <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
                         class="fa fa-power-off">&nbsp;</i>注销</button>
 
@@ -50,11 +61,11 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="card shadow mb-3">
-                    <a href="../editInfo.html"><img class="card-img-top" :src="img" style="width:100%"></a>
+                    <a href="../editInfo.html"><img class="card-img-top" :src="portrait" style="width:100%"></a>
                     <div class="card-body">
-                        <h4 class="card-title text-center">NAME</h4>
-                        <p class="card-text">Some example information.</p>
-                        <a href="../editInfo.html" class="btn btn-primary">修改资料</a>
+                        <h4 class="card-title text-center" v-text="name"></h4>
+                        <p class="card-text"><i class="fa fa-id-card">&nbsp;&nbsp;</i>发包人员</p>
+                        <a href="../editInfo.html" class="btn btn-primary btn-block">修改资料</a>
                     </div>
                 </div>
             </div>
@@ -68,24 +79,41 @@
                                 <div class="row">
                                     <div class="col-lg-3 card  border-top-0 border-left-0 border-bottom-0">
                                         <br>
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-info">5</p>
-                                        <p class="text-center">待审核</p>
+                                        <a href="" style="text-decoration: none">
+                                            <p style="font-size: 25px;" class=" text-center font-weight-bold text-info">5</p>
+                                        </a>
+                                        <a href="" style="text-decoration: none" class="text-dark">
+                                            <p class="text-center">待审核任务</p>
+                                        </a>
                                     </div>
                                     <div class="col-lg-3 card border-top-0 border-left-0 border-bottom-0">
                                         <br>
-                                        <p style="font-size: 25px; " class=" text-center font-weight-bold text-primary">13</p>
-                                        <p class="text-center">进行中</p>
+                                        <a href="" style="text-decoration: none">
+                                            <p style="font-size: 25px;" class=" text-center font-weight-bold text-danger">8</p>
+                                        </a>
+                                        <a href="" style="text-decoration: none" class="text-dark">
+                                            <p class="text-center">延迟任务</p>
+                                        </a>
                                     </div>
                                     <div class="col-lg-3 card border-top-0 border-left-0 border-bottom-0">
                                         <br>
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-success">2</p>
-                                        <p class="text-center">已完成</p>
+                                        <a href="" style="text-decoration: none">
+                                            <p style="font-size: 25px; " class=" text-center font-weight-bold text-primary">13</p>
+                                        </a>
+                                        <a href="" style="text-decoration: none" class="text-dark">
+                                            <p class="text-center">进行中项目</p>
+                                        </a>
                                     </div>
                                     <div class="col-lg-3 card border-0">
                                         <br>
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-danger">8</p>
-                                        <p class="text-center">延迟</p>
+                                        <a href="" style="text-decoration: none">
+                                            <p style="font-size: 25px; " class=" text-center font-weight-bold text-warning">13</p>
+                                        </a>
+                                        <a href="" style="text-decoration: none" class="text-dark">
+                                            <p class="text-center">即将截止</p>
+                                        </a>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -112,8 +140,16 @@
             //user
             group: null,
             uuid: null,
-            img: "http://static.runoob.com/images/mix/img_avatar.png",
+            portrait: "",
+            name: "",
+            //
+            checkNum: 0,
+            delayNum: 0,
+            workingNum: 0,
+            ddlNum: 0,
         },
+
+
         created: function () {
             this.group = $.cookie('group');
             if ($.cookie('uuid') == null) {
@@ -139,19 +175,20 @@
             else {
                 this.uuid = $.cookie('uuid');
                 var that = this;
-                // swal({
-                //     title: "载入中",
-                //     width: 250,
-                //     showConfirmButton: false,
-                //     allowOutsideClick: false,
-                //     allowEscapeKey: false,
-                //     allowEnterKey: false,
-                //     onOpen: () => { swal.showLoading() }
-                // });
+                swal({
+                    title: "载入中",
+                    width: 250,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    onOpen: () => { swal.showLoading() }
+                });
                 $.post("../../php/checkState.php", {
                     uuid: that.uuid,
-                    group: 1,
+                    group: that.group,
                 }).done((data) => {
+
                     data = JSON.parse(data);
                     if (data.code == 0) {
                         let timerInterval
@@ -174,14 +211,44 @@
                         })
                     }
                     else {
-                        //获取信息
+                        swal.close();
+                        ////////////////////
                     }
                 });
-
             }
-            //end of else
+        },
+        methods: {
+            logout: function () {
+                var that = this;
+                $.post("../../php/logOut.php", {
+                    uuid: that.uuid,
+                    group: that.group,
+                }).done(() => {
+                    $.cookie("uuid", null, { expires: 1, secure: false, path: '/' });
+                    $.cookie("group", null, { expires: 1, secure: false, path: '/' });
+                    window.location.href = "../login/login.html";
+                })
+            },
+
+            convertTime: function (timestamp) {
+                var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                var D = date.getDate() + ' ';
+                var h = date.getHours() + ':';
+                var m = date.getMinutes();
+                // var s = date.getSeconds();
+                return Y + M + D + h + m;
+            }
         }
+
     })
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
 </script>
 
 </html>
