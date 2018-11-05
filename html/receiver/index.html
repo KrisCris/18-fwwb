@@ -30,6 +30,7 @@
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="taskList.html?state=0"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
                             <a class="dropdown-item" href="taskList.html?state=2"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
+                            <a class="dropdown-item" href="taskList.html?state=-1"><i class="fa fa-warning">&nbsp;&nbsp;</i>延迟</a>
                             <a class="dropdown-item" href="taskList.html?state=1"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
                         </div>
                     </li>
@@ -68,21 +69,33 @@
                                 <div class="row">
                                     <div class="col-lg-4 card  border-top-0 border-left-0 border-bottom-0">
                                         <br>
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-info"
-                                            v-text="recentNum"></p>
-                                        <p class="text-center">即将截止</p>
+                                        <a href="taskList.html?state=recent" style="text-decoration: none">
+                                            <p style="font-size: 25px;" class="text-center font-weight-bold text-info"
+                                                v-text="recentNum"></p>
+                                        </a>
+                                        <a href="taskList.html?state=recent" style="text-decoration: none" class="text-dark">
+                                            <p class="text-center">即将截止</p>
+                                        </a>
                                     </div>
                                     <div class="col-lg-4 card border-top-0 border-left-0 border-bottom-0">
                                         <br>
-                                        <p style="font-size: 25px; " class=" text-center font-weight-bold text-primary"
-                                            v-text="checkNum"></p>
-                                        <p class="text-center">审核中</p>
+                                        <a href="taskList.html?state=2" style="text-decoration: none">
+                                            <p style="font-size: 25px; " class=" text-center font-weight-bold text-primary"
+                                                v-text="checkNum"></p>
+                                        </a>
+                                        <a href="taskList.html?state=2" style="text-decoration: none" class="text-dark">
+                                            <p class="text-center">审核中</p>
+                                        </a>
                                     </div>
                                     <div class="col-lg-4 card border-0">
                                         <br>
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-danger"
-                                            v-text="delayNum"></p>
-                                        <p class="text-center">延迟</p>
+                                        <a href="taskList.html?state=-1" style="text-decoration: none" class="text-dark">
+                                            <p style="font-size: 25px;" class=" text-center font-weight-bold text-danger"
+                                                v-text="delayNum"></p>
+                                        </a>
+                                        <a href="taskList.html?state=-1" style="text-decoration: none" class="text-dark">
+                                            <p class="text-center">延迟</p>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +111,7 @@
                                 <h4 class="card-title">最近的任务</h4>
                                 <table class="table table-striped table-hover border-bottom">
                                     <thead>
-                                        <tr>
+                                        <tr class="text-center">
                                             <th>任务名称</th>
                                             <th>所属项目</th>
                                             <th>截止日期</th>
@@ -106,11 +119,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="task in tasks" @click="window.location.href='task.html?taskId='+task.id">
-                                            <td v-text="task.taskName"></td>
-                                            <td v-text="task.prjName"></td>
-                                            <td v-text="convertTime(task.endTime)"></td>
-                                            <td v-text="task.state"></td>
+                                        <tr v-for="task in tasks" class="text-center">
+                                            <td style="width:25%"><a v-text="task.taskName" :href="'task.html?taskId='+task.id"
+                                                    class="text-dark" style="text-decoration: none"></a></td>
+                                            <td style="width:25%" v-text="task.prjName"></td>
+                                            <td style="width:25%" v-text="convertTime(task.endTime)"></td>
+                                            <td style="width:25%" v-text="task.state==-1?'延误':task.state==1?'完成':task.state==2?'审核中':task.state==0?'进行中':'unknown'"
+                                                :style="{'color':task.state==-1?'#ff0000':'#000000'}"></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -187,7 +202,7 @@
                     uuid: that.uuid,
                     group: that.group,
                 }).done((data) => {
-                    
+
                     data = JSON.parse(data);
                     if (data.code == 0) {
                         let timerInterval
@@ -210,7 +225,7 @@
                         })
                     }
                     else {
-                        
+
                         $.post("../../php/receiver/getIndexInfo.php", {
                             uuid: that.uuid,
                             group: that.group,

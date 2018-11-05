@@ -20,21 +20,31 @@
             <div class="collapse navbar-collapse " id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="prjList.html?state=today"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>今日工作</a>
+                        <a class="nav-link" href="publish.html"><i class="fa fa-paste">&nbsp;</i>项目发布</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-pie-chart"></i>
-                            所有任务
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-tasks"></i>
+                            项目管理
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="prjList.html?state=1"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
-                            <a class="dropdown-item" href="prjList.html?state=2"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
-                            <a class="dropdown-item" href="prjList.html?state=3"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
+                            <a class="dropdown-item" href=""><i class="	fa fa-spinner">&nbsp;&nbsp;</i>进行中项目</a>
+                            <a class="dropdown-item" href=""><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-calendar"></i>
+                            任务进度
+                        </a>
+                        <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href=""><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
+                            <a class="dropdown-item" href=""><i class="fa fa-info-circle">&nbsp;&nbsp;</i>待审核</a>
+                            <a class="dropdown-item" href=""><i class="fa fa-warning">&nbsp;&nbsp;</i>已延期</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
+                        <a class="nav-link" href="#"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
                     </li>
                 </ul>
             </div>
@@ -43,6 +53,7 @@
                 <img :src="portrait" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
                 <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
                         class="fa fa-power-off">&nbsp;</i>注销</button>
+
             </div>
         </nav>
 
@@ -83,14 +94,14 @@
             //user
             group: null,
             uuid: null,
-            portrait: "http://static.runoob.com/images/mix/img_avatar.png",
+            portrait: "",
             //prj
-            tasks: [],
-            taskState: "",
-            type: "a",
+            prjs: [],
+            state: "",
 
         },
         created: function () {
+
             this.group = $.cookie('group');
             if ($.cookie('uuid') == null) {
                 let timerInterval

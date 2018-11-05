@@ -30,7 +30,7 @@
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="taskList.html?state=0"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
                             <a class="dropdown-item" href="taskList.html?state=2"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
-                            <a class="dropdown-item" href="taskList.html?state=-1"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>延迟</a>
+                            <a class="dropdown-item" href="taskList.html?state=-1"><i class="fa fa-warning">&nbsp;&nbsp;</i>延迟</a>
                             <a class="dropdown-item" href="taskList.html?state=1"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
                         </div>
                     </li>
@@ -54,26 +54,29 @@
                     <div class="card-body">
                         <h4 class="card-title pb-3" v-text="tTitle"></h4>
 
-                        <table class="table table-stripe table-hover">
+                        <table class="table table-striped table-hover">
                             <thead>
-                                <tr>
-                                    <th>任务名称</th>
-                                    <th>所属项目</th>
-                                    <th>开始日期</th>
-                                    <th>截止日期</th>
-                                    <th>安全等级</th>
-                                    <th>状态</th>
+                                <tr class="text-center">
+                                    <th style="width:20%">任务名称</th>
+                                    <th style="width:20%">所属项目</th>
+                                    <th style="width:20%">开始日期</th>
+                                    <th style="width:20%">截止日期</th>
+                                    <th style="width:10%">安全等级</th>
+                                    <th style="width:10%">状态</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- <p v-text="'asdasd'" :style="{'color':color_state==-1?'#ff0000':'#000000'}"></p> -->
-                                <tr v-for="task in tasks" @click="window.location.href='task.html?taskId='+task.id">
-                                    <td v-text="task.taskName"></td>
-                                    <td v-text="task.prjName"></td>
-                                    <td v-text="convertTime(task.startTime)"></td>
-                                    <td v-text="convertTime(task.endTime)"></td>
-                                    <td v-text="task.securityLevel==0?'普通':task.securityLevel==1?'高':'unknown'"></td>
-                                    <td v-text="task.state==-1?'延误':task.state==1?'完成':task.state==2?'审核中':task.state==0?'进行中':'unknown'" :style="{'color':task.state==-1?'#ff0000':'#000000'}"></td>
+                                <tr v-for="task in tasks" @click="window.location.href='task.html?taskId='+task.id"
+                                    class="text-center">
+                                    <td style="width:20%"><a v-text="task.taskName" :href="'task.html?taskId='+task.id"
+                                            class="text-dark" style="text-decoration: none"></a></td>
+                                    <td style="width:20%" v-text="task.prjName"></td>
+                                    <td style="width:20%" v-text="convertTime(task.startTime)"></td>
+                                    <td style="width:20%" v-text="convertTime(task.endTime)"></td>
+                                    <td style="width:10%" v-text="task.securityLevel==0?'普通':task.securityLevel==1?'高':'unknown'"></td>
+                                    <td style="width:10%" v-text="task.state==-1?'延误':task.state==1?'完成':task.state==2?'审核中':task.state==0?'进行中':'unknown'"
+                                        :style="{'color':task.state==-1?'#ff0000':'#000000'}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -119,7 +122,8 @@
             if (this.state == 1) this.tTitle = "完成的任务";
             else if (this.state == 0) this.tTitle = "进行中的任务";
             else if (this.state == 2) this.tTitle = "审核中的任务";
-            else if (this.state == "recent") this.tTitle = "近期的任务"           
+            else if (this.state == "recent") this.tTitle = "近期的任务"
+            else if (this.state == -1) this.tTitle = "延迟"
             if ($.cookie('uuid') == null) {
                 let timerInterval
                 swal({

@@ -20,20 +20,31 @@
             <div class="collapse navbar-collapse " id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa fa-paste">&nbsp;</i>项目发布</a>
+                        <a class="nav-link" href="publish.html"><i class="fa fa-paste">&nbsp;</i>项目发布</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-pie-chart"></i>
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-tasks"></i>
                             项目管理
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="workingon.html"><i class="	fa fa-spinner">&nbsp;&nbsp;</i>进行中的项目</a>
-                            <a class="dropdown-item" href="accomplished.html"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
+                            <a class="dropdown-item" href=""><i class="	fa fa-spinner">&nbsp;&nbsp;</i>进行中项目</a>
+                            <a class="dropdown-item" href=""><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-calendar"></i>
+                            任务进度
+                        </a>
+                        <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href=""><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
+                            <a class="dropdown-item" href=""><i class="fa fa-info-circle">&nbsp;&nbsp;</i>待审核</a>
+                            <a class="dropdown-item" href=""><i class="fa fa-warning">&nbsp;&nbsp;</i>已延期</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa fa-user-circle">&nbsp;</i>个人信息</a>
+                        <a class="nav-link" href="#"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
                     </li>
                 </ul>
             </div>
@@ -42,6 +53,7 @@
                 <img :src="portrait" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
                 <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
                         class="fa fa-power-off">&nbsp;</i>注销</button>
+
             </div>
         </nav>
 
@@ -79,12 +91,12 @@
                 </div>
 
                 <div class="card shadow mb-3">
-                        <div class="card-body">
-                            <h4 class="card-title">项目周期</h4>
-                            <span>开始日期：</span>
-                            <span>截止日期：</span>
-                        </div>
+                    <div class="card-body">
+                        <h4 class="card-title">项目周期</h4>
+                        <span>开始日期：</span>
+                        <span>截止日期：</span>
                     </div>
+                </div>
             </div>
         </div>
     </div>
@@ -99,6 +111,8 @@
     var app = new Vue({
         el: "#main",
         data: {
+            group: null,
+            uuid: null,
             portrait: "",
         },
 
@@ -163,12 +177,12 @@
                         })
                     }
                     else {
+                        //////////////
+                        $.cookie('portrait', that.portrait, { expires: 1, secure: false, path: '/' });
                         swal.close();
                     }
                 });
-
             }
-            //end of else
         },
 
         methods: {
