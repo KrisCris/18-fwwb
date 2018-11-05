@@ -9,9 +9,9 @@ $code=0;
 
 if(!empty($usermsg)){
     $id=$usermsg[0]["id"];
-    $userskill=get("skill","userID",$id);
+    $userskill=get("skill","userId",$id);
     if(empty($userskill)){
-        $skillarray=array(array("userID",$id),array("php",$php),array("vue",$vue));
+        $skillarray=array(array("userId",$id),array("php",$php),array("vue",$vue));
         add("skill",$skillarray);
         $code=1;
     }

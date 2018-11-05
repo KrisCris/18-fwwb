@@ -11,7 +11,7 @@
  Target Server Version : 50553
  File Encoding         : 65001
 
- Date: 03/11/2018 13:55:22
+ Date: 05/11/2018 11:35:34
 */
 
 SET NAMES utf8mb4;
@@ -36,7 +36,7 @@ CREATE TABLE `administrator`  (
 -- ----------------------------
 -- Records of administrator
 -- ----------------------------
-INSERT INTO `administrator` VALUES ('admin', 'admin', 'admin', NULL, '910189033@qq.com', '13333333333', '76d325a8f591b52d1541146889', 111);
+INSERT INTO `administrator` VALUES ('admin', 'admin', 'admin', NULL, '910189033@qq.com', '13333333333', '96fcc4b4ce72d7731541302110', 111);
 
 -- ----------------------------
 -- Table structure for company
@@ -96,6 +96,7 @@ INSERT INTO `project` VALUES ('小鱼干', 27, NULL, 2, NULL, 1541513248, NULL);
 -- ----------------------------
 DROP TABLE IF EXISTS `skill`;
 CREATE TABLE `skill`  (
+  `userId` int(11) DEFAULT NULL,
   `php` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `vue` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL
 ) ENGINE = MyISAM CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
@@ -123,11 +124,11 @@ CREATE TABLE `task`  (
 -- ----------------------------
 -- Records of task
 -- ----------------------------
-INSERT INTO `task` VALUES (1, 1540995617, 1541340418, '烤咸鱼', 2, 25, 0, 1, NULL, NULL, NULL, NULL);
+INSERT INTO `task` VALUES (1, 1540995617, 1541340418, '烤咸鱼', 1, 26, 0, 1, '../../files/prj/咸鱼/烤咸鱼/receiver/黄平川/mysql密码.txt;../../files/prj/咸鱼/烤咸鱼/receiver/黄平川/NTN技术综述.doc', '', '发顺丰', 'fdsafadfdadf;阿发达的说法');
 INSERT INTO `task` VALUES (1, 1540995617, 1541340416, '咸鱼干', 0, 26, 1, 2, NULL, NULL, NULL, NULL);
-INSERT INTO `task` VALUES (2, NULL, 1540995617, NULL, -1, 28, 0, 3, NULL, NULL, NULL, NULL);
-INSERT INTO `task` VALUES (2, 1540995617, 1541653689, '晒咸鱼', 0, 25, 1, 4, NULL, NULL, NULL, NULL);
-INSERT INTO `task` VALUES (2, 1540995617, 1540995617, '老咸鱼', -1, 25, 1, 5, NULL, NULL, NULL, NULL);
+INSERT INTO `task` VALUES (2, NULL, 1540995617, NULL, -1, 26, 0, 3, NULL, NULL, NULL, NULL);
+INSERT INTO `task` VALUES (2, 1540995617, 1541653689, '晒咸鱼', 0, 26, 1, 4, NULL, NULL, NULL, NULL);
+INSERT INTO `task` VALUES (2, 1540995617, 1540995617, '老咸鱼', -1, 26, 1, 5, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for user
@@ -147,30 +148,39 @@ CREATE TABLE `user`  (
   `userGroup` int(255) DEFAULT NULL,
   `identificationNum` varchar(18) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `portrait` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `workTime` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 38 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('Anthony', 'medic', 'medic', '', 1, '233@233.com', '13333333333', 1, '7dee729311ef5b5c1540965700', 25, 2, '333333333333333333', NULL);
-INSERT INTO `user` VALUES ('黄平川', 'r_hpc', '910189033', '', 2, '910189033@qq.com', '15906675075', 1, '0efcfab08731a97e1541074189', 26, 2, '123456789123456789', NULL);
-INSERT INTO `user` VALUES ('ChrisWong', 's_hpc', '910189033', '', -1, 'jkl@outlook.com', '15906675555', 1, 'a3d5b344bc40f3bc1541074253', 27, 1, '123456789123456111', NULL);
-INSERT INTO `user` VALUES ('wrf', 'r_wrf', 'wrf', '', 1, 'dfsa@qq.com', '11122233344', 1, NULL, 28, 2, '980890123456789', NULL);
-INSERT INTO `user` VALUES ('wrfs', 's_wrf', 'wrf', '', -1, 'fsadjkla2@qq.com', '12345678922', 1, NULL, 29, 1, '111222333444555', NULL);
-INSERT INTO `user` VALUES ('jdhs', 'asdf', '111111', '', -1, 'wgwrg', '5555', 1, NULL, 37, 1, NULL, NULL);
-INSERT INTO `user` VALUES ('jdhs', 'fdasf', '111111', '', 825, 'wgwrg', '5555', 0, NULL, 34, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('jdhs', 'dfafa', '111111', '', 825, 'wgwrg', '5555', 1, NULL, 35, 2, NULL, NULL);
+INSERT INTO `user` VALUES ('Anthony', 'medic', 'medic', '', 1, '233@233.com', '13333333333', 1, '7dee729311ef5b5c1540965700', 25, 2, '333333333333333333', NULL, NULL);
+INSERT INTO `user` VALUES ('黄平川', 'r_hpc', '910189033', '', 2, '910189033@qq.com', '15906675075', 1, '0efcfab08731a97e1541074189', 26, 2, '123456789123456789', NULL, NULL);
+INSERT INTO `user` VALUES ('ChrisWong', 's_hpc', '910189033', '', -1, 'jkl@outlook.com', '15906675555', 1, 'a3d5b344bc40f3bc1541074253', 27, 1, '123456789123456111', NULL, NULL);
+INSERT INTO `user` VALUES ('wrf', 'r_wrf', 'wrf', '', 1, 'dfsa@qq.com', '11122233344', 1, NULL, 28, 2, '980890123456789', NULL, NULL);
+INSERT INTO `user` VALUES ('wrfs', 's_wrf', 'wrf', '', -1, 'fsadjkla2@qq.com', '12345678922', 1, NULL, 29, 1, '111222333444555', NULL, NULL);
+INSERT INTO `user` VALUES ('jdhs', 'asdf', '111111', '', -1, 'wgwrg', '5555', 1, NULL, 37, 1, NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('jdhs', 'fdasf', '111111', '', 825, 'wgwrg', '5555', 0, NULL, 34, NULL, NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('jdhs', 'dfafa', '111111', '', 825, 'wgwrg', '5555', 1, NULL, 35, 2, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for workinfo
 -- ----------------------------
 DROP TABLE IF EXISTS `workinfo`;
 CREATE TABLE `workinfo`  (
-  `begin` date DEFAULT NULL,
-  `end` date DEFAULT NULL,
+  `begin` int(11) DEFAULT NULL,
+  `end` int(11) DEFAULT NULL,
   `taskId` int(11) DEFAULT NULL,
   `userId` int(11) DEFAULT NULL
 ) ENGINE = MyISAM CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
+
+-- ----------------------------
+-- Records of workinfo
+-- ----------------------------
+INSERT INTO `workinfo` VALUES (2147483647, 123, 2, 26);
+INSERT INTO `workinfo` VALUES (2147483647, 123, 2, 25);
+INSERT INTO `workinfo` VALUES (456, 123, 5, 27);
+INSERT INTO `workinfo` VALUES (1546786786, 54254334, 5, 27);
 
 SET FOREIGN_KEY_CHECKS = 1;
