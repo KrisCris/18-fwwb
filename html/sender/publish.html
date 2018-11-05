@@ -33,18 +33,60 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html"><i class="fa fa-user-circle">&nbsp;</i>个人信息</a>
+                        <a class="nav-link" href="#"><i class="fa fa-user-circle">&nbsp;</i>个人信息</a>
                     </li>
                 </ul>
             </div>
             <div class="float-right">
                 <!-- <a class="text-muted" href="#">[注销账号]</a> -->
-                <img :src="img" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
+                <img :src="portrait" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
                 <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
                         class="fa fa-power-off">&nbsp;</i>注销</button>
-
             </div>
         </nav>
+
+        <div class="row">
+            <div class="col-md-9">
+                <div class="card shadow mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title pb-3">标题</h4>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="card shadow mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title pb-3">描述</h4>
+                        <textarea class="form-control" style="height:150px;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow mb-3">
+                    <img class="card-img-top" src="http://image.moocollege.com/v2_customer/small/471/1/20160508204402471001051187.jpg">
+                    <div class="card-body">
+                        <h4 class="card-title text-left">封面</h4>
+                        <div>
+                            <button class="btn btn-block btn-primary">选择图片</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title">需求文件</h4><span>请添加单个压缩文件</span>
+                        <button class="btn btn-block btn-primary">选择文件</button>
+                    </div>
+                </div>
+
+                <div class="card shadow mb-3">
+                        <div class="card-body">
+                            <h4 class="card-title">项目周期</h4>
+                            <span>开始日期：</span>
+                            <span>截止日期：</span>
+                        </div>
+                    </div>
+            </div>
+        </div>
     </div>
 </body>
 <script src="../../javascript/camera.js"></script>
@@ -57,18 +99,17 @@
     var app = new Vue({
         el: "#main",
         data: {
-            //user
-            group: null,
-            uuid: null,
-            img: "http://static.runoob.com/images/mix/img_avatar.png",
+            portrait: "",
         },
+
         created: function () {
             this.group = $.cookie('group');
+            this.portrait = $.cookie('portrait');
             if ($.cookie('uuid') == null) {
                 let timerInterval
                 swal({
                     title: '请登录',
-                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                    html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
                     timer: 5500,
                     onOpen: () => {
                         swal.showLoading()
@@ -87,25 +128,25 @@
             else {
                 this.uuid = $.cookie('uuid');
                 var that = this;
-                // swal({
-                //     title: "载入中",
-                //     width: 250,
-                //     showConfirmButton: false,
-                //     allowOutsideClick: false,
-                //     allowEscapeKey: false,
-                //     allowEnterKey: false,
-                //     onOpen: () => { swal.showLoading() }
-                // });
+                swal({
+                    title: "载入中",
+                    width: 250,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    onOpen: () => { swal.showLoading() }
+                });
                 $.post("../../php/checkState.php", {
                     uuid: that.uuid,
-                    group: 1,
+                    group: that.group,
                 }).done((data) => {
                     data = JSON.parse(data);
                     if (data.code == 0) {
                         let timerInterval
                         swal({
                             title: '请登录',
-                            html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                            html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
                             timer: 5500,
                             onOpen: () => {
                                 swal.showLoading()
@@ -122,14 +163,46 @@
                         })
                     }
                     else {
-                        //获取信息
+                        swal.close();
                     }
                 });
 
             }
             //end of else
+        },
+
+        methods: {
+            logout: function () {
+                var that = this;
+                $.post("../../php/logOut.php", {
+                    uuid: that.uuid,
+                    group: that.group,
+                }).done(() => {
+                    $.cookie("uuid", null, { expires: 1, secure: false, path: '/' });
+                    $.cookie("group", null, { expires: 1, secure: false, path: '/' });
+                    window.location.href = "../login/login.html";
+                })
+            },
+
+            convertTime: function (timestamp) {
+                var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                var D = date.getDate() + ' ';
+                var h = date.getHours() + ':';
+                var m = date.getMinutes();
+                // var s = date.getSeconds();
+                return Y + M + D + h + m;
+            }
         }
+
     })
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
 </script>
 
 </html>

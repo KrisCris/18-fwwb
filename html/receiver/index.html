@@ -106,10 +106,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="task in tasks" @click="window.location.href='taskInfo.html?taskId='+task.id">
+                                        <tr v-for="task in tasks" @click="window.location.href='task.html?taskId='+task.id">
                                             <td v-text="task.taskName"></td>
                                             <td v-text="task.prjName"></td>
-                                            <td v-text="task.endTime"></td>
+                                            <td v-text="convertTime(task.endTime)"></td>
                                             <td v-text="task.state"></td>
                                         </tr>
                                     </tbody>
@@ -140,7 +140,7 @@
             //user
             group: null,
             uuid: null,
-            portrait: "http://static.runoob.com/images/mix/img_avatar.png",
+            portrait: "",
             name: "",
             tasks: [],
             recentNum: 0,
@@ -187,7 +187,7 @@
                     uuid: that.uuid,
                     group: that.group,
                 }).done((data) => {
-                    swal.close();
+                    
                     data = JSON.parse(data);
                     if (data.code == 0) {
                         let timerInterval
@@ -210,18 +210,21 @@
                         })
                     }
                     else {
+                        
                         $.post("../../php/receiver/getIndexInfo.php", {
                             uuid: that.uuid,
                             group: that.group,
                         }).done((data) => {
                             data = JSON.parse(data);
-                            if (data.code == 0) {
+                            if (data.code == 1) {
                                 that.tasks = data.tasks;
                                 that.portrait = data.portrait;
+                                $.cookie('portrait', that.portrait, { expires: 1, secure: false, path: '/' });
                                 that.name = data.name;
                                 that.recentNum = data.recentNum;
                                 that.checkNum = data.checkNum;
                                 that.delayNum = data.delayNum;
+                                swal.close();
                             }
 
 
@@ -244,6 +247,17 @@
                     window.location.href = "../login/login.html";
                 })
             },
+
+            convertTime: function (timestamp) {
+                var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                var D = date.getDate() + ' ';
+                var h = date.getHours() + ':';
+                var m = date.getMinutes();
+                // var s = date.getSeconds();
+                return Y + M + D + h + m;
+            }
         }
     })
 </script>
