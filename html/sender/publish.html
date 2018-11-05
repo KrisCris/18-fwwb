@@ -58,7 +58,7 @@
         </nav>
 
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <div class="card shadow mb-3">
                     <div class="card-body">
                         <h4 class="card-title pb-3">标题</h4>
@@ -71,10 +71,27 @@
                         <textarea class="form-control" style="height:150px;"></textarea>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3">
                 <div class="card shadow mb-3">
-                    <img class="card-img-top" src="http://image.moocollege.com/v2_customer/small/471/1/20160508204402471001051187.jpg">
+                    <div class="card-body">
+                        <h4 class="card-title">需求文件</h4>
+                        <div class="input-group mt-3">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="uploadFile" aria-describedby="inputGroupFileAddon04"
+                                    @change="getName()">
+                                <label class="custom-file-label" for="uploadFile" v-text="fileName"></label>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04"
+                                    @click="upload()">Upload</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow mb-3">
+                    <img class="card-img-top" src="http://image.moocollege.com/v2_customer/small/471/1/20160508204402471001051187.jpg"
+                        style="height: 220px;">
                     <div class="card-body">
                         <h4 class="card-title text-left">封面</h4>
                         <div>
@@ -83,22 +100,18 @@
                     </div>
                 </div>
 
-                <div class="card shadow mb-3">
-                    <div class="card-body">
-                        <h4 class="card-title">需求文件</h4><span>请添加单个压缩文件</span>
-                        <button class="btn btn-block btn-primary">选择文件</button>
-                    </div>
-                </div>
+
 
                 <div class="card shadow mb-3">
                     <div class="card-body">
                         <h4 class="card-title">项目周期</h4>
-                        <span>开始日期：</span>
-                        <span>截止日期：</span>
+
                     </div>
                 </div>
             </div>
         </div>
+        {{date}}
+        {{fileName}}
     </div>
 </body>
 <script src="../../javascript/camera.js"></script>
@@ -114,6 +127,9 @@
             group: null,
             uuid: null,
             portrait: "",
+            date: "",
+            //
+            fileName: "",
         },
 
         created: function () {
@@ -207,8 +223,30 @@
                 var m = date.getMinutes();
                 // var s = date.getSeconds();
                 return Y + M + D + h + m;
+            },
+            upload: function () {
+                var formData = new FormData();
+                var fileData = $("#uploadFile").prop("files")[0];
+                form_data.append("file", file_data);
+                $.ajax({
+                    type: "POST",
+                    url: "../../php/sender/newPrj.php",
+                    dataType: "json",
+                    processData: false, 
+                    contentType: false,  
+                    data: form_data
+                }).done((data)=>{
+                    data = JSON.parse(data);
+                    /////////////////
+                });
+            },
+            getName: function () {
+                var file = $("#uploadFile").val();
+                var pos = file.lastIndexOf("\\");
+                this.fileName = file.substring(pos + 1);
             }
-        }
+
+        },
 
     })
     function getQueryString(name) {
@@ -217,6 +255,7 @@
         if (r != null) return unescape(r[2]);
         return null;
     }
+
 </script>
 
 </html>
