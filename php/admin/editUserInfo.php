@@ -2,5 +2,5 @@
 
 //修改用户信息
 require 'database.php';
-set('user', 'id', $_GET['id'], [['name', $_GET['name']], ['username', $_GET['username']], ['password', $_GET['password']], ['facialData', $_GET['facial']], ['company', $_GET['company']], ['mail', $_GET['mail']], ['phone', $_GET['phone']], ['isCensored', $_GET['is']], ['token', $_GET['token']], ['userGroup', $_GET['group']], ['identificationNum', $_GET['identification']]]);
+set('user', 'id', $_POST['id'], [['name', $_POST['name']], ['username', $_POST['username']], ['password', $_POST['password']], ['facialData', $_POST['facial']], ['company', $_POST['company']], ['mail', $_POST['mail']], ['phone', $_POST['phone']], ['isCensored', $_POST['is']], ['token', $_POST['token']], ['userGroup', $_POST['group']], ['identificationNum', $_POST['identification']]]);
 json_encode([code => 1]);
