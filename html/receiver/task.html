@@ -9,7 +9,7 @@
     <title>任务查看</title>
 </head>
 
-<body style="background-image: url(../../image/papper.png)">
+<body style="background-image: url(../../image/papper.png)" onbeforeunload="return closeWindow()">
     <div id="main" class="container">
         <!-- simple bar -->
         <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
@@ -46,13 +46,16 @@
         </nav>
         <div class="card rounded shadow mb-4">
             <div class="card-body">
-                <!-- taskName -->
-                <h4 v-text="taskName"></h4>
-                <!-- button-group -->
-                <div class="btn-group float-right">
-                    <button class="btn btn-primary " v-if="seen" @click="startWork">开始工作</button>
-                    <button class="btn btn-danger" v-if="!seen" @click="endWork">结束工作</button>
+                <div class="'d-flex flex-row">
+                    <!-- taskName -->
+                    <h4 v-text="taskName"></h4><span>
+                    <!-- button-group -->
+                    <div class="btn-group float-right">
+                        <button class="btn btn-primary" :disabled="!visible" @click="startWork">开始工作</button>
+                        <button class="btn btn-danger" :disabled="visible" @click="endWork">结束工作</button>
+                    </div></span>
                 </div>
+
             </div>
         </div>
         <!-- 任务需求 -->
@@ -64,7 +67,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <h4>信息</h4>
-                        <textarea id="area" rows="5" class="form-control rounded mb-3" v-model="description" readonly></textarea>
+                        <textarea id="area" rows="5" class="form-control rounded mb-3" v-model="description" readonly="readonly"></textarea>
                     </li>
                     <li class="list-group-item">
                         <h4>附件</h4>
@@ -81,7 +84,7 @@
                     <h3>任务上传</h3>
                 </div>
                 <ul class="list-group list-group-flush">
-                   
+
                     <!-- <li class="list-group-item">
                         <h4>附件</h4>
                         <input type="file" id="file_input" class="rounded">
@@ -89,14 +92,15 @@
                     </li> -->
                     <li class="list-group-item">
                         <form action="../../php/receiver/upload.php" name="form" method="post" enctype="multipart/form-data">
-                            <div class="form-group"><h4>信息</h4></div>
-                            <div class="form-group"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
-                                v-model="taskId" name="taskId">5</textarea></div>
+                            <div class="form-group">
+                                <h4>信息</h4>
+                            </div>
+                            <div class="form-group" v-show="showTaskId"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
+                                    v-model="taskId" name="taskId">5</textarea></div>
                             <div class="form-group"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
                                     v-model="workDescription" name="workDescription"></textarea></div>
                             <div class="form-group"><input type="file" name="file"></div>
                             <div class="form-group float-right"><input type="submit" name="submit" value="上传" class="btn btn-primary"></div>
-
                         </form>
                     </li>
 
@@ -140,12 +144,13 @@
             startTime: '',
             endTime: '',
             timeType: '',
-            seen: true,
             jump: '',
             source: '',
-            workFileName: '233',
+            workFileName: '',
             facialCensor: 0,
             code: '',
+            showTaskId: false,
+            visible: true,
         },
         created() {
             swal({
@@ -247,13 +252,13 @@
                             '时长已开始计算',
                             'success'
                         );
-                        this.seen = false;
                         $("#area").val("233");
                         var startTime = new Date();
-                        this.startTime = startTime.getTime();
+                        this.startTime = parseInt(startTime.getTime() / 1000);
                         this.jump = "_blank";
                         //startTime type
                         this.timeType = 0;
+                        this.visible = false;
                         $.post("../../php/receiver/recordTime.php", {
                             startTime: this.startTime,
                             timeType: this.timeType,
@@ -282,13 +287,13 @@
                             '时长已记录',
                             'success'
                         );
-                        this.seen = true;
                         this.jump = '';
                         var endTime = new Date();
-                        this.endTime = endTime.getTime();
+                        this.endTime = parseInt(endTime.getTime() / 1000);
                         this.facialCensor = 0;
                         //endTime type
                         this.timeType = 1;
+                        this.visible = true;
                         $.post("../../php/receiver/recordTime.php", {
                             endTime: this.endTime,
                             timeType: this.timeType,
@@ -354,6 +359,9 @@
                     '请尝试重新上传',
                     'error'
                 )
+            },
+            closeWindow: function () {
+                return "2333";
             },
         }
     })
