@@ -260,22 +260,7 @@
                 // var s = date.getSeconds();
                 return Y + M + D + h + m;
             },
-            upload: function () {
-                var formData = new FormData();
-                var fileData = $("#uploadFile").prop("files")[0];
-                form_data.append("file", file_data);
-                $.ajax({
-                    type: "POST",
-                    url: "../../php/sender/newPrj.php",
-                    dataType: "json",
-                    processData: false,
-                    contentType: false,
-                    data: form_data
-                }).done((data) => {
-                    data = JSON.parse(data);
-                    /////////////////
-                });
-            },
+
             getName: function () {
                 var file = $("#uploadFile").val();
                 var pos = file.lastIndexOf("\\");
@@ -296,16 +281,31 @@
             submit: function () {
                 var that = this;
                 if (this.ed != 0 && this.bd != 0 && this.title.replace(/\s+/g, "") != "" && (this.description.replace(/\s+/g, "") != "" || this.fileName != "")) {
-
-                }
-                else {
-                    alert("请补充完整信息");
-                    $.ajax({}).done((data) => {
+                    var formData = new FormData();
+                    var file = $("#uploadFile").prop("files")[0];
+                    formData.append("file",file);
+                    formData.append("description",that.description);
+                    formData.append("title",that.title);
+                    formData.append("startTime",that.bd);
+                    formData.append("endTime",that.ed);
+                    formData.append("img",that.img);
+                    formData.append("uuid",that.uuid);       
+                    $.ajax({
+                        type:"POST",
+                        url:"../../php/sender/publish.php",
+                        dataType:"json",
+                        processData:false,
+                        contentType:false,
+                        data:formData,
+                    }).done((data) => {
                         data = JSON.parse(data);
                         if (data.code == 1) {
                             window.location.href = "'prj.html?'+data.data.id";
                         }
                     });
+                }
+                else {
+                    alert("请补充完整信息");
                 }
             }
         },
