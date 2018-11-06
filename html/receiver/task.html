@@ -47,7 +47,7 @@
         <div class="card rounded shadow mb-4">
             <div class="card-body">
                 <!-- taskName -->
-                <h3 v-text="taskName"></h3>
+                <h4 v-text="taskName"></h4>
                 <!-- button-group -->
                 <div class="btn-group float-right">
                     <button class="btn btn-primary " v-if="seen" @click="startWork">开始工作</button>
@@ -90,23 +90,16 @@
                     <li class="list-group-item">
                         <form action="../../php/receiver/upload.php" name="form" method="post" enctype="multipart/form-data">
                             <div class="form-group"><h4>信息</h4></div>
-                            <div class="formgroup">
-                                <input type="hidden" :value="taskId">
-                            </div>
-                            <div class="form-group">
-                                <textarea cols="60" rows="5" class="form-control rounded mb-3"
-                                    v-model="workDescription"></textarea>
-                                </div>
-                                <div class="formgroup">
-                                        <input type="hidden" :value="workDescription">
-                                    </div>
-                            <div class="form-group">
-                                <input type="file" name="file">
-                            </div>
+                            <div class="form-group"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
+                                v-model="taskId" name="taskId">5</textarea></div>
+                            <div class="form-group"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
+                                    v-model="workDescription" name="workDescription"></textarea></div>
+                            <div class="form-group"><input type="file" name="file"></div>
                             <div class="form-group float-right"><input type="submit" name="submit" value="上传" class="btn btn-primary"></div>
 
                         </form>
                     </li>
+
                 </ul>
             </div>
         </div>
@@ -150,7 +143,7 @@
             seen: true,
             jump: '',
             source: '',
-            workFileName: '',
+            workFileName: '233',
             facialCensor: 0,
             code: '',
         },
