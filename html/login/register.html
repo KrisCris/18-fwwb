@@ -132,7 +132,6 @@
                             </div>
                         </div>
                     </transition>
-
                 </div>
             </div>
         </div>
@@ -183,14 +182,14 @@
         },
         created() {
             swal({
-                    title: "Loading...",
-                    width: 250,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    allowEnterKey: false,
-                    showConfirmButton: false,
-                    onOpen: () => { swal.showLoading() }
-                });
+                title: "Loading...",
+                width: 250,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                showConfirmButton: false,
+                onOpen: () => { swal.showLoading() }
+            });
             var that = this;
             // get company names for selector
             $.post("../../php/fetchCompany.php").done((data) => {
@@ -206,6 +205,16 @@
             register: function () {
                 var that = this;
                 if (that.password == that.password_2) {
+                    swal({
+                        title: '请等待',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        width:250,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    })
                     $.post("../../php/login/register.php", {
                         name: that.name,
                         company: that.company,
@@ -218,35 +227,22 @@
                     }).done((data) => {
                         data = JSON.parse(data);
                         if (data.code == 1) {
-                            window.location.href = "login.html"
-                            // let timerInterval
-                            // swal({
-                            // position: 'center',
-                            //   type: 'success',
-                            //   title: '注册成功！',
-                            //   showConfirmButton: true,
-                            //   html: '页面将会在 <strong></strong> 毫秒后跳转',
-                            //   timer: 5000,
-                            //   onOpen: () => {
-                            //     swal.showLoading()
-                            //     timerInterval = setInterval(() => {
-                            //       swal.getContent().querySelector('strong')
-                            //         .textContent = swal.getTimerLeft()
-                            //     }, 100)
-                            //   },
-                            //   onClose: () => {
-                            //     clearInterval(timerInterval)
-                            //   }
-                            // }).then((result) => {
-                            //   if (
-                            //     // Read more about handling dismissals
-                            //     result.dismiss === swal.DismissReason.timer
-                            //   ) {
-                            //     console.log('I was closed by the timer')
-                            //   }
-                            // })
+                            swal({
+                                title: "注册成功！",
+                                text:"您的账号将在2小时内得到审核。",
+                                type: "success",
+                                showConfirmButton: false,
+                                timer: 2000,
+                                width:300,
+                            }).then(()=>{
+                                window.location.href = "login.html";
+                            });
+                            
                         }
-                        else if (data.code == 0) console.log("用户名重复");
+                        else if (data.code == 0) {
+                            this.notify = '用户名重复！';
+                            this.stateColor = "alert alert-danger";
+                        }
                     })
                 }
                 else {
@@ -271,8 +267,9 @@
                         allowEnterKey: false,
                         showConfirmButton: false,
                         onOpen: () => { swal.showLoading() }
-                    });
-
+                    });  
+                    this.notify = '确认中';
+                    this.stateColor = "alert alert-primary";
                     var that = this;
                     $.post("../../php/login/isDuplicated.php", {
                         phone: that.phone,
@@ -309,21 +306,19 @@
 
                         if (!that.isDuplicated) {
                             that.show = !that.show;
-                            window.setTimeout(() => { that.fade = !that.fade; }, 500)
-
-                        }
-                        this.seen = true;
-                        if (!that.hasCam) {
-                            camera.init();
-                            that.hasCam = true;
+                            window.setTimeout(() => {
+                                that.fade = !that.fade;
+                                this.notify = '请继续填写登陆信息';
+                                this.stateColor = "alert alert-primary";
+                            }, 500)
+                            this.seen = true;
+                            if (!that.hasCam) {
+                                camera.init();
+                                that.hasCam = true;
+                            }
                         }
                     });
-
-
                 }
-
-
-
             },
 
             prev: function () {
@@ -366,14 +361,6 @@
                 }
             }
         },
-
-
-
-
-
-
-
-
     })
     var camera = new Camera('camera', {
         needEdit: true,

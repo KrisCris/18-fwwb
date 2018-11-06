@@ -4,3 +4,4 @@
 require 'database.php';
 set('user', 'id', $_POST['id'], '[isCenscored,1]');
 json_encode([code => 1]);
+?>

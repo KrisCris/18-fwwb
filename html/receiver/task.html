@@ -1,17 +1,17 @@
-<!DOCTYPE html>
+<!DOCTYPE <!DOCTYPE html>
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
-    <title>主页</title>
+    <title>任务查看</title>
 </head>
 
 <body style="background-image: url(../../image/papper.png)">
-    <div id="main" class="container ">
-        <!-- navigation_bar -->
+    <div id="main" class="container">
+        <!-- simple bar -->
         <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
             <a class="navbar-brand" href="#">CrowdSourcing</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -20,7 +20,7 @@
             <div class="collapse navbar-collapse " id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="task.html?state=today"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>今日工作</a>
+                        <a class="nav-link" href="taskList.html?state=recent" :target="jump"><i class="fa fa-calendar-check-o">&nbsp;&nbsp;</i>近日任务</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -28,40 +28,95 @@
                             所有任务
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="taskList.html?state=1"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
-                            <a class="dropdown-item" href="taskList.html?state=2"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
-                            <a class="dropdown-item" href="taskList.html?state=3"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
-                        </div>  
+                            <a class="dropdown-item" href="taskList.html?state=0" :target="jump"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
+                            <a class="dropdown-item" href="taskList.html?state=2" :target="jump"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
+                            <a class="dropdown-item" href="taskList.html?state=1" :target="jump"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
+                        </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
+                        <a class="nav-link" href="index.html" :target="jump"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
                     </li>
                 </ul>
             </div>
             <div class="float-right">
-                <!-- <a class="text-muted" href="#">[注销账号]</a> -->
-                <img :src="portrait" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
+                <img :src="img" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
                 <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
                         class="fa fa-power-off">&nbsp;</i>注销</button>
             </div>
         </nav>
-
-        <!-- project items cards -->
-        <div class="row">
-            <div class="col-sm-3" v-for="n in 10 ">
-                <div class="card mb-4">
-                    <img class="card-img-top" src="../../image/timg.jpg" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">projectName</h5>
-                        <p class="card-text">breif</p>
-                        <a href="#" class="btn btn-primary">查看任务</a>
-                    </div>
+        <div class="card rounded shadow mb-4">
+            <div class="card-body">
+                <!-- taskName -->
+                <h4 v-text="taskName"></h4>
+                <!-- button-group -->
+                <div class="btn-group float-right">
+                    <button class="btn btn-primary " v-if="seen" @click="startWork">开始工作</button>
+                    <button class="btn btn-danger" v-if="!seen" @click="endWork">结束工作</button>
                 </div>
             </div>
         </div>
-    </div>
+        <!-- 任务需求 -->
+        <div class="card rounded shadow mb-4">
+            <div class="card-body">
+                <div class="card-title">
+                    <h3>任务要求</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <h4>信息</h4>
+                        <textarea id="area" rows="5" class="form-control rounded mb-3" v-model="description" readonly></textarea>
+                    </li>
+                    <li class="list-group-item">
+                        <h4>附件</h4>
+                        <!-- 下载文件 -->
+                        <a :href="source" :download="source" class="float-right" target="_blank" v-text="workFileName"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 完成任务发送 -->
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="card-title">
+                    <h3>任务上传</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                   
+                    <!-- <li class="list-group-item">
+                        <h4>附件</h4>
+                        <input type="file" id="file_input" class="rounded">
+                        <button class="btn btn-primary float-right rounded" @click="upload">提交</button>
+                    </li> -->
+                    <li class="list-group-item">
+                        <form action="../../php/receiver/upload.php" name="form" method="post" enctype="multipart/form-data">
+                            <div class="form-group"><h4>信息</h4></div>
+                            <div class="form-group"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
+                                v-model="taskId" name="taskId">5</textarea></div>
+                            <div class="form-group"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
+                                    v-model="workDescription" name="workDescription"></textarea></div>
+                            <div class="form-group"><input type="file" name="file"></div>
+                            <div class="form-group float-right"><input type="submit" name="submit" value="上传" class="btn btn-primary"></div>
 
+                        </form>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <p>{{startTime}}</p>
+        <p>{{endTime}}</p>
+        <p>{{code}}</p>
+        <p>{{taskName}}</p>
+        <p>{{taskId}}</p>
+        <p>{{workDescription}}</p>
+        <hr>
+        <p>{{source}}</p>
+        <p>{{workFileName}}</p>
+        <p>{{description}}</p>
+    </div>
 </body>
+
+<script src="../../javascript/camera.js"></script>
 <script src="../../resource/swal2/sweetalert2.all.js"></script>
 <script src="../../resource/vue/vue.js"></script>
 <script src="../../resource/jquery/jquery.js"></script>
@@ -74,19 +129,43 @@
             //user
             group: null,
             uuid: null,
+            img: "http://static.runoob.com/images/mix/img_avatar.png",
             portrait: "http://static.runoob.com/images/mix/img_avatar.png",
-            //prj
-            tasks: [],
-            taskState: "",
-            type: "a",
+            taskId: '',
+            //
+            task: [],
+            taskName: '',
+            workDescription: '',
+            description: '',
+            startTime: '',
+            endTime: '',
+            timeType: '',
+            seen: true,
+            jump: '',
+            source: '',
+            workFileName: '233',
+            facialCensor: 0,
+            code: '',
         },
-        created: function () {
+        created() {
+            swal({
+                title: "Loading...",
+                width: 250,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                showConfirmButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            });
             this.group = $.cookie('group');
             if ($.cookie('uuid') == null) {
                 let timerInterval
                 swal({
                     title: '请登录',
-                    html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
                     timer: 5500,
                     onOpen: () => {
                         swal.showLoading()
@@ -101,36 +180,26 @@
                 }).then(() => {
                     window.location.href = "../login/login.html";
                 })
-            }
-            else {
+            } else {
                 this.uuid = $.cookie('uuid');
                 var that = this;
-                swal({
-                    title: "载入中",
-                    width: 250,
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    allowEnterKey: false,
-                    onOpen: () => { swal.showLoading() }
-                });
                 $.post("../../php/checkState.php", {
                     uuid: that.uuid,
-                    group: 1,
+                    group: that.group,
                 }).done((data) => {
-                    swal.close();
                     data = JSON.parse(data);
                     if (data.code == 0) {
                         let timerInterval
                         swal({
                             title: '请登录',
-                            html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+                            html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
                             timer: 5500,
                             onOpen: () => {
                                 swal.showLoading()
                                 timerInterval = setInterval(() => {
                                     swal.getContent().querySelector('strong')
-                                        .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
                                 }, 100)
                             },
                             onClose: () => {
@@ -139,31 +208,162 @@
                         }).then(() => {
                             window.location.href = "../login/login.html";
                         })
-                    }
-                    else {
-                        that.taskState = getQueryString("state");
-                        that.fetchTask();
+                    } else {
+                        that.taskId = getQueryString("taskId");
+                        $.post("../../php/fetchWorkInfo.php", {
+                            //返回taskId
+                            taskId: that.taskId,
+                        }).done((data) => {
+                            data = JSON.parse(data);
+                            that.task = data;
+                            that.code = that.task.code;
+                            that.taskName = that.task.taskName; //任务名
+                            that.source = that.task.workInfo.downloadPath; //路径
+                            that.workFileName = that.task.workInfo.workFileName; //文件名
+                            that.description = that.task.description; //任务描述
+                            swal.close();
+                        })
                     }
                 });
 
             }
-            //end of else
         },
         methods: {
+            //开始工作的时候用计时器提示已经开始工作
+            startWork: function () {
+                swal({
+                    title: '开始工作',
+                    text: '工作期间请不要离开页面！',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '开始记录工作时长！',
+                    cancelButtonText: '再等等...',
+                }).then((result) => {
+                    if (result.value) {
+                        swal(
+                            '开始工作！',
+                            '时长已开始计算',
+                            'success'
+                        );
+                        this.seen = false;
+                        $("#area").val("233");
+                        var startTime = new Date();
+                        this.startTime = startTime.getTime();
+                        this.jump = "_blank";
+                        //startTime type
+                        this.timeType = 0;
+                        $.post("../../php/receiver/recordTime.php", {
+                            startTime: this.startTime,
+                            timeType: this.timeType,
+                            taskId: this.taskId,
+                            uuid: this.uuid,
+                        })
+                    }
+                })
+            },
+
+            //结束工作的时候显示本次工作时长
+            endWork: function () {
+                swal({
+                    title: '结束工作',
+                    text: '请及时上传完成的文件！',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '结束计时！',
+                    cancelButtonText: '再工作一会儿...',
+                }).then((result) => {
+                    if (result.value) {
+                        swal(
+                            '工作结束！',
+                            '时长已记录',
+                            'success'
+                        );
+                        this.seen = true;
+                        this.jump = '';
+                        var endTime = new Date();
+                        this.endTime = endTime.getTime();
+                        this.facialCensor = 0;
+                        //endTime type
+                        this.timeType = 1;
+                        $.post("../../php/receiver/recordTime.php", {
+                            endTime: this.endTime,
+                            timeType: this.timeType,
+                            taskId: this.taskId,
+                            uuid: this.uuid,
+                        })
+                    }
+                })
+
+            },
+            upload: function () {
+                var form_data = new FormData();
+                var file_data = $("#file_input").prop("files")[0];
+                form_data.append("file", file_data);
+                form_data.append("WorkDescription", this.workDescription);
+                $.ajax({
+                    type: "POST",
+                    url: "../../php/receiver/upload.php",
+                    dataType: "json",
+                    crossDomain: true,
+                    processData: false, // 注意：让jQuery不要处理数据
+                    contentType: false, // 注意：让jQuery不要设置contentType
+                    data: form_data,
+                }).success(function () {
+                    swal(
+                        '提交成功！',
+                        '请等待管理员审核',
+                        'success'
+                    )
+                    //清空
+                    this.WorkDescription = "";
+                }).fail(function () {
+                    swal(
+                        '提交失败！',
+                        '请尝试重新上传',
+                        'error'
+                    )
+                });
+            },
             logout: function () {
                 var that = this;
                 $.post("../../php/logout.php", {
                     uuid: that.uuid,
                     group: "admin",
                 }).done(() => {
-                    $.cookie("uuid", null, { expires: 1, secure: false, path: '/' });
-                    $.cookie("group", null, { expires: 1, secure: false, path: '/' });
+                    $.cookie("uuid", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    $.cookie("group", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
                     window.location.href = "../login/login.html";
                 })
             },
-
+            closeAlert: function () {
+                console.log(msg);
+                swal(
+                    '提交失败！',
+                    '请尝试重新上传',
+                    'error'
+                )
+            },
         }
     })
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
 </script>
 
 </html>

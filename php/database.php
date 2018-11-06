@@ -50,15 +50,17 @@ function sql_str($sql){
         die('Could not connect: ' . mysql_error());
     }
     $result = $con->query($sql);
-    
-    if($result->num_rows<=0)return [];
-    $data=[];
-    while($row = $result->fetch_assoc()){
-        array_push($data,$row);
+    if(strpos($sql,"DELETE")!== false||strpos($sql,"UPDATE")!== false){
     }
-    return $data;
-
-    
+    else{
+        if($result->num_rows<=0)return [];
+        $data=[];
+        while($row = $result->fetch_assoc()){
+            array_push($data,$row);
+        }
+        return $data;
+    }
+  
 }
 
 

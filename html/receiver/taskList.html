@@ -20,7 +20,7 @@
             <div class="collapse navbar-collapse " id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="task.html?state=today"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>今日工作</a>
+                        <a class="nav-link" href="taskList.html?state=recent"><i class="fa fa-calendar-check-o">&nbsp;&nbsp;</i>近日任务</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -28,13 +28,14 @@
                             所有任务
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="taskList.html?state=1"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
+                            <a class="dropdown-item" href="taskList.html?state=0"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
                             <a class="dropdown-item" href="taskList.html?state=2"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
-                            <a class="dropdown-item" href="taskList.html?state=3"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
+                            <a class="dropdown-item" href="taskList.html?state=-1"><i class="fa fa-warning">&nbsp;&nbsp;</i>延迟</a>
+                            <a class="dropdown-item" href="taskList.html?state=1"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
+                        <a class="nav-link" href="index.html"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
                     </li>
                 </ul>
             </div>
@@ -45,25 +46,37 @@
                         class="fa fa-power-off">&nbsp;</i>注销</button>
             </div>
         </nav>
+
         <!-- content -->
         <div class="row">
             <div class="col">
-                <div class="card rounded shadow">
+                <div class="card shadow ">
                     <div class="card-body">
-                        <h4 class="card-title border-bottom pb-3" v-text="'state'"></h4>
-                        <table class="table table-hover rounded">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>任务名称</th>
-                                    <th></th>
-                                    <th></th>
-                                    <th>开始日期</th>
-                                    <th>截止日期</th>
+                        <h4 class="card-title pb-3" v-text="tTitle"></h4>
+
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr class="text-center">
+                                    <th style="width:20%">任务名称</th>
+                                    <th style="width:20%">所属项目</th>
+                                    <th style="width:20%">开始日期</th>
+                                    <th style="width:20%">截止日期</th>
+                                    <th style="width:10%">安全等级</th>
+                                    <th style="width:10%">状态</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="task in tasks">
-                                    
+                                <!-- <p v-text="'asdasd'" :style="{'color':color_state==-1?'#ff0000':'#000000'}"></p> -->
+                                <tr v-for="task in tasks" @click="window.location.href='task.html?taskId='+task.id"
+                                    class="text-center">
+                                    <td style="width:20%"><a v-text="task.taskName" :href="'task.html?taskId='+task.id"
+                                            class="text-dark" style="text-decoration: none"></a></td>
+                                    <td style="width:20%" v-text="task.prjName"></td>
+                                    <td style="width:20%" v-text="convertTime(task.startTime)"></td>
+                                    <td style="width:20%" v-text="convertTime(task.endTime)"></td>
+                                    <td style="width:10%" v-text="task.securityLevel==0?'普通':task.securityLevel==1?'高':'unknown'"></td>
+                                    <td style="width:10%" v-text="task.state==-1?'延误':task.state==1?'完成':task.state==2?'审核中':task.state==0?'进行中':'unknown'"
+                                        :style="{'color':task.state==-1?'#ff0000':'#000000'}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -71,10 +84,17 @@
                 </div>
             </div>
         </div>
+
+
+
+
+        <!-- content_end -->
+        <!-- test -->
         <p>{{uuid}}</p>
         <p>{{group}}</p>
-        <p>{{taskState}}</p>
+        <p>{{state}}</p>
     </div>
+
 </body>
 <script src="../../javascript/camera.js"></script>
 <script src="../../resource/swal2/sweetalert2.all.js"></script>
@@ -89,14 +109,21 @@
             //user
             group: null,
             uuid: null,
-            portrait: "http://static.runoob.com/images/mix/img_avatar.png",
-            //prj
+            portrait: "",
+            state: "",
+            //table
+            tTitle: "",
             tasks: [],
-            taskState: "",
-            type: "a",
         },
         created: function () {
             this.group = $.cookie('group');
+            this.portrait = $.cookie('portrait');
+            this.state = getQueryString("state");
+            if (this.state == 1) this.tTitle = "完成的任务";
+            else if (this.state == 0) this.tTitle = "进行中的任务";
+            else if (this.state == 2) this.tTitle = "审核中的任务";
+            else if (this.state == "recent") this.tTitle = "近期的任务"
+            else if (this.state == -1) this.tTitle = "延迟"
             if ($.cookie('uuid') == null) {
                 let timerInterval
                 swal({
@@ -131,7 +158,7 @@
                 });
                 $.post("../../php/checkState.php", {
                     uuid: that.uuid,
-                    group: 1,
+                    group: that.group,
                 }).done((data) => {
                     swal.close();
                     data = JSON.parse(data);
@@ -156,39 +183,49 @@
                         })
                     }
                     else {
-                        that.taskState = getQueryString("state");
-                        that.fetchTask();
+                        this.getTask()
+                        // 确认登陆后干的事
                     }
                 });
 
             }
             //end of else
         },
-
         methods: {
             logout: function () {
                 var that = this;
-                $.post("../../php/logout.php", {
+                $.post("../../php/logOut.php", {
                     uuid: that.uuid,
-                    group: "admin",
+                    group: that.group,
                 }).done(() => {
                     $.cookie("uuid", null, { expires: 1, secure: false, path: '/' });
                     $.cookie("group", null, { expires: 1, secure: false, path: '/' });
                     window.location.href = "../login/login.html";
                 })
             },
-            //task->prj
-            fetchTask: function () {
+
+            getTask: function () {
                 var that = this;
-                $.post("../../php/receiver/fetchTask.php", {
-                    taskState: that.taskState,
+                $.post("../../php/receiver/getTasks.php", {
                     uuid: that.uuid,
+                    group: that.group,
+                    state: that.state,
                 }).done((data) => {
                     data = JSON.parse(data);
-                    tasks = data;
+                    that.tasks = data.tasks;
                 })
-            }
+            },
 
+            convertTime: function (timestamp) {
+                var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                var D = date.getDate() + ' ';
+                var h = date.getHours() + ':';
+                var m = date.getMinutes();
+                // var s = date.getSeconds();
+                return Y + M + D + h + m;
+            }
         }
     })
     function getQueryString(name) {
