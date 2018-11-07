@@ -64,11 +64,12 @@
 
                 <div class="card mb-4 rounded shadow">
                     <!-- 项目图片 -->
-                    <img class="card-img-top" :src="project.img">
+                    <img class="card-img-top" :src="project.imgSource">
                     <div class="card-body">
+                        <h4 v-text="project.prjName"></h4>
                         <div class="progress">
                             <!-- 进度条 -->
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width: progressWidth}"></div>
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width: project.percentage}"></div>
                         </div>
                         <h5 class="card-title" v-text=""></h5>
                         <p class="card-text ">开始日期:<span v-text="convertTime(project.begin)"></span></p>
@@ -106,87 +107,6 @@
             state: '',
             projectId: '',
         },
-        // created: function () {
-        //     this.group = $.cookie('group');
-        //     if ($.cookie('uuid') == null) {
-        //         let timerInterval
-        //         swal({
-        //             title: '请登录',
-        //             html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
-        //             timer: 5500,
-        //             onOpen: () => {
-        //                 swal.showLoading()
-        //                 timerInterval = setInterval(() => {
-        //                     swal.getContent().querySelector('strong')
-        //                         .textContent = parseInt((swal.getTimerLeft()) / 1000)
-        //                 }, 100)
-        //             },
-        //             onClose: () => {
-        //                 clearInterval(timerInterval)
-        //             }
-        //         }).then(() => {
-        //             window.location.href = "../login/login.html";
-        //         })
-        //     } else {
-        //         this.uuid = $.cookie('uuid');
-        //         var that = this;
-        //         swal({
-        //             title: "载入中",
-        //             width: 250,
-        //             showConfirmButton: false,
-        //             allowOutsideClick: false,
-        //             allowEscapeKey: false,
-        //             allowEnterKey: false,
-        //             onOpen: () => {
-        //                 swal.showLoading()
-        //             }
-        //         });
-        //         $.post("../../php/checkState.php", {
-        //             uuid: that.uuid,
-        //             group: 1,
-        //         }).done((data) => {
-        //             swal.close();
-        //             data = JSON.parse(data);
-        //             if (data.code == 0) {
-        //                 let timerInterval
-        //                 swal({
-        //                     title: '请登录',
-        //                     html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
-        //                     timer: 5500,
-        //                     onOpen: () => {
-        //                         swal.showLoading()
-        //                         timerInterval = setInterval(() => {
-        //                             swal.getContent().querySelector('strong')
-        //                                 .textContent = parseInt((swal.getTimerLeft()) /
-        //                                     1000)
-        //                         }, 100)
-        //                     },
-        //                     onClose: () => {
-        //                         clearInterval(timerInterval)
-        //                     }
-        //                 }).then(() => {
-        //                     window.location.href = "../login/login.html";
-        //                 })
-        //             } 
-        //             else {
-        //                 sawl.close();
-        //                 that.state = getQueryString("state");
-        //                 // that.fetchTask();
-        //                 $.post("../../php/sender/fetchPrj.php",{
-        //                     //查找相应的state的Project
-        //                     state: that.state,
-        //                 }).done((data) => {
-        //                     data = JSON.parse(data);
-        //                     that.projects = data.projects;
-        //                     that.code = data.code;
-        //                     swal.close();
-        //                 })
-        //             }
-                    
-        //         });
-        //     }
-        //     //end of else
-        // },
         created() {
             swal({
                 title: "Loading...",
@@ -292,10 +212,10 @@
                 var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) +
                     '-';
                 var D = date.getDate() + ' ';
-                var h = date.getHours() + ':';
-                var m = date.getMinutes();
+                // var h = date.getHours() + ':';
+                // var m = date.getMinutes();
                 // var s = date.getSeconds();
-                return Y + M + D + h + m;
+                return Y + M + D ;
             },
 
 
