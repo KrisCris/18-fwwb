@@ -307,12 +307,13 @@
                     formData.append("img", that.img);
                     formData.append("uuid", that.uuid);
                     $.ajax({
-                        type: "POST",
-                        url: "../../php/sender/publish.php",
-                        dataType: "json",
-                        processData: false,
-                        contentType: false,
-                        data: formData,
+                        type:"POST",
+                        url:"../../php/sender/publish.php",
+                        // url:"../../php/receiver/upload.php",
+                        dataType:"json",
+                        processData:false,
+                        contentType:false,
+                        data:formData,
                     }).done((data) => {
                         data = JSON.parse(data);
                         if (data.code == 1) {

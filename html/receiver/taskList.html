@@ -160,7 +160,6 @@
                     uuid: that.uuid,
                     group: that.group,
                 }).done((data) => {
-                    swal.close();
                     data = JSON.parse(data);
                     if (data.code == 0) {
                         let timerInterval
@@ -184,7 +183,8 @@
                     }
                     else {
                         this.getTask()
-                        // 确认登陆后干的事
+                        
+                        
                     }
                 });
 
@@ -213,6 +213,7 @@
                 }).done((data) => {
                     data = JSON.parse(data);
                     that.tasks = data.tasks;
+                    swal.close();
                 })
             },
 

@@ -2,5 +2,5 @@
 
 //修改公司信息
 require 'database.php';
-set('company', 'id', $_GET['id'], [['companyName', $_GET['companyname']], ['regDate', $_GET['regDate']], ['responsiblePerson', $_GET['responsible']], ['address', $_GET['address']], ['contact', $_GET['contact']]]);
+set('company', 'id', $_POST['id'], [['companyName', $_POST['companyname']], ['regDate', $_POST['regDate']], ['responsiblePerson', $_POST['responsible']], ['address', $_POST['address']], ['contact', $_POST['contact']]]);
 json_encode([code => 1]);
