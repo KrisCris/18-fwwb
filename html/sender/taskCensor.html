@@ -20,28 +20,41 @@
             <div class="collapse navbar-collapse " id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="taskList.html?state=recent" :target="jump"><i class="fa fa-calendar-check-o">&nbsp;&nbsp;</i>近日任务</a>
+                        <a class="nav-link" href="publish.html"><i class="fa fa-paste">&nbsp;</i>项目发布</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-pie-chart"></i>
-                            所有任务
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-tasks"></i>
+                            项目管理
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="taskList.html?state=0" :target="jump"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
-                            <a class="dropdown-item" href="taskList.html?state=2" :target="jump"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
-                            <a class="dropdown-item" href="taskList.html?state=1" :target="jump"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
+                            <a class="dropdown-item" href="prjList.html?state=0"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=-1"><i class="fa fa-exclamation-triangle">&nbsp;&nbsp;</i>延期的项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=1"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-calendar"></i>
+                            任务进度
+                        </a>
+                        <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href=""><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
+                            <a class="dropdown-item" href=""><i class="fa fa-info-circle">&nbsp;&nbsp;</i>待审核</a>
+                            <a class="dropdown-item" href=""><i class="fa fa-warning">&nbsp;&nbsp;</i>已延期</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html" :target="jump"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
+                        <a class="nav-link" href="#"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
                     </li>
                 </ul>
             </div>
             <div class="float-right">
-                <img :src="img" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
+                <!-- <a class="text-muted" href="#">[注销账号]</a> -->
+                <img :src="portrait" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
                 <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
                         class="fa fa-power-off">&nbsp;</i>注销</button>
+
             </div>
         </nav>
         <div class="card rounded shadow mb-4">
@@ -49,51 +62,46 @@
                 <div class="'d-flex flex-row">
                     <!-- taskName -->
                     <h4 v-text="taskName "></h4>
-                    <!-- button-group -->
-                    <div class="btn-group float-right align-self-start">
-                        <button class="btn btn-primary" :disabled="!visible" @click="startWork">开始工作</button>
-                        <button class="btn btn-danger" :disabled="visible" @click="endWork">结束工作</button>
-                    </div>
+                    <button class="btn btn-primary mr-3 float-right">通过</button>
+                    <button class="btn btn-danger float-right mr-3">退回</button>
                 </div>
 
             </div>
         </div>
-        <!-- 任务需求 -->
         <div class="card rounded shadow mb-4">
             <div class="card-body">
                 <div class="card-title">
-                    <h3>任务要求</h3>
+                    <h3>工作信息</h3>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <h4>信息</h4>
+                        <h4>简述</h4>
                         <textarea id="area" rows="5" class="form-control rounded mb-3" v-model="description" readonly="readonly"></textarea>
                     </li>
                     <li class="list-group-item">
-                        <h4>附件</h4>
+                        <h4>工作成果</h4>
                         <!-- 下载文件 -->
                         <a :href="source" :download="source" class="float-right" target="_blank" v-text="workFileName"></a>
                     </li>
                 </ul>
             </div>
         </div>
-        <!-- 完成任务发送 -->
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="card-title">
-                    <h3>任务上传</h3>
+                    <h3>任务需求</h3>
                 </div>
                 <ul class="list-group list-group-flush">
 
                     <!-- <li class="list-group-item">
-                        <h4>附件</h4>
-                        <input type="file" id="file_input" class="rounded">
-                        <button class="btn btn-primary float-right rounded" @click="upload">提交</button>
-                    </li> -->
+                                        <h4>附件</h4>
+                                        <input type="file" id="file_input" class="rounded">
+                                        <button class="btn btn-primary float-right rounded" @click="upload">提交</button>
+                                    </li> -->
                     <li class="list-group-item">
-                        <form action="../../php/receiver/upload.php" name="form" method="post" enctype="multipart/form-data" target="myIframe">
+                        <form action="../../php/receiver/upload.php" name="form" method="post" enctype="multipart/form-data">
                             <div class="form-group">
-                                <h4>信息</h4>
+                                <h4>要求</h4>
                             </div>
                             <div class="form-group" v-show="showTaskId"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
                                     v-model="taskId" name="taskId">5</textarea></div>
@@ -107,19 +115,9 @@
                 </ul>
             </div>
         </div>
-        <p>{{startTime}}</p>
-        <p>{{endTime}}</p>
-        <p>{{code}}</p>
-        <p>{{taskName}}</p>
-        <p>{{taskId}}</p>
-        <p>{{workDescription}}</p>
-        <hr>
-        <p>{{source}}</p>
-        <p>{{workFileName}}</p>
-        <p>{{description}}</p>
+
+
     </div>
-    <!-- 防止表单提交时页面跳转 -->
-    <iframe id="myIframe" name="myIframe"style= "display:none "></iframe>
 </body>
 
 <script src="../../javascript/camera.js"></script>
@@ -236,76 +234,6 @@
             }
         },
         methods: {
-            //开始工作的时候用计时器提示已经开始工作
-            startWork: function () {
-                swal({
-                    title: '开始工作',
-                    text: '工作期间请不要离开页面！',
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: '开始记录工作时长！',
-                    cancelButtonText: '再等等...',
-                }).then((result) => {
-                    if (result.value) {
-                        swal(
-                            '开始工作！',
-                            '时长已开始计算',
-                            'success'
-                        );
-                        $("#area").val("233");
-                        var startTime = new Date();
-                        this.startTime = parseInt(startTime.getTime() / 1000);
-                        this.jump = "_blank";
-                        //startTime type
-                        this.timeType = 0;
-                        this.visible = false;
-                        $.post("../../php/receiver/recordTime.php", {
-                            startTime: this.startTime,
-                            timeType: this.timeType,
-                            taskId: this.taskId,
-                            uuid: this.uuid,
-                        })
-                    }
-                })
-            },
-
-            //结束工作的时候显示本次工作时长
-            endWork: function () {
-                swal({
-                    title: '结束工作',
-                    text: '请及时上传完成的文件！',
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: '结束计时！',
-                    cancelButtonText: '再工作一会儿...',
-                }).then((result) => {
-                    if (result.value) {
-                        swal(
-                            '工作结束！',
-                            '时长已记录',
-                            'success'
-                        );
-                        this.jump = '';
-                        var endTime = new Date();
-                        this.endTime = parseInt(endTime.getTime() / 1000);
-                        this.facialCensor = 0;
-                        //endTime type
-                        this.timeType = 1;
-                        this.visible = true;
-                        $.post("../../php/receiver/recordTime.php", {
-                            endTime: this.endTime,
-                            timeType: this.timeType,
-                            taskId: this.taskId,
-                            uuid: this.uuid,
-                        })
-                    }
-                })
-
-            },
             upload: function () {
                 var form_data = new FormData();
                 var file_data = $("#file_input").prop("files")[0];

@@ -297,10 +297,17 @@
                     swal.close();
                     data = JSON.parse(data);
                     if (data.code == 1) {
+                        swal({
+                            title: "添加成功！",
+                            type: "success",
+                            showConfirmButton: false,
+                            timer: 1000,
+                        })
                         $.post("../../php/admin/fetchPublisher.php").done((data) => {
                             data = JSON.parse(data);
                             that.publishers = data;
                         });
+                        that.seen = false
                     }
                     else {
                         swal({
@@ -327,7 +334,6 @@
                     cancelButtonColor: '#257FED',
                     confirmButtonText: "确认",
                     cancelButtonText: "取消"
-                    //我估计result就是有没有确认,.value就是true/false
                 }).then((result) => {
                     if (result.value) {
                         swal({
@@ -355,6 +361,7 @@
                                     showConfirmButton: false,
                                     timer: 1000,
                                 })
+                                that.publisherList = [];
 
                             }
                         })

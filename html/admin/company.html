@@ -147,7 +147,9 @@
                 allowEscapeKey: false,
                 allowEnterKey: false,
                 showConfirmButton: false,
-                onOpen: () => { swal.showLoading() }
+                onOpen: () => {
+                    swal.showLoading()
+                }
             });
             this.group = $.cookie('group');
             if ($.cookie('uuid') == null) {
@@ -169,8 +171,7 @@
                 }).then(() => {
                     window.location.href = "../login/login.html";
                 })
-            }
-            else {
+            } else {
                 this.uuid = $.cookie('uuid');
                 var that = this;
                 $.post("../../php/checkState.php", {
@@ -188,7 +189,8 @@
                                 swal.showLoading()
                                 timerInterval = setInterval(() => {
                                     swal.getContent().querySelector('strong')
-                                        .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
                                 }, 100)
                             },
                             onClose: () => {
@@ -197,8 +199,7 @@
                         }).then(() => {
                             window.location.href = "../login/login.html";
                         })
-                    }
-                    else {
+                    } else {
                         $.post("../../php/fetchCompany.php").done((data) => {
                             data = JSON.parse(data);
                             that.companies = data;
@@ -217,8 +218,16 @@
                     uuid: that.uuid,
                     group: "admin",
                 }).done(() => {
-                    $.cookie("uuid", null, { expires: 1, secure: false, path: '/' });
-                    $.cookie("group", null, { expires: 1, secure: false, path: '/' });
+                    $.cookie("uuid", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    $.cookie("group", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
                     window.location.href = "../login/login.html";
                 })
             },
@@ -238,8 +247,7 @@
                     this.addable = false;
                     this.editable = false;
                     this.deleble = true;
-                }
-                else {
+                } else {
                     this.companyList = [];
                     this.hasCheckAll = !this.hasCheckAll;
                     this.addable = true;
@@ -257,13 +265,11 @@
                     this.addable = false;
                     this.editable = true;
                     this.deleble = true;
-                }
-                else if (this.companyList.length > 1) {
+                } else if (this.companyList.length > 1) {
                     this.addable = false;
                     this.editable = false;
                     this.deleble = true;
-                }
-                else {
+                } else {
                     this.addable = true;
                     this.editable = false;
                     this.deleble = false;
@@ -291,7 +297,9 @@
                     allowEscapeKey: false,
                     allowEnterKey: false,
                     showConfirmButton: false,
-                    onOpen: () => { swal.showLoading() }
+                    onOpen: () => {
+                        swal.showLoading()
+                    }
                 });
                 $.post("../../php/admin/addCompany.php", {
                     companyName: that.companyName,
@@ -314,8 +322,7 @@
                             that.companies = data;
                         });
                         that.seen = false;
-                    }
-                    else {
+                    } else {
                         swal({
                             title: "未知错误！",
                             type: "error",
@@ -323,9 +330,9 @@
                             confirmButtonText: "刷新",
                             allowOutsideClick: false,
                             allowEscapeKey: false,
-                            showConfirmButton:false,
-                            timer:1000,
-                        }).then(()=>{
+                            showConfirmButton: false,
+                            timer: 1000,
+                        }).then(() => {
                             window.location.reload();
                         });
                     }

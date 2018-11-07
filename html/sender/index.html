@@ -28,8 +28,9 @@
                             项目管理
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href=""><i class="	fa fa-spinner">&nbsp;&nbsp;</i>进行中项目</a>
-                            <a class="dropdown-item" href=""><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=0"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=-1"><i class="fa fa-exclamation-triangle">&nbsp;&nbsp;</i>延期的项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=1"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -171,8 +172,7 @@
                 }).then(() => {
                     window.location.href = "../login/login.html";
                 })
-            }
-            else {
+            } else {
                 this.uuid = $.cookie('uuid');
                 var that = this;
                 swal({
@@ -182,7 +182,9 @@
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     allowEnterKey: false,
-                    onOpen: () => { swal.showLoading() }
+                    onOpen: () => {
+                        swal.showLoading()
+                    }
                 });
                 $.post("../../php/checkState.php", {
                     uuid: that.uuid,
@@ -200,7 +202,8 @@
                                 swal.showLoading()
                                 timerInterval = setInterval(() => {
                                     swal.getContent().querySelector('strong')
-                                        .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
                                 }, 100)
                             },
                             onClose: () => {
@@ -209,8 +212,7 @@
                         }).then(() => {
                             window.location.href = "../login/login.html";
                         })
-                    }
-                    else {
+                    } else {
                         swal.close();
                         ////////////////////
                     }
@@ -224,16 +226,25 @@
                     uuid: that.uuid,
                     group: that.group,
                 }).done(() => {
-                    $.cookie("uuid", null, { expires: 1, secure: false, path: '/' });
-                    $.cookie("group", null, { expires: 1, secure: false, path: '/' });
+                    $.cookie("uuid", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    $.cookie("group", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
                     window.location.href = "../login/login.html";
                 })
             },
 
             convertTime: function (timestamp) {
-                var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
                 var Y = date.getFullYear() + '-';
-                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) +
+                    '-';
                 var D = date.getDate() + ' ';
                 var h = date.getHours() + ':';
                 var m = date.getMinutes();
@@ -243,6 +254,7 @@
         }
 
     })
+
     function getQueryString(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
         var r = window.location.search.substr(1).match(reg);

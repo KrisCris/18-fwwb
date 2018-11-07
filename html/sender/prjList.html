@@ -28,8 +28,9 @@
                             项目管理
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href=""><i class="	fa fa-spinner">&nbsp;&nbsp;</i>进行中项目</a>
-                            <a class="dropdown-item" href=""><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=0"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=-1"><i class="fa fa-exclamation-triangle">&nbsp;&nbsp;</i>延期的项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=1"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -59,26 +60,30 @@
 
         <!-- project items cards -->
         <div class="row">
-            <div class="col-md-3 col-sm-6" v-for="n in 1">
+            <div class="col-md-3 col-sm-6" v-for="project in projects">
 
                 <div class="card mb-4 rounded shadow">
-                    <img class="card-img-top" src="../../image/timg.jpg" >
+                    <!-- 项目图片 -->
+                    <img class="card-img-top" :src="project.img">
                     <div class="card-body">
-                            <div class="progress">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:40%"></div>
-                                  </div>
+                        <div class="progress">
+                            <!-- 进度条 -->
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width: progressWidth}"></div>
+                        </div>
                         <h5 class="card-title" v-text=""></h5>
-                        <p class="card-text ">开始日期:<span v-text=""></span></p>
-                        <p class="card-text">截止日期:<span v-text=""></span></p>
-                       
-                        <a href="taskList.html" class="btn btn-success btn-block">查看任务</a>
-                
+                        <p class="card-text ">开始日期:<span v-text="convertTime(project.startTIme)"></span></p>
+                        <p class="card-text">截止日期:<span v-text="convertTime(project.startTIme)"></span></p>
+
+                        <a href="" class="btn btn-success btn-block">查看任务</a>
+
                     </div>
                 </div>
 
             </div>
         </div>
+        <p><span>state:</span>{{state}}</p>
     </div>
+    
 
 
 </body>
@@ -96,9 +101,14 @@
             uuid: null,
             portrait: "",
             //prj
-            prjs: [],
-            state: "",
-
+            projects: [],
+            state: '',
+            imgSource: '',
+            percentage: '',
+            begin: '',
+            end: '',
+            projectId: '',
+            progressWidth: '',
         },
         created: function () {
 
@@ -164,18 +174,97 @@
                         })
                     } 
                     else {
-                        that.taskState = getQueryString("state");
-                        that.fetchTask();
-                        $.post("../../php/fetchTask.php").done((data)=>{
+                        sawl.close();
+                        that.state = getQueryString("state");
+                        // that.fetchTask();
+                        $.post("../../php/sender/fetchPrj.php",{
+                            //查找相应的state的Project
+                            state: that.state,
+                        }).done((data) => {
                             data = JSON.parse(data);
-                            that.tasks = data;
+                            that.projects = data;
+                            swal.close();
+                        })
+                    }
+                    
+                });
+            }
+            //end of else
+        },
+        created() {
+            swal({
+                title: "Loading...",
+                width: 250,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                showConfirmButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            });
+            this.group = $.cookie('group');
+            if ($.cookie('uuid') == null) {
+                let timerInterval
+                swal({
+                    title: '请登录',
+                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                    timer: 5500,
+                    onOpen: () => {
+                        swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            swal.getContent().querySelector('strong')
+                                .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                        }, 100)
+                    },
+                    onClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then(() => {
+                    window.location.href = "../login/login.html";
+                })
+            } else {
+                this.uuid = $.cookie('uuid');
+                var that = this;
+                $.post("../../php/checkState.php", {
+                    uuid: that.uuid,
+                    group: that.group,
+                }).done((data) => {
+                    data = JSON.parse(data);
+                    if (data.code == 0) {
+                        let timerInterval
+                        swal({
+                            title: '请登录',
+                            html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                            timer: 5500,
+                            onOpen: () => {
+                                swal.showLoading()
+                                timerInterval = setInterval(() => {
+                                    swal.getContent().querySelector('strong')
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
+                                }, 100)
+                            },
+                            onClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then(() => {
+                            window.location.href = "../login/login.html";
+                        })
+                    } else {
+                        that.state = getQueryString("state");
+                        $.post("../../php/sender/fetchPrj.php", {
+                            state : that.state,
+                        }).done((data) => {
+                            data =JSON.parse(data);
+                            that.info = data;
                             swal.close();
                         });
                     }
                 });
 
             }
-            //end of else
         },
         methods: {
             logout: function () {
@@ -187,20 +276,38 @@
                     $.cookie("uuid", null, {
                         expires: 1,
                         secure: false,
-                        path: '/'
+                        path: '/',
                     });
                     $.cookie("group", null, {
                         expires: 1,
                         secure: false,
-                        path: '/'
+                        path: '/',
                     });
                     window.location.href = "../login/login.html";
                 })
+            },
+            convertTime: function (timestamp) {
+                var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) +
+                    '-';
+                var D = date.getDate() + ' ';
+                var h = date.getHours() + ':';
+                var m = date.getMinutes();
+                // var s = date.getSeconds();
+                return Y + M + D + h + m;
             },
 
 
         }
     })
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
 </script>
 
 </html>

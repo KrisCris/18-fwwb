@@ -29,8 +29,9 @@
                             项目管理
                         </a>
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href=""><i class="	fa fa-spinner">&nbsp;&nbsp;</i>进行中项目</a>
-                            <a class="dropdown-item" href=""><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=0"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=-1"><i class="fa fa-exclamation-triangle">&nbsp;&nbsp;</i>延期的项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=1"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -172,8 +173,7 @@
                 }).then(() => {
                     window.location.href = "../login/login.html";
                 })
-            }
-            else {
+            } else {
                 this.uuid = $.cookie('uuid');
                 var that = this;
                 swal({
@@ -183,7 +183,9 @@
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     allowEnterKey: false,
-                    onOpen: () => { swal.showLoading() }
+                    onOpen: () => {
+                        swal.showLoading()
+                    }
                 });
                 $.post("../../php/checkState.php", {
                     uuid: that.uuid,
@@ -200,7 +202,8 @@
                                 swal.showLoading()
                                 timerInterval = setInterval(() => {
                                     swal.getContent().querySelector('strong')
-                                        .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
                                 }, 100)
                             },
                             onClose: () => {
@@ -209,8 +212,7 @@
                         }).then(() => {
                             window.location.href = "../login/login.html";
                         })
-                    }
-                    else {
+                    } else {
                         //////////////
                         $("#datepickerEnd").datepicker({
                             minDate: 0,
@@ -230,7 +232,11 @@
                                 that.bd = date;
                             }
                         })
-                        $.cookie('portrait', that.portrait, { expires: 1, secure: false, path: '/' });
+                        $.cookie('portrait', that.portrait, {
+                            expires: 1,
+                            secure: false,
+                            path: '/'
+                        });
                         swal.close();
                     }
                 });
@@ -244,16 +250,25 @@
                     uuid: that.uuid,
                     group: that.group,
                 }).done(() => {
-                    $.cookie("uuid", null, { expires: 1, secure: false, path: '/' });
-                    $.cookie("group", null, { expires: 1, secure: false, path: '/' });
+                    $.cookie("uuid", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    $.cookie("group", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
                     window.location.href = "../login/login.html";
                 })
             },
 
             convertTime: function (timestamp) {
-                var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
                 var Y = date.getFullYear() + '-';
-                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) +
+                    '-';
                 var D = date.getDate() + ' ';
                 var h = date.getHours() + ':';
                 var m = date.getMinutes();
@@ -280,37 +295,38 @@
 
             submit: function () {
                 var that = this;
-                if (this.ed != 0 && this.bd != 0 && this.title.replace(/\s+/g, "") != "" && (this.description.replace(/\s+/g, "") != "" || this.fileName != "")) {
+                if (this.ed != 0 && this.bd != 0 && this.title.replace(/\s+/g, "") != "" && (this.description
+                        .replace(/\s+/g, "") != "" || this.fileName != "")) {
                     var formData = new FormData();
                     var file = $("#uploadFile").prop("files")[0];
-                    formData.append("file",file);
-                    formData.append("description",that.description);
-                    formData.append("title",that.title);
-                    formData.append("startTime",that.bd);
-                    formData.append("endTime",that.ed);
-                    formData.append("img",that.img);
-                    formData.append("uuid",that.uuid);       
+                    formData.append("file", file);
+                    formData.append("description", that.description);
+                    formData.append("title", that.title);
+                    formData.append("startTime", that.bd);
+                    formData.append("endTime", that.ed);
+                    formData.append("img", that.img);
+                    formData.append("uuid", that.uuid);
                     $.ajax({
-                        type:"POST",
-                        url:"../../php/sender/publish.php",
-                        dataType:"json",
-                        processData:false,
-                        contentType:false,
-                        data:formData,
+                        type: "POST",
+                        url: "../../php/sender/publish.php",
+                        dataType: "json",
+                        processData: false,
+                        contentType: false,
+                        data: formData,
                     }).done((data) => {
                         data = JSON.parse(data);
                         if (data.code == 1) {
                             window.location.href = "'prj.html?'+data.data.id";
                         }
                     });
-                }
-                else {
+                } else {
                     alert("请补充完整信息");
                 }
             }
         },
 
     })
+
     function getQueryString(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
         var r = window.location.search.substr(1).match(reg);
@@ -327,9 +343,11 @@
             nextText: '下月&#x3e;',
             currentText: '今天',
             monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
-                '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                '七月', '八月', '九月', '十月', '十一月', '十二月'
+            ],
             monthNamesShort: ['一', '二', '三', '四', '五', '六',
-                '七', '八', '九', '十', '十一', '十二'],
+                '七', '八', '九', '十', '十一', '十二'
+            ],
             dayNames: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
             dayNamesShort: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
             dayNamesMin: ['日', '一', '二', '三', '四', '五', '六'],
@@ -342,8 +360,6 @@
         };
         $.datepicker.setDefaults($.datepicker.regional['zh-CN']);
     });
-
-
 </script>
 
 </html>
