@@ -161,8 +161,6 @@
             recentNum: 0,
             checkNum: 0,
             delayNum: 0,
-
-
         },
         created: function () {
             this.group = $.cookie('group');
@@ -240,6 +238,15 @@
                                 that.checkNum = data.checkNum;
                                 that.delayNum = data.delayNum;
                                 swal.close();
+                            }
+                            else {
+                                swal.close();
+                                swal({
+                                    type: 'success',
+                                    title: '近期任务已全部完成！',
+                                    text:"详细请查看任务列表。",
+                                    showConfirmButton: true,
+                                })
                             }
 
 
