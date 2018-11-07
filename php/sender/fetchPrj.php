@@ -59,7 +59,7 @@ $data=array(
     "projects"=>$projects
 );
 
-echo json_encode($projects,JSON_UNESCAPED_UNICODE);
+echo json_encode($data,JSON_UNESCAPED_UNICODE);
  // auther：hgz
 
 ?>

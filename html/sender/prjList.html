@@ -71,10 +71,10 @@
                             <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width: progressWidth}"></div>
                         </div>
                         <h5 class="card-title" v-text=""></h5>
-                        <p class="card-text ">开始日期:<span v-text="convertTime(project.startTIme)"></span></p>
-                        <p class="card-text">截止日期:<span v-text="convertTime(project.startTIme)"></span></p>
+                        <p class="card-text ">开始日期:<span v-text="convertTime(project.begin)"></span></p>
+                        <p class="card-text">截止日期:<span v-text="convertTime(project.end)"></span></p>
 
-                        <a href="" class="btn btn-success btn-block">查看任务</a>
+                        <a :href="'prj.html?id='+project.projectId" class="btn btn-success btn-block">查看项目</a>
 
                     </div>
                 </div>
@@ -102,95 +102,91 @@
             portrait: "",
             //prj
             projects: [],
+            code: '',
             state: '',
-            imgSource: '',
-            percentage: '',
-            begin: '',
-            end: '',
             projectId: '',
-            progressWidth: '',
         },
-        created: function () {
-
-            this.group = $.cookie('group');
-            if ($.cookie('uuid') == null) {
-                let timerInterval
-                swal({
-                    title: '请登录',
-                    html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
-                    timer: 5500,
-                    onOpen: () => {
-                        swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            swal.getContent().querySelector('strong')
-                                .textContent = parseInt((swal.getTimerLeft()) / 1000)
-                        }, 100)
-                    },
-                    onClose: () => {
-                        clearInterval(timerInterval)
-                    }
-                }).then(() => {
-                    window.location.href = "../login/login.html";
-                })
-            } else {
-                this.uuid = $.cookie('uuid');
-                var that = this;
-                swal({
-                    title: "载入中",
-                    width: 250,
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    allowEnterKey: false,
-                    onOpen: () => {
-                        swal.showLoading()
-                    }
-                });
-                $.post("../../php/checkState.php", {
-                    uuid: that.uuid,
-                    group: 1,
-                }).done((data) => {
-                    swal.close();
-                    data = JSON.parse(data);
-                    if (data.code == 0) {
-                        let timerInterval
-                        swal({
-                            title: '请登录',
-                            html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
-                            timer: 5500,
-                            onOpen: () => {
-                                swal.showLoading()
-                                timerInterval = setInterval(() => {
-                                    swal.getContent().querySelector('strong')
-                                        .textContent = parseInt((swal.getTimerLeft()) /
-                                            1000)
-                                }, 100)
-                            },
-                            onClose: () => {
-                                clearInterval(timerInterval)
-                            }
-                        }).then(() => {
-                            window.location.href = "../login/login.html";
-                        })
-                    } 
-                    else {
-                        sawl.close();
-                        that.state = getQueryString("state");
-                        // that.fetchTask();
-                        $.post("../../php/sender/fetchPrj.php",{
-                            //查找相应的state的Project
-                            state: that.state,
-                        }).done((data) => {
-                            data = JSON.parse(data);
-                            that.projects = data;
-                            swal.close();
-                        })
-                    }
+        // created: function () {
+        //     this.group = $.cookie('group');
+        //     if ($.cookie('uuid') == null) {
+        //         let timerInterval
+        //         swal({
+        //             title: '请登录',
+        //             html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+        //             timer: 5500,
+        //             onOpen: () => {
+        //                 swal.showLoading()
+        //                 timerInterval = setInterval(() => {
+        //                     swal.getContent().querySelector('strong')
+        //                         .textContent = parseInt((swal.getTimerLeft()) / 1000)
+        //                 }, 100)
+        //             },
+        //             onClose: () => {
+        //                 clearInterval(timerInterval)
+        //             }
+        //         }).then(() => {
+        //             window.location.href = "../login/login.html";
+        //         })
+        //     } else {
+        //         this.uuid = $.cookie('uuid');
+        //         var that = this;
+        //         swal({
+        //             title: "载入中",
+        //             width: 250,
+        //             showConfirmButton: false,
+        //             allowOutsideClick: false,
+        //             allowEscapeKey: false,
+        //             allowEnterKey: false,
+        //             onOpen: () => {
+        //                 swal.showLoading()
+        //             }
+        //         });
+        //         $.post("../../php/checkState.php", {
+        //             uuid: that.uuid,
+        //             group: 1,
+        //         }).done((data) => {
+        //             swal.close();
+        //             data = JSON.parse(data);
+        //             if (data.code == 0) {
+        //                 let timerInterval
+        //                 swal({
+        //                     title: '请登录',
+        //                     html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+        //                     timer: 5500,
+        //                     onOpen: () => {
+        //                         swal.showLoading()
+        //                         timerInterval = setInterval(() => {
+        //                             swal.getContent().querySelector('strong')
+        //                                 .textContent = parseInt((swal.getTimerLeft()) /
+        //                                     1000)
+        //                         }, 100)
+        //                     },
+        //                     onClose: () => {
+        //                         clearInterval(timerInterval)
+        //                     }
+        //                 }).then(() => {
+        //                     window.location.href = "../login/login.html";
+        //                 })
+        //             } 
+        //             else {
+        //                 sawl.close();
+        //                 that.state = getQueryString("state");
+        //                 // that.fetchTask();
+        //                 $.post("../../php/sender/fetchPrj.php",{
+        //                     //查找相应的state的Project
+        //                     state: that.state,
+        //                 }).done((data) => {
+        //                     data = JSON.parse(data);
+        //                     that.projects = data.projects;
+        //                     that.code = data.code;
+        //                     swal.close();
+        //                 })
+        //             }
                     
-                });
-            }
-            //end of else
-        },
+        //         });
+        //     }
+        //     //end of else
+        // },
         created() {
             swal({
                 title: "Loading...",
@@ -254,18 +250,22 @@
                         })
                     } else {
                         that.state = getQueryString("state");
-                        $.post("../../php/sender/fetchPrj.php", {
-                            state : that.state,
+                        // that.fetchTask();
+                        $.post("../../php/sender/fetchPrj.php",{
+                            //查找相应的state的Project
+                            state: that.state,
                         }).done((data) => {
-                            data =JSON.parse(data);
-                            that.info = data;
+                            data = JSON.parse(data);
+                            that.projects = data.projects;
+                            that.code = data.code;
                             swal.close();
-                        });
+                        })
                     }
                 });
 
             }
         },
+        
         methods: {
             logout: function () {
                 var that = this;
