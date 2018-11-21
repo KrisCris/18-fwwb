@@ -72,6 +72,9 @@
                                 :value="skill">
                             <label class="custom-control-label" :for="skill" v-text="skill"></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </div>
+                        <div>
+                            <input type="text" class="form-control" v-model="addSkill" placeholder="新增技能（多项技请用*分隔）">
+                        </div>
                     </div>
                 </div>
                 <div class="card shadow mb-3">
@@ -128,6 +131,7 @@
             prjId: "a",
             ed: 0,
             bd: 0,
+            addSkill:"",
 
         },
 
@@ -261,6 +265,10 @@
                     var formdata = new FormData();
                     var file = $("uploadFile").prop("files")[0];
                     formdata.append("file", file);
+                    if(this.addSkill.replace(/\s+/g, "") != "") {
+                        var newSkill = addSkill.split("*");
+                        formdata.append("newSkill",newSkill);
+                    }
                     formdata.append("uuid", that.uuid);
                     formdata.append("skill", that.skillRequire);
                     formdata.append("description", that.description);
