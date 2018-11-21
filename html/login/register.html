@@ -242,12 +242,14 @@
                         else if (data.code == 0) {
                             this.notify = '用户名重复！';
                             this.stateColor = "alert alert-danger";
+                            swal.close();
                         }
                     })
                 }
                 else {
                     this.notify = '请重新确认您的密码！';
                     this.stateColor = "alert alert-danger";
+                    swal.close();
                 }
             },
 
@@ -256,6 +258,7 @@
                 if (!this.complete_1) {
                     this.notify = '请填写正确的信息！';
                     this.stateColor = "alert alert-danger";
+                    
                 }
                 else {
                     swal({
