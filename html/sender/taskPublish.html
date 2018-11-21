@@ -1,0 +1,380 @@
+<!doctype html>
+
+<html lang="zh">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="../../resource/jquery/jquery-ui.css">
+    <title>任务发布</title>
+</head>
+<style>
+    /* #main{font-family: '微软雅黑';} */
+</style>
+
+<body style="background-image: url(../../image/papper.png)">
+    <div id="main" class="container">
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
+            <a class="navbar-brand" href="#">CrowdSourcing</a>
+            <div class="collapse navbar-collapse ">
+
+            </div>
+            <div class="float-right">
+                <img :src="portrait" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="window.history.back()"><i
+                        class="fa fa-reply">&nbsp;</i>取消</button>
+            </div>
+        </nav>
+        <!-- content -->
+        <div class="row">
+            <div class="col-12 mb-3">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h4 class="card-title">任务发布</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card shadow mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title pb-3">任务标题</h4>
+                        <input type="text" class="form-control" v-model="title">
+                    </div>
+                </div>
+                <div class="card shadow mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title pb-3">任务描述</h4>
+                        <textarea class="form-control" style="height:150px;" v-model="description"></textarea>
+                    </div>
+                </div>
+                <div class="card shadow mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title">需求文件</h4>
+                        <div class="input-group mt-3 mb-4">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="uploadFile" aria-describedby="inputGroupFileAddon04"
+                                    @change="getName()">
+                                <label class="custom-file-label" for="uploadFile" v-text="fileName"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow mb-3" style="min-height: 150px;">
+                    <div class="card-body">
+                        <h4 class="card-title">技能需求</h4>
+                        <div class="custom-control custom-checkbox float-left" v-for="skill in skills">
+                            <input type="checkbox" class="custom-control-input" :id="skill" v-model="skillRequire"
+                                :value="skill">
+                            <label class="custom-control-label" :for="skill" v-text="skill"></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title mb-2">任务周期</h4>
+                        <span>起始日期：</span>
+                        <input type="text" id="datepickerBegin" class="form-control mb-2" readonly="readonly">
+                        <span>截止日期：</span>
+                        <input type="text" id="datepickerEnd" class="form-control" readonly="readonly">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <button class="btn btn-primary btn-block btn-lg" @click="submit">提交</button>
+            </div>
+        </div>
+        {{skillRequire}}
+        {{prjId}}<br>
+        {{title}}<br>
+        {{description}}<br>
+        {{bd}}<br>
+        {{ed}}<br>
+        {{uuid}}<br>
+        {{group}}<br>
+        {{fileName}}
+        {{prjId}}
+    </div>
+
+
+    </div>
+</body>
+<script src="../../javascript/camera.js"></script>
+<script src="../../resource/swal2/sweetalert2.all.js"></script>
+<script src="../../resource/vue/vue.js"></script>
+<script src="../../resource/jquery/jquery.js"></script>
+<script src="../../resource/bootstrap/js/bootstrap.js"></script>
+<script src="../../resource/jquery/jquery.cookie.js"></script>
+<script src="../../resource/jquery/jquery-ui.js"></script>
+<script>
+    var app = new Vue({
+        el: "#main",
+        data: {
+            group: null,
+            uuid: null,
+            skills: "",
+            skillRequire: [],
+            portrait: "",
+            description: "",
+            fileName: "",
+            title: "",
+            prjId: "a",
+            ed: 0,
+            bd: 0,
+
+        },
+
+        created: function () {
+            this.group = $.cookie("group");
+            this.portrait = $.cookie("portrait");
+            this.prjId = getQueryString("prjId")
+            if ($.cookie('uuid') == null) {
+                swal({
+                    title: '请登录',
+                    html: '页面将于<strong></strong>秒后跳转至登陆页面.',
+                    timer: 5500,
+                    onOpen: () => {
+                        swal.showLoading();
+                        timerInterval = setInterval(() => {
+                            swal.getContent().querySelector('strong')
+                                .textContent = parseInt((swal.getTimeLeft()) / 1000)
+                        }, 100);
+                    },
+                    onClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then(() => {
+                    window.location.href = "../login/login.html";
+                })
+            }
+            else {
+                this.uuid = $.cookie('uuid');
+                var that = this;
+                swal({
+                    title: "载入中",
+                    width: 250,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    onOpen: () => {
+                        swal.showLoading()
+                    }
+                });
+                $.post("../../php/checkState.php", {
+                    uuid: that.uuid,
+                    group: that.group,
+                }).done((data) => {
+                    data = JSON.parse(data);
+                    if (data.code == 0) {
+                        let timerInterval
+                        swal({
+                            title: '请登录',
+                            html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+                            timer: 5500,
+                            onOpen: () => {
+                                swal.showLoading()
+                                timerInterval = setInterval(() => {
+                                    swal.getContent().querySelector('strong')
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
+                                }, 100)
+                            },
+                            onClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then(() => {
+                            window.location.href = "../login/login.html";
+                        })
+                    } else {
+                        if (that.prjId == null) {
+                            swal({
+                                type: "warning",
+                                title: '请从相应项目进入本页面',
+                                html: '正在跳转至项目列表<br><strong></strong>',
+                                timer: 4500,
+                                onOpen: () => {
+                                    // swal.showLoading()
+                                    timerInterval = setInterval(() => {
+                                        swal.getContent().querySelector('strong')
+                                            .textContent = parseInt((swal.getTimerLeft()) /
+                                                1000)
+                                    }, 100)
+                                },
+                                onClose: () => {
+                                    clearInterval(timerInterval)
+                                }
+                            }).then(() => {
+                                window.location.href = "prjList.html?state=0";
+                            })
+                        }
+                        else {
+                            // that.skills = ["Vue", "PHP", "SQL", "Angular.Js", "JavaScript"];
+                            $.post("../../php/sender/fetchSkill.php").done((data) => {
+                                data = JSON.parse(data);
+                                // {
+                                //     code:1,
+                                //     skills:["","",""],
+                                // }
+                                that.skills = data.skills;
+
+                            })
+                            that.prjId = getQueryString('prjId');
+                            $("#datepickerEnd").datepicker({
+                                minDate: 0,
+                                dateFormat: "@",
+                                altField: "#datepickerEnd",
+                                altFormat: "yy-mm-dd",
+                                onSelect: function (date, inst) {
+                                    that.ed = date;
+                                }
+                            })
+                            $("#datepickerBegin").datepicker({
+                                minDate: 0,
+                                dateFormat: "@",
+                                altField: "#datepickerBegin",
+                                altFormat: "yy-mm-dd",
+                                onSelect: function (date, inst) {
+                                    that.bd = date;
+                                }
+                            })
+                            swal.close();
+                        }
+
+                    }
+                });
+            }
+        },
+
+        methods: {
+            submit: function () {
+                if (this.ed != 0 && this.bd != 0 && this.title.replace(/\s+/g, "") != "" && (this.description
+                    .replace(/\s+/g, "") != "" || this.fileName != "")) {
+                    var that = this;
+                    var formdata = new FormData();
+                    var file = $("uploadFile").prop("files")[0];
+                    formdata.append("file", file);
+                    formdata.append("uuid", that.uuid);
+                    formdata.append("skill", that.skillRequire);
+                    formdata.append("description", that.description);
+                    formdata.append("title", that.title);
+                    formdata.append("prjId", that.prjId);
+                    formdata.append("startTime", that.bd);
+                    formdata.append("endTime", that.ed);
+                    $.ajax({
+                        type: "POST",
+                        url: "../../php/sender/taskPublish.php",
+                        dataType: "json",
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                    }).doen((data) => {
+                        data = JSON.prase(data);
+                        if (data.code == 0) {
+                            swal({
+                                type: error,
+                                title: '该项目不存在！',
+                                text: '请从特定项目跳转至本页面。',
+                                confirmButtonText: '我知道了',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                            }).then(() => {
+                                window.location.href = "prjList.html";
+                            })
+                        }
+                        else if (data.code == 1) {
+                            swal({
+                                type: success,
+                                title: "发布成功！",
+                                showConfirmButton: false,
+                                timer: 1000,
+                            }).then(() => {
+                                window.location.href = "'taskCensor.html?taskId='+data.taskId";
+                            })
+                        }
+                    })
+                }
+
+            },
+            logout: function () {
+                var that = this;
+                $.post("../../php/logOut.php", {
+                    uuid: that.uuid,
+                    group: that.group,
+                }).done(() => {
+                    $.cookie("uuid", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    $.cookie("group", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    window.location.href = "../login/login.html";
+                })
+            },
+
+            convertTime: function (timestamp) {
+                var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) +
+                    '-';
+                var D = date.getDate() + ' ';
+                var h = date.getHours() + ':';
+                var m = date.getMinutes();
+                // var s = date.getSeconds();
+                return Y + M + D + h + m;
+            },
+
+            getName: function () {
+                var file = $("#uploadFile").val();
+                var pos = file.lastIndexOf("\\");
+                this.fileName = file.substring(pos + 1);
+            },
+
+
+        }
+
+    })
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+    jQuery(function ($) {
+        $.datepicker.regional['zh-CN'] = {
+            closeText: '关闭',
+            prevText: '&#x3c;上月',
+            nextText: '下月&#x3e;',
+            currentText: '今天',
+            monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                '七月', '八月', '九月', '十月', '十一月', '十二月'
+            ],
+            monthNamesShort: ['一', '二', '三', '四', '五', '六',
+                '七', '八', '九', '十', '十一', '十二'
+            ],
+            dayNames: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+            dayNamesShort: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+            dayNamesMin: ['日', '一', '二', '三', '四', '五', '六'],
+            weekHeader: '周',
+            dateFormat: 'yy-mm-dd',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: true,
+            yearSuffix: '年'
+        };
+        $.datepicker.setDefaults($.datepicker.regional['zh-CN']);
+    });
+</script>
+
+</html>
