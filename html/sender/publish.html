@@ -93,7 +93,8 @@
                     <div class="card-body">
                         <h4 class="card-title text-left mb-0">封面</h4>
                         <div>
-                            <input @change="getImage()" type="file" id="img" style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
+                            <input @change="getImage()" type="file" id="img" style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;"
+                                accept="image/*" />
                             <button class="btn btn-block btn-primary mt-0" @click="$('#img').click()">选择</button>
 
                         </div>
@@ -286,16 +287,22 @@
                     console.log(imgFile);
                     that.img = imgFile;
                 };
-                reader.readAsDataURL($("#img").prop("files")[0]);
+                var file = $("#img").prop("files")[0];
+                var fileTypes = [".jpg", ".png"];
+                if (file.size / 1024 > 800) alert("图片大小不得大于800kb！");
+                else reader.readAsDataURL(file);
+
             },
 
             submit: function () {
                 var that = this;
                 if (this.ed != 0 && this.bd != 0 && this.title.replace(/\s+/g, "") != "" && (this.description
-                        .replace(/\s+/g, "") != "" || this.fileName != "")) {
+                    .replace(/\s+/g, "") != "" || this.fileName != "")) {
                     var formData = new FormData();
-                    var file = $("#uploadFile").prop("files")[0];
-                    formData.append("file", file);
+                    if (this.fileName != "") {
+                        var file = $("#uploadFile").prop("files")[0];
+                        formData.append("file", file);
+                    }
                     formData.append("description", that.description);
                     formData.append("title", that.title);
                     formData.append("startTime", that.bd);
@@ -303,18 +310,32 @@
                     formData.append("img", that.img);
                     formData.append("uuid", that.uuid);
                     $.ajax({
-                        type:"POST",
-                        url:"../../php/sender/publish.php",
+                        type: "POST",
+                        url: "../../php/sender/publish.php",
                         // url:"../../php/receiver/upload.php",
-                        dataType:"json",
-                        processData:false,
-                        contentType:false,
-                        data:formData,
+                        dataType: "json",
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                        success: function (data) {
+                            console.log(data);
+
+                            data = JSON.parse(data);
+                            console.log(data.code);
+                            if (data.code == 1) {
+                                // window.location.href = "'prj.html?'+data.data.id";
+                            }
+                            else alert(data.code);
+                        }
                     }).done((data) => {
+                        console.log(data);
+
                         data = JSON.parse(data);
+                        console.log(data.code);
                         if (data.code == 1) {
                             window.location.href = "'prj.html?'+data.data.id";
                         }
+                        else alert(data.code);
                     });
                 } else {
                     alert("请补充完整信息");
