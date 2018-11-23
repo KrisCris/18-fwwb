@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
+    <title>主页</title>
+</head>
+
+<body style="background-image: url(../../image/papper.png)">
+    <div id="main" class="container">
+        <!-- navigation_bar -->
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
+            <a class="navbar-brand" href="#">CrowdSourcing</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse " id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="publish.html"><i class="fa fa-paste">&nbsp;</i>项目发布</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-tasks"></i>
+                            项目管理
+                        </a>
+                        <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="prjList.html?state=0"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=-1"><i class="fa fa-exclamation-triangle">&nbsp;&nbsp;</i>延期的项目</a>
+                            <a class="dropdown-item" href="prjList.html?state=1"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>完成的项目</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"><i class="fa fa-calendar"></i>
+                            任务进度
+                        </a>
+                        <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="taskLIst.html?state=0"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
+                            <a class="dropdown-item" href="taskLIst.html?state=2"><i class="fa fa-info-circle">&nbsp;&nbsp;</i>待审核</a>
+                            <a class="dropdown-item" href="taskLIst.html?state=-1"><i class="fa fa-warning">&nbsp;&nbsp;</i>已延期</a>
+                            <a class="dropdown-item" href="taskLIst.html?state=3"><i class="fa fa-hourglass-1">&nbsp;&nbsp;</i>待接受</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="fa fa-user-circle">&nbsp;</i>我的主页</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="float-right">
+                <!-- <a class="text-muted" href="#">[注销账号]</a> -->
+                <img :src="portrait" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
+                        class="fa fa-power-off">&nbsp;</i>注销</button>
+
+            </div>
+        </nav>
+
+        <!-- project items cards -->
+        <div class="row">
+            <div class="col">
+                <div class="card shadow ">
+                    <div class="card-body">
+                        <h4 class="card-title pb-3" v-text="tTitle"></h4>
+
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr class="text-center">
+                                    <th style="width:15%">任务名称</th>
+                                    <th style="width:15%">所属项目</th>
+                                    <th style="width:15%">开始日期</th>
+                                    <th style="width:15%">截止日期</th>
+                                    <th style="width:15%">安全等级</th>
+                                    <th style="width:15%">接包人员</th>
+                                    <th style="width:10%">状态</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- <p v-text="'asdasd'" :style="{'color':color_state==-1?'#ff0000':'#000000'}"></p> -->
+                                <tr v-for="task in tasks" @click="window.location.href='task.html?taskId='+task.id"
+                                    class="text-center">
+                                    <td style="width:15%"><a v-text="task.taskName" :href="'task.html?taskId='+task.id"
+                                            class="text-dark" style="text-decoration: none"></a></td>
+                                    <td style="width:15%" v-text="task.prjName"></td>
+                                    <td style="width:15%" v-text="convertTime(task.startTime)"></td>
+                                    <td style="width:15%" v-text="convertTime(task.endTime)"></td>
+                                    <td style="width:15%" v-text="task.receiver"></td>
+                                    <td style="width:10%" v-text="task.securityLevel==0?'普通':task.securityLevel==1?'高':'unknown'"></td>
+                                    <td style="width:10%" v-text="task.state==-1?'延误':task.state==2?'审核中':task.state==3?'待接受':'unknown'"
+                                        :style="{'color':task.state==-1?'#ff0000':'#000000'}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <p><span>state:</span>{{state}}</p> -->
+    </div>
+
+
+
+</body>
+<script src="../../resource/swal2/sweetalert2.all.js"></script>
+<script src="../../resource/vue/vue.js"></script>
+<script src="../../resource/jquery/jquery.js"></script>
+<script src="../../resource/bootstrap/js/bootstrap.js"></script>
+<script src="../../resource/jquery/jquery.cookie.js"></script>
+<script>
+    var app = new Vue({
+        el: "#main",
+        data: {
+            //user
+            group: null,
+            uuid: null,
+            portrait: "",
+            //taskList
+            tTitle: '',
+            tasks: [],
+
+        },
+        created() {
+            swal({
+                title: "Loading...",
+                width: 250,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                showConfirmButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            });
+            this.group = $.cookie('group');
+            this.portrait = $.cookie('portrait');
+            this.state = getQueryString("state");
+            if (this.state == 0) this.tTitle = "进行中的任务";
+            else if (this.state == 2) this.tTitle = "审核中的任务";
+            else if (this.state == -1) this.tTitle = "已延期的任务"
+            else if (this.state == 3) this.tTitle = "待接受的任务"
+            if ($.cookie('uuid') == null) {
+                let timerInterval
+                swal({
+                    title: '请登录',
+                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                    timer: 5500,
+                    onOpen: () => {
+                        swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            swal.getContent().querySelector('strong')
+                                .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                        }, 100)
+                    },
+                    onClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then(() => {
+                    window.location.href = "../login/login.html";
+                })
+            } else {
+                this.uuid = $.cookie('uuid');
+                var that = this;
+                $.post("../../php/checkState.php", {
+                    uuid: that.uuid,
+                    group: that.group,
+                }).done((data) => {
+                    data = JSON.parse(data);
+                    if (data.code == 0) {
+                        let timerInterval
+                        swal({
+                            title: '请登录',
+                            html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                            timer: 5500,
+                            onOpen: () => {
+                                swal.showLoading()
+                                timerInterval = setInterval(() => {
+                                    swal.getContent().querySelector('strong')
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
+                                }, 100)
+                            },
+                            onClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then(() => {
+                            window.location.href = "../login/login.html";
+                        })
+                    } else {
+                        that.state = getQueryString("state");
+                        // that.fetchTask();
+                        swal.close();
+                        $.post("../../php/sender/getTasks.php", {
+                            uuid: that.uuid,
+                            group: that.group,
+                            state: that.state,
+                        }).done((data) => {
+                            data = JSON.parse(data);
+                            that.tasks = data.tasks;
+                            that.code = data.code;
+                            swal.close();
+                        })
+                    }
+                });
+
+            }
+        },
+
+        methods: {
+            logout: function () {
+                var that = this;
+                $.post("../../php/logout.php", {
+                    uuid: that.uuid,
+                    group: "admin",
+                }).done(() => {
+                    $.cookie("uuid", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/',
+                    });
+                    $.cookie("group", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/',
+                    });
+                    window.location.href = "../login/login.html";
+                })
+            },
+            convertTime: function (timestamp) {
+                var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) +
+                    '-';
+                var D = date.getDate() + ' ';
+                // var h = date.getHours() + ':';
+                // var m = date.getMinutes();
+                // var s = date.getSeconds();
+                return Y + M + D;
+            },
+
+
+        }
+    })
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+</script>
+
+</html>
