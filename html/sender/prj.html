@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
     <link rel="stylesheet" href="../../resource/jquery/jquery-ui.css">
-    <title>主页</title>
+    <title>项目</title>
 </head>
 
 <body style="background-image: url(../../image/papper.png)">
@@ -56,13 +56,73 @@
                 <img :src="portrait" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
                 <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="logout()"><i
                         class="fa fa-power-off">&nbsp;</i>注销</button>
-
             </div>
         </nav>
-
         <div>
+            <div class="row">
+                <div class="col">
+                    <div class="card mb-3 shadow">
+                        <div class="card-body">
+                            <h4 class="card-title  float-left" v-text="title">dfs</h4>
+                            <button class="btn btn-primary float-right">新增任务</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h4 class="card-title">状态</h4>
+                            <div class="row">
+                                <div class="col-lg-3 card  border-top-0 border-left-0 border-bottom-0">
+                                    <br>
+                                    <a href="" style="text-decoration: none">
+                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-info">5</p>
+                                    </a>
+                                    <a href="" style="text-decoration: none" class="text-dark">
+                                        <p class="text-center">总任务</p>
+                                    </a>
+                                </div>
+                                <div class="col-lg-3 card border-top-0 border-left-0 border-bottom-0">
+                                    <br>
+                                    <a href="" style="text-decoration: none">
+                                        <p style="font-size: 25px; " class=" text-center font-weight-bold text-primary">13</p>
+                                    </a>
+                                    <a href="" style="text-decoration: none" class="text-dark">
+                                        <p class="text-center">待接包</p>
+                                    </a>
+                                </div>
+                                <div class="col-lg-3 card border-top-0 border-left-0 border-bottom-0">
+                                    <br>
+                                    <a href="" style="text-decoration: none">
+                                        <p style="font-size: 25px; " class=" text-center font-weight-bold text-warning">13</p>
+                                    </a>
+                                    <a href="" style="text-decoration: none" class="text-dark">
+                                        <p class="text-center">待审核</p>
+                                    </a>
+                                </div>
+                                <div class="col-lg-3 card border-0">
+                                    <br>
+                                    <a href="" style="text-decoration: none">
+                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-danger">8</p>
+                                    </a>
+                                    <a href="" style="text-decoration: none" class="text-dark">
+                                        <p class="text-center">延迟</p>
+                                    </a>
 
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    
+                </div>
+            </div>
         </div>
+
         <p>{{uuid}}</p>
         <p>{{group}}</p>
     </div>
@@ -81,8 +141,12 @@
             uuid: null,
             portrait: "",
             prjId=0,
-            
+
         },
+        created: function () {
+
+        },
+
         methods: {
 
         },

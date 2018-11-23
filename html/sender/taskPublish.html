@@ -263,7 +263,7 @@
                     .replace(/\s+/g, "") != "" || this.fileName != "")) {
                     var that = this;
                     var formdata = new FormData();
-                    var file = $("uploadFile").prop("files")[0];
+                    var file = $("#uploadFile").prop("files")[0];
                     formdata.append("file", file);
                     if(this.addSkill.replace(/\s+/g, "") != "") {
                         var newSkill = addSkill.split("*");
@@ -282,8 +282,8 @@
                         dataType: "json",
                         processData: false,
                         contentType: false,
-                        data: formData,
-                    }).doen((data) => {
+                        data: formdata,
+                    }).done((data) => {
                         data = JSON.prase(data);
                         if (data.code == 0) {
                             swal({
