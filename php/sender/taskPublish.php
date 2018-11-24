@@ -9,7 +9,7 @@ $uuid=$_POST["uuid"];
 $skill=$_POST["skill"];  
 $newSkill=$_POST["newSkill"];  
 $description=$_POST["description"];  
-// $securityLevel=$_POST["securityLevel"];  
+$securityLevel=$_POST["securityLevel"];  
 $title=$_POST["title"];  
 $prjId=$_POST["prjId"]; 
 $startTime=$_POST["startTime"]; 
@@ -65,7 +65,7 @@ else if(!empty($project)){
                     $newSkills=implode("*", $newSkill); 
                     $skills.="*".$newSkills; 
                 } 
-                $newtask=array(array("prjId",$prjId),array("startTime",$startTime),array("endTime",$endTime),array("taskName",$title),array("description",$description),array("workDescription",$workFile),array("text",$skills)); 
+                $newtask=array(array("prjId",$prjId),array("startTime",$startTime),array("endTime",$endTime),array("taskName",$title),array("description",$description),array("workDescription",$workFile),array("text",$skills),array("securityLevel",$securityLevel)); 
                 add("task",$newtask); 
                 $myfile = fopen($workFile, "w");     //创建多及目录文件                         2步骤 
                 if(move_uploaded_file($tmp,$workFile)){  //将传入文件导入该文件中 
