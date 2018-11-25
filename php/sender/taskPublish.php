@@ -57,15 +57,30 @@ else if(!empty($project)){
             if($isbuilt){ 
                 $workFile=$pathFile.$imgname;      //文件路径 
                 $skills=implode("*", $skill); 
-                if(!empty($newSkill)){ 
+                if($newSkill[0]!=NULL){ 
                     foreach($newSkill as $each){ 
                         $sql="ALTER TABLE skill ADD"." ".$each." "."varchar(255) NOT NULL"; 
                         sql_str($sql);  
                     } 
                     $newSkills=implode("*", $newSkill); 
                     $skills.="*".$newSkills; 
+                }
+                $skillsArr=explode("*",$skills);
+                $check="userId is not null ";
+                foreach($skillsArr as $each){
+                    $check.="AND ".$each."=1 ";
                 } 
-                $newtask=array(array("prjId",$prjId),array("startTime",$startTime),array("endTime",$endTime),array("taskName",$title),array("description",$description),array("workDescription",$workFile),array("text",$skills),array("securityLevel",$securityLevel)); 
+                $sql="SELECT userId FROM skill WHERE ".$check;
+                $userIdArr=sql_str($sql);
+                $userIdStr=NULL;
+                if(!empty($userIdArr)){
+                    foreach($userIdArr as $each){
+                        $userIdStr.=$each["userId"]."*";
+                        // echo $each["userId"];
+                    }
+                    $userIdStr= substr($userIdStr, 0, strlen($userIdStr)-1);
+                }
+                $newtask=array(array("prjId",$prjId),array("startTime",$startTime),array("endTime",$endTime),array("taskName",$title),array("description",$description),array("workDescription",$workFile),array("text",$skills),array("securityLevel",$securityLevel),array("state",3),array("userId",$userIdStr)); 
                 add("task",$newtask); 
                 $myfile = fopen($workFile, "w");     //创建多及目录文件                         2步骤 
                 if(move_uploaded_file($tmp,$workFile)){  //将传入文件导入该文件中 

@@ -1,6 +1,6 @@
 <?php 
 header("Content-type:text/html;charset=utf-8");
-require("../database.php"); 
+require("../projectStateCheck.php"); 
 
 $state=$_POST["state"]; 
 $projects=array();
