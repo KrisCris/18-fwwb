@@ -140,10 +140,10 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="task in pendingTasks" class="text-center">
-                                            <td style="width:25%"><a v-text="task.taskName" :href="'taskCensor.html?taskId='+task.id"
+                                            <td><a v-text="task.taskName" :href="'taskCensor.html?taskId='+task.id"
                                                     class="text-dark" style="text-decoration: none"></a></td>
-                                            <td style="width:25%" v-text="task.prjName"></td>
-                                            <td style="width:25%" v-text="convertTime(task.endTime)"></td>
+                                            <td v-text="task.prjName"></td>
+                                            <td v-text="convertTime(task.endTime)"></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -166,10 +166,10 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="task in delayTasks" class="text-center">
-                                            <td style="width:25%"><a v-text="task.taskName" :href="'taskCensor.html?taskId='+task.id"
+                                            <td><a v-text="task.taskName" :href="'taskCensor.html?taskId='+task.id"
                                                     class="text-dark" style="text-decoration: none"></a></td>
-                                            <td style="width:25%" v-text="task.prjName"></td>
-                                            <td style="width:25%" v-text="task.worker"></td>
+                                            <td v-text="task.prjName"></td>
+                                            <td v-text="task.worker"></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -251,7 +251,6 @@
                     uuid: that.uuid,
                     group: that.group,
                 }).done((data) => {
-
                     data = JSON.parse(data);
                     if (data.code == 0) {
                         let timerInterval
@@ -287,8 +286,9 @@
                             that.acceptNum = data.acceptNum;
                             that.pendingTasks = data.chart.pendingTasks;
                             that.delayTasks = data.chart.delayTasks;
+                            swal.close();
                         })
-                        swal.close();
+
                         ////////////////////
                     }
                 });
