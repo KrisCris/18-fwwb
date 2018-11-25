@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
-    <title>任务查看</title>
+    <link rel="stylesheet" href="../../resource/star-rating/theme.css">
+    <link rel="stylesheet" href="../../resource/star-rating/star-rating.css">
+    <title>任务审核</title>
 </head>
 
 <body style="background-image: url(../../image/papper.png)" onbeforeunload="return closeWindow()">
@@ -63,8 +66,6 @@
                 <div class="'d-flex flex-row">
                     <!-- taskName -->
                     <h4 v-text="taskName "></h4>
-                    <button class="btn btn-primary mr-3 float-right">通过</button>
-                    <button class="btn btn-danger float-right mr-3">退回</button>
                 </div>
 
             </div>
@@ -77,12 +78,16 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <h4>简述</h4>
-                        <textarea id="area" rows="5" class="form-control rounded mb-3" v-model="description" readonly="readonly"></textarea>
+                        <textarea id="area" rows="5" class="form-control rounded mb-3" v-model="workDescription"
+                            readonly="readonly"></textarea>
                     </li>
                     <li class="list-group-item">
                         <h4>工作成果</h4>
                         <!-- 下载文件 -->
                         <a :href="source" :download="source" class="float-right" target="_blank" v-text="workFileName"></a>
+                        <button class="btn btn-primary float-right mr-3" @click="pass()" :disabled="showStar" v-show="verified">通过</button>
+                        <div class="float-right" v-show="verified"><input id="input-id" type="number" class="rating"
+                                min=0 max=5 step=0.5 data-size="sm" value=0></div>
                     </li>
                 </ul>
             </div>
@@ -106,18 +111,18 @@
                             </div>
                             <div class="form-group" v-show="showTaskId"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
                                     v-model="taskId" name="taskId">5</textarea></div>
-                            <div class="form-group"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
-                                    v-model="workDescription" name="workDescription"></textarea></div>
+                            <div class="form-group"><textarea cols="60" rows="5" class="form-control rounded mb-3"
+                                    v-model="description" name="description"></textarea></div>
                             <div class="form-group"><input type="file" name="file"></div>
                             <div class="form-group float-right"><input type="submit" name="submit" value="提交" class="btn btn-primary"></div>
+                            <button class="btn btn-danger float-right mr-3">退回</button>
                         </form>
                     </li>
 
                 </ul>
             </div>
         </div>
-
-
+        <p v-text="star"></p>
     </div>
 </body>
 
@@ -127,74 +132,54 @@
 <script src="../../resource/jquery/jquery.js"></script>
 <script src="../../resource/bootstrap/js/bootstrap.js"></script>
 <script src="../../resource/jquery/jquery.cookie.js"></script>
+<script src="../../resource/star-rating/star-rating.js"></script>
+<script src="../../resource/star-rating/theme.js"></script>
+<script src="../../resource/star-rating/zh.js"></script>
 <script>
     var app = new Vue({
-        el: "#main",
-        data: {
-            //user
-            group: null,
-            uuid: null,
-            img: "http://static.runoob.com/images/mix/img_avatar.png",
-            portrait: "http://static.runoob.com/images/mix/img_avatar.png",
-            taskId: '',
-            //
-            task: [],
-            taskName: '',
-            workDescription: '',
-            description: '',
-            startTime: '',
-            endTime: '',
-            timeType: '',
-            jump: '',
-            source: '',
-            workFileName: '',
-            facialCensor: 0,
-            code: '',
-            showTaskId: false,
-            visible: true,
-        },
-        created() {
-            swal({
-                title: "Loading...",
-                width: 250,
-                showConfirmButton: false,
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                allowEnterKey: false,
-                showConfirmButton: false,
-                onOpen: () => {
-                    swal.showLoading()
-                }
-            });
-            this.group = $.cookie('group');
-            if ($.cookie('uuid') == null) {
-                let timerInterval
-                swal({
-                    title: '请登录',
-                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
-                    timer: 5500,
-                    onOpen: () => {
-                        swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            swal.getContent().querySelector('strong')
-                                .textContent = parseInt((swal.getTimerLeft()) / 1000)
-                        }, 100)
-                    },
-                    onClose: () => {
-                        clearInterval(timerInterval)
-                    }
-                }).then(() => {
-                    window.location.href = "../login/login.html";
-                })
-            } else {
-                this.uuid = $.cookie('uuid');
-                var that = this;
-                $.post("../../php/checkState.php", {
-                    uuid: that.uuid,
-                    group: that.group,
-                }).done((data) => {
-                    data = JSON.parse(data);
-                    if (data.code == 0) {
+                el: "#main",
+                data: {
+                    //user
+                    group: null,
+                    uuid: null,
+                    img: "http://static.runoob.com/images/mix/img_avatar.png",
+                    portrait: "http://static.runoob.com/images/mix/img_avatar.png",
+                    taskId: '',
+                    //
+                    task: [],
+                    taskName: '',
+                    workDescription: '',
+                    description: '',
+                    startTime: '',
+                    endTime: '',
+                    timeType: '',
+                    jump: '',
+                    source: '',
+                    workFileName: '',
+                    facialCensor: 0,
+                    code: '',
+                    showTaskId: false,
+                    visible: true,
+                    showStar: false,
+                    star: 4,
+                    verified: true,
+
+                },
+                created() {
+                    swal({
+                        title: "Loading...",
+                        width: 250,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                        showConfirmButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    });
+                    this.group = $.cookie('group');
+                    if ($.cookie('uuid') == null) {
                         let timerInterval
                         swal({
                             title: '请登录',
@@ -204,8 +189,7 @@
                                 swal.showLoading()
                                 timerInterval = setInterval(() => {
                                     swal.getContent().querySelector('strong')
-                                        .textContent = parseInt((swal.getTimerLeft()) /
-                                            1000)
+                                        .textContent = parseInt((swal.getTimerLeft()) / 1000)
                                 }, 100)
                             },
                             onClose: () => {
@@ -215,94 +199,182 @@
                             window.location.href = "../login/login.html";
                         })
                     } else {
-                        that.taskId = getQueryString("taskId");
-                        $.post("../../php/fetchWorkInfo.php", {
-                            //返回taskId
-                            taskId: that.taskId,
+                        this.uuid = $.cookie('uuid');
+                        var that = this;
+                        $.post("../../php/checkState.php", {
+                            uuid: that.uuid,
+                            group: that.group,
                         }).done((data) => {
                             data = JSON.parse(data);
-                            that.task = data;
-                            that.code = that.task.code;
-                            that.taskName = that.task.taskName; //任务名
-                            that.source = that.task.workInfo.downloadPath; //路径
-                            that.workFileName = that.task.workInfo.workFileName; //文件名
-                            that.description = that.task.description; //任务描述
-                            swal.close();
-                        })
+                            if (data.code == 0) {
+                                let timerInterval
+                                swal({
+                                    title: '请登录',
+                                    html: '页面将于 <strong>5</strong> 秒后跳转至登陆页面.',
+                                    timer: 5500,
+                                    onOpen: () => {
+                                        swal.showLoading()
+                                        timerInterval = setInterval(() => {
+                                            swal.getContent().querySelector('strong')
+                                                .textContent = parseInt((swal.getTimerLeft()) /
+                                                    1000)
+                                        }, 100)
+                                    },
+                                    onClose: () => {
+                                        clearInterval(timerInterval)
+                                    }
+                                }).then(() => {
+                                    window.location.href = "../login/login.html";
+                                })
+                            } else {
+                                swal.close();
+                                that.taskId = getQueryString("taskId");
+                                $.post("../../php/sender/fetchCensorInfo.php", {
+                                    //返回taskId
+                                    taskId: that.taskId,
+                                }).done((data) => {
+                                    data = JSON.parse(data);
+                                    that.task = data;
+                                    that.code = that.task.code;
+                                    that.taskName = that.task.taskName; //任务名
+                                    that.source = that.task.workInfo.downloadPath; //审核文件路径
+                                    that.workFileName = that.task.workInfo.workFileName; //审核文件名
+                                    that.workDescription = that.task.workDescription; //任务描述
+                                    swal.close();
+                                })
+                            }
+                        });
+
                     }
-                });
+                },
+                methods: {
+                    upload: function () {
+                        var form_data = new FormData();
+                        var file_data = $("#file_input").prop("files")[0];
+                        form_data.append("file", file_data);
+                        form_data.append("WorkDescription", this.workDescription);
+                        $.ajax({
+                            type: "POST",
+                            url: "../../php/receiver/upload.php",
+                            dataType: "json",
+                            crossDomain: true,
+                            processData: false, // 注意：让jQuery不要处理数据
+                            contentType: false, // 注意：让jQuery不要设置contentType
+                            data: form_data,
+                        }).success(function () {
+                            swal(
+                                '提交成功！',
+                                '请等待管理员审核',
+                                'success'
+                            )
+                            //清空
+                            this.WorkDescription = "";
+                        }).fail(function () {
+                            swal(
+                                '提交失败！',
+                                '请尝试重新上传',
+                                'error'
+                            )
+                        });
+                    },
+                    logout: function () {
+                        var that = this;
+                        $.post("../../php/logout.php", {
+                            uuid: that.uuid,
+                            group: "admin",
+                        }).done(() => {
+                            $.cookie("uuid", null, {
+                                expires: 1,
+                                secure: false,
+                                path: '/'
+                            });
+                            $.cookie("group", null, {
+                                expires: 1,
+                                secure: false,
+                                path: '/'
+                            });
+                            window.location.href = "../login/login.html";
+                        })
+                    },
+                    closeAlert: function () {
+                        console.log(msg);
+                        swal(
+                            '提交失败！',
+                            '请尝试重新上传',
+                            'error'
+                        )
+                    },
+                    closeWindow: function () {
+                        return "2333";
+                    },
 
-            }
-        },
-        methods: {
-            upload: function () {
-                var form_data = new FormData();
-                var file_data = $("#file_input").prop("files")[0];
-                form_data.append("file", file_data);
-                form_data.append("WorkDescription", this.workDescription);
-                $.ajax({
-                    type: "POST",
-                    url: "../../php/receiver/upload.php",
-                    dataType: "json",
-                    crossDomain: true,
-                    processData: false, // 注意：让jQuery不要处理数据
-                    contentType: false, // 注意：让jQuery不要设置contentType
-                    data: form_data,
-                }).success(function () {
-                    swal(
-                        '提交成功！',
-                        '请等待管理员审核',
-                        'success'
-                    )
-                    //清空
-                    this.WorkDescription = "";
-                }).fail(function () {
-                    swal(
-                        '提交失败！',
-                        '请尝试重新上传',
-                        'error'
-                    )
-                });
-            },
-            logout: function () {
-                var that = this;
-                $.post("../../php/logout.php", {
-                    uuid: that.uuid,
-                    group: "admin",
-                }).done(() => {
-                    $.cookie("uuid", null, {
-                        expires: 1,
-                        secure: false,
-                        path: '/'
-                    });
-                    $.cookie("group", null, {
-                        expires: 1,
-                        secure: false,
-                        path: '/'
-                    });
-                    window.location.href = "../login/login.html";
+                    pass: function () {
+                        swal({
+                            title: '确定要删除该公司吗？',
+                            type: 'warning',
+                            allowOutsideClick: false,
+                            showCancelButton: true,
+                            confirmButtonColor: '#CE252A',
+                            cancelButtonColor: '#257FED',
+                            confirmButtonText: "确认",
+                            cancelButtonText: "取消",
+                            //我估计result就是有没有确认,.value就是true/false
+                        }).then((result) => {
+                                if (result.value) {
+                                    this.star = $("#input-id").attr("value"),
+                                        $.post("../../php/sender/pass.php", {
+                                                uuid: this.uuid,
+                                                group: this.group,
+                                                state: this.state,
+                                                taskId: this.taskId,
+                                                star: $("#input-id").attr("value"),
+                                            });
+                                            this.verified = false;
+                                            swal.close();
+                                        }
+                                });
+                        }
+
+
+                    },
+
+
                 })
-            },
-            closeAlert: function () {
-                console.log(msg);
-                swal(
-                    '提交失败！',
-                    '请尝试重新上传',
-                    'error'
-                )
-            },
-            closeWindow: function () {
-                return "2333";
-            },
-        }
-    })
 
-    function getQueryString(name) {
-        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-        var r = window.location.search.substr(1).match(reg);
-        if (r != null) return unescape(r[2]);
-        return null;
-    }
+            function getQueryString(name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]);
+                return null;
+            }
+            $("#input-id").rating(); $("#input-id").rating({
+                'showCaption': 'false'
+            }); $('#input-id').on('rating:change', function (event, value, caption) {
+                console.log(value);
+                console.log(caption);
+                var inp = document.getElementById("input-id");
+                inp.setAttribute("value", value);
+                console.log($("#input-id").attr("value"));
+            }); $('#input-id').on('rating:clear', function (event) {
+                console.log("rating:clear");
+            }); $('#input-id').on('rating:reset', function (event) {
+                console.log("rating:reset");
+            }); $('#input-id').on('rating:hover', function (event, value, caption, target) {
+                console.log(value);
+                console.log(caption);
+                console.log(target);
+                var inp = document.getElementById("input-id");
+                inp.setAttribute("value", value);
+                console.log($("#input-id").attr("value"));
+            }); $('#input-id').on('rating:hoverleave', function (event, target) {
+                console.log(target);
+            });
+            // forbid the caption
+            $('#input-id').rating('refresh', {
+                readonly: false,
+                showClear: true,
+                showCaption: false
+            });
 </script>
 
 </html>
