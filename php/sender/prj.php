@@ -24,12 +24,12 @@ $table=array();
 
 $project=get("project","id",$prjId);
 if(!empty($project)){
+    $code=1;
     $title=$project[0]["prjName"];
     $tasks=get("task","prjId",$prjId);
     // echo $json=json_encode($tasks,JSON_UNESCAPED_UNICODE);   
     $totalNum=count($tasks);
     if(!empty($tasks)){
-        $code=1;
         foreach($tasks as $each){
             if($each["state"]==3){
                 $receiveNum++;
