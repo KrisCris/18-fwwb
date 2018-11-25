@@ -352,53 +352,55 @@
                         $.post("../../php/sender/prj.php", {
                             prjId: that.prjId,
                         }).done((data) => {
-                            // data = JSON.parse(data);
+                            data = JSON.parse(data);
                             //test
-                            data = {
-                                code: 1,
-                                title: "test",
-                                taskNum: {
-                                    totalNum: 80,
-                                    receiveNum: 20,
-                                    censorNum: 13,
-                                    delayNum: 12,
-                                },
-                                table: {
-
-                                },
-                                pieChartData: [
-                                    { value: 10, name: '延期', url: 'taskList.html?prjId=xx&state=-1', },
-                                    { value: 56, name: '进行中', url: 'taskList.html?prjId=xx&state=0', },
-                                    { value: 34, name: '待审核', url: 'taskList.html?prjId=xx&state=2', },
-                                    { value: 16, name: '待接包', url: 'taskList.html?prjId=xx&state=3', },
-                                    { value: 110, name: '已完成', url: 'taskList.html?prjId=xx&state=1', },
-                                ],
-                            };
+                            // data = {
+                            //     code: 1,
+                            //     title: "test",
+                            //     taskNum: {
+                            //         totalNum: 80,
+                            //         receiveNum: 20,
+                            //         censorNum: 13,
+                            //         delayNum: 12,
+                            //     },
+                            //     table: {
+                            //         censorTasks:[],
+                            //         delayTasks:[],
+                            //         worker:[],
+                            //     },
+                            //     pieChartData: [
+                            //         { value: 10, name: '延期', url: 'taskList.html?prjId=xx&state=-1', },
+                            //         { value: 56, name: '进行中', url: 'taskList.html?prjId=xx&state=0', },
+                            //         { value: 34, name: '待审核', url: 'taskList.html?prjId=xx&state=2', },
+                            //         { value: 16, name: '待接包', url: 'taskList.html?prjId=xx&state=3', },
+                            //         { value: 110, name: '已完成', url: 'taskList.html?prjId=xx&state=1', },
+                            //     ],
+                            // };
                             //endTest
-                            if (data.code == 0) window.location.href = "prjList.html?state=0";
-                            else {
-                                that.title = data.title;
-                                that.totalNum = data.taskNum.totalNum;
-                                that.receiveNum = data.taskNum.receiveNum;
-                                that.censorNum = data.taskNum.censorNum;
-                                that.delayNum = data.taskNum.delayNum;
-                                that.censorTasks = data.table.censorTasks;
-                                that.delayTasks = data.table.delayTasks;
-                                that.workers = data.table.workers;
-                                that.option.series[0].data = data.pieChartData;
-                                //piechart
-                                var dom = document.getElementById("pieChart");
-                                var pieChart = echarts.init(dom);
-                                if (that.option && typeof that.option === "object") {
-                                    pieChart.setOption(that.option, true);
-                                }
-                                pieChart.on('click', function (param) {
-                                    //console.log(param);
-                                    window.location.href = param.data.url;
-                                });
-                                //piechart end
-
+                            // if (data.code == 0) window.location.href = "prjList.html?state=0";
+                            // else {
+                            that.title = data.title;
+                            that.totalNum = data.taskNum.totalNum;
+                            that.receiveNum = data.taskNum.receiveNum;
+                            that.censorNum = data.taskNum.censorNum;
+                            that.delayNum = data.taskNum.delayNum;
+                            that.censorTasks = data.table.censorTasks;
+                            that.delayTasks = data.table.delayTasks;
+                            that.workers = data.table.workers;
+                            that.option.series[0].data = data.pieChartData;
+                            //piechart
+                            var dom = document.getElementById("pieChart");
+                            var pieChart = echarts.init(dom);
+                            if (that.option && typeof that.option === "object") {
+                                pieChart.setOption(that.option, true);
                             }
+                            pieChart.on('click', function (param) {
+                                //console.log(param);
+                                window.location.href = param.data.url;
+                            });
+                            //piechart end
+
+                            // }
 
                         })
 
@@ -415,7 +417,7 @@
                 $.post("../../php/sender/prjFinish.php", {
                     prjId: that.prjId,
                 }).done(() => {
-                    window.location.href="prjList.html?state=1";
+                    window.location.href = "prjList.html?state=1";
                 })
             }
         },
