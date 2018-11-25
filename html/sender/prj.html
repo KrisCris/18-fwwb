@@ -63,70 +63,161 @@
                 <div class="col">
                     <div class="card mb-3 shadow">
                         <div class="card-body">
-                            <h4 class="card-title  float-left" v-text="title">dfs</h4>
-                            <button class="btn btn-primary float-right">新增任务</button>
+                            <h4 class="card-title  float-left" v-text="title"></h4>
+                            <button class="btn btn-success float-right ml-2" @click="finish()">项目完成</button>
+                            <button class="btn btn-primary float-right" @click="window.location.href='taskPublish.html?prjId='+prjId">新增任务</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row pb-3">
                 <div class="col-md-8">
-                    <div class="card shadow">
+                    <div class="card shadow mb-3">
                         <div class="card-body">
                             <h4 class="card-title">状态</h4>
                             <div class="row">
                                 <div class="col-lg-3 card  border-top-0 border-left-0 border-bottom-0">
                                     <br>
-                                    <a href="" style="text-decoration: none">
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-info">5</p>
+                                    <a :href="'taskLIst.html?state=total&prjId='+prjId" style="text-decoration: none">
+                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-info"
+                                            v-text="totalNum"></p>
                                     </a>
-                                    <a href="" style="text-decoration: none" class="text-dark">
+                                    <a :href="'taskLIst.html?state=total&prjId='+prjId" style="text-decoration: none"
+                                        class="text-dark">
                                         <p class="text-center">总任务</p>
                                     </a>
                                 </div>
                                 <div class="col-lg-3 card border-top-0 border-left-0 border-bottom-0">
                                     <br>
-                                    <a href="" style="text-decoration: none">
-                                        <p style="font-size: 25px; " class=" text-center font-weight-bold text-primary">13</p>
+                                    <a :href="'taskLIst.html?state=3&prjId='+prjId" style="text-decoration: none">
+                                        <p style="font-size: 25px; " class=" text-center font-weight-bold text-primary"
+                                            v-text="receiveNum"></p>
                                     </a>
-                                    <a href="" style="text-decoration: none" class="text-dark">
+                                    <a :href="'taskLIst.html?state=3&prjId='+prjId" style="text-decoration: none" class="text-dark">
                                         <p class="text-center">待接包</p>
                                     </a>
                                 </div>
                                 <div class="col-lg-3 card border-top-0 border-left-0 border-bottom-0">
                                     <br>
-                                    <a href="" style="text-decoration: none">
-                                        <p style="font-size: 25px; " class=" text-center font-weight-bold text-warning">13</p>
+                                    <a :href="'taskLIst.html?state=2&prjId='+prjId" style="text-decoration: none">
+                                        <p style="font-size: 25px; " class=" text-center font-weight-bold text-warning"
+                                            v-text="censorNum"></p>
                                     </a>
-                                    <a href="" style="text-decoration: none" class="text-dark">
+                                    <a :href="'taskLIst.html?state=2&prjId='+prjId" style="text-decoration: none" class="text-dark">
                                         <p class="text-center">待审核</p>
                                     </a>
                                 </div>
                                 <div class="col-lg-3 card border-0">
                                     <br>
-                                    <a href="" style="text-decoration: none">
-                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-danger">8</p>
+                                    <a :href="'taskLIst.html?state=-1&prjId='+prjId" style="text-decoration: none">
+                                        <p style="font-size: 25px;" class=" text-center font-weight-bold text-danger"
+                                            v-text="delayNum"></p>
                                     </a>
-                                    <a href="" style="text-decoration: none" class="text-dark">
+                                    <a :href="'taskLIst.html?state=-1&prjId='+prjId" style="text-decoration: none"
+                                        class="text-dark">
                                         <p class="text-center">延迟</p>
                                     </a>
-
                                 </div>
-
                             </div>
+                        </div>
+                    </div>
+                    <div class="card shadow">
+                        <div class="card-body" style="min-height: 170px">
+                            <h4 class="card-title">待审核</h4>
+                            <table class="table table-hover rounded text-center">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>任务名称</th>
+                                        <th>开始日期</th>
+                                        <th>截止日期</th>
+                                        <th>接包人</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="task in censorTasks">
+                                        <td><a v-text="task.Name" :href="'taskCensor.html?taskId='+task.id" class="text-dark"
+                                                style="text-decoration: none"></a></td>
+                                        <td v-text="task.startTime"></td>
+                                        <td v-text="task.endTime"></td>
+                                        <td v-text="task.worker"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    
+                    <div class="card shadow" style="min-height: 308px">
+                        <div class="card-body">
+                            <h4 class="pb-1">任务情况</h4>
+                            <div style="height: 308px;" id="pieChart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h4 class="card-title">延期任务</h4>
+                            <table class="table table-hover rounded text-center">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>任务</th>
+                                        <th>截止日期</th>
+                                        <th>拖延天数</th>
+                                        <th>接包人</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="task in delayTasks">
+                                        <td><a v-text="task.Name" :href="'taskCensor.html?taskId='+task.id" class="text-dark"
+                                                style="text-decoration: none"></a></td>
+                                        <td v-text="task.endTime"></td>
+                                        <td v-text="task.delayDays"></td>
+                                        <td v-text="task.worker"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h4 class="card-title">接包人员</h4>
+                            <table class="table table-hover rounded text-center">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>姓名</th>
+                                        <th>所属公司</th>
+                                        <th>当前项目</th>
+                                        <th>工作情况</th>
+                                        <th>繁忙程度</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="worker in workers">
+                                        <td v-text="worker.name"></td>
+                                        <td v-text="worker.company"></td>
+                                        <td><a v-text="worker.currentTask" :href="'taskCensor.html?taskId='+worker.taskId"
+                                                class="text-dark" style="text-decoration: none"></a></td>
+                                        <td v-text="worker.state"></td>
+                                        <td v-text="worker.busy"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
         <p>{{uuid}}</p>
         <p>{{group}}</p>
+        <p>{{prjId}}</p>
     </div>
 </body>
+<script src="../../resource/eChart/echarts.js"></script>
 <script src="../../javascript/camera.js"></script>
 <script src="../../resource/swal2/sweetalert2.all.js"></script>
 <script src="../../resource/vue/vue.js"></script>
@@ -137,20 +228,205 @@
     var app = new Vue({
         el: "#main",
         data: {
+            //every
             group: null,
             uuid: null,
             portrait: "",
-            prjId=0,
+            //webpage
+            prjId: 0,
+            title: "",
+            //state
+            totalNum: 0,
+            receiveNum: 0,
+            censorNum: 0,
+            delayNum: 0,
+            //table
+            censorTasks: [],
+            delayTasks: [],
+            workers: [],
+            //piechart
+            option: {
+                // title: {
+                //     text: '任务情况',
+                //     left: 'center'
+                // },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                series: [
+                    {
+                        name: '任务情况',
+                        type: 'pie',
+                        radius: ['50%', '92%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '30',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: null,
+                    }
+                ]
+            },
+            //table
 
         },
-        created: function () {
+        created() {
+            this.group = $.cookie('group');
+            this.portrait = $.cookie('portrait');
+            if ($.cookie('uuid') == null) {
+                let timerInterval
+                swal({
+                    title: '请登录',
+                    html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+                    timer: 5500,
+                    onOpen: () => {
+                        swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            swal.getContent().querySelector('strong')
+                                .textContent = parseInt((swal.getTimerLeft()) / 1000)
+                        }, 100)
+                    },
+                    onClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then(() => {
+                    window.location.href = "../login/login.html";
+                })
+            } else {
+                this.uuid = $.cookie('uuid');
+                var that = this;
+                swal({
+                    title: "载入中",
+                    width: 250,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    onOpen: () => {
+                        swal.showLoading()
+                    }
+                });
+                $.post("../../php/checkState.php", {
+                    uuid: that.uuid,
+                    group: that.group,
+                }).done((data) => {
+                    data = JSON.parse(data);
+                    if (data.code == 0) {
+                        let timerInterval
+                        swal({
+                            title: '请登录',
+                            html: '页面将于 <strong></strong> 秒后跳转至登陆页面.',
+                            timer: 5500,
+                            onOpen: () => {
+                                swal.showLoading()
+                                timerInterval = setInterval(() => {
+                                    swal.getContent().querySelector('strong')
+                                        .textContent = parseInt((swal.getTimerLeft()) /
+                                            1000)
+                                }, 100)
+                            },
+                            onClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then(() => {
+                            window.location.href = "../login/login.html";
+                        })
+                    } else {
+                        //////////////
+                        that.prjId = getQueryString('id');
+                        $.post("../../php/sender/prj.php", {
+                            prjId: that.prjId,
+                        }).done((data) => {
+                            // data = JSON.parse(data);
+                            //test
+                            data = {
+                                code: 1,
+                                title: "test",
+                                taskNum: {
+                                    totalNum: 80,
+                                    receiveNum: 20,
+                                    censorNum: 13,
+                                    delayNum: 12,
+                                },
+                                table: {
+
+                                },
+                                pieChartData: [
+                                    { value: 10, name: '延期', url: 'taskList.html?prjId=xx&state=-1', },
+                                    { value: 56, name: '进行中', url: 'taskList.html?prjId=xx&state=0', },
+                                    { value: 34, name: '待审核', url: 'taskList.html?prjId=xx&state=2', },
+                                    { value: 16, name: '待接包', url: 'taskList.html?prjId=xx&state=3', },
+                                    { value: 110, name: '已完成', url: 'taskList.html?prjId=xx&state=1', },
+                                ],
+                            };
+                            //endTest
+                            if (data.code == 0) window.location.href = "prjList.html?state=0";
+                            else {
+                                that.title = data.title;
+                                that.totalNum = data.taskNum.totalNum;
+                                that.receiveNum = data.taskNum.receiveNum;
+                                that.censorNum = data.taskNum.censorNum;
+                                that.delayNum = data.taskNum.delayNum;
+                                that.censorTasks = data.table.censorTasks;
+                                that.delayTasks = data.table.delayTasks;
+                                that.workers = data.table.workers;
+                                that.option.series[0].data = data.pieChartData;
+                                //piechart
+                                var dom = document.getElementById("pieChart");
+                                var pieChart = echarts.init(dom);
+                                if (that.option && typeof that.option === "object") {
+                                    pieChart.setOption(that.option, true);
+                                }
+                                pieChart.on('click', function (param) {
+                                    //console.log(param);
+                                    window.location.href = param.data.url;
+                                });
+                                //piechart end
+
+                            }
+
+                        })
+
+                        swal.close();
+                    }
+                });
+            }
 
         },
 
         methods: {
-
+            finish: function () {
+                var that = this;
+                $.post("../../php/sender/prjFinish.php", {
+                    prjId: that.prjId,
+                }).done(() => {
+                    window.location.href="prjList.html?state=1";
+                })
+            }
         },
     })
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
 </script>
 
 </html>

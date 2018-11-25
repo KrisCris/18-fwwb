@@ -1,2 +1,22 @@
-<?php
+<?php 
+header("Content-type:text/html;charset=utf-8"); 
+require("../database.php"); 
+$taskId=$_POST["taskId"]; 
+$code=0;
+$task=get("task","id",$taskId);
+if(!empty($task)){
+    $code=1;
+}
+$endPoint=strripos($task[0]["workFile"],"/")+1;
+echo $endPoint;
+$task[0]["workFile"]=str_replace ("\\","/",$task[0]["workFile"]);
+// array_push($skillarray,$each['Field']);
+$task[0]["workInfo"]["downloadPath"]=$task[0]["workFile"];
+$task[0]["workInfo"]["workFileName"]= substr($task[0]["workFile"], $endPoint,strlen($task[0]["workFile"])-1);
+
+echo json_encode(array(
+    "code"=>$code,
+    "task"=>$task
+));
+ 
 ?>
