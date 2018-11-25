@@ -1,6 +1,6 @@
 <?php 
 header("Content-type:text/html;charset=utf-8");
-require("../database.php"); 
+require("../taskStateCheck.php");
 function Directory( $dir ){  
     return  is_dir ( $dir ) or Directory(dirname( $dir )) and  mkdir ( $dir , 0777);
 }
@@ -18,9 +18,10 @@ $finishNum=0;
 $taskNum=array();
 $censorTasks=array();
 $delayTasks=array();
-$worker=array();
+$workers=array();
 $pieChartData=array();
 $table=array();
+$peopleIdList=array();
 
 $project=get("project","id",$prjId);
 if(!empty($project)){
@@ -35,27 +36,48 @@ if(!empty($project)){
                 $receiveNum++;
             }
             else{
-                $user=get("user","id",$each["userId"]);
-                    // $worker=array(
-                    //     "name"=>$user[0]["name"],
-                    //     "name"=>$user[0]["name"],
-                    //     "name"=>$user[0]["name"],
-                    // );
-                $company=get("company","id",$user[0]["company"]);
-                $sql="SELECT * FROM task WHERE state=0 AND state=2 AND ".$each["userId"];
-                $taskNum=sql_str($sql);
-                $taskNum=count($taskNum);
-                $busy=$taskNum>=1?1:0;
-                // $currentTask=get("task","userId",$user[0]["id"]);
-                $people=array(
-                    "name"=>$user[0]["name"],
-                    "currentTask"=>$each["taskName"],
-                    "taskId"=>$each["id"],
-                    "state"=>$each["state"],
-                    "busy"=>$busy,
-                    "company"=>$company[0]["companyName"]
-                );
-                array_push($worker,$people);
+                // $user=get("user","id",$each["userId"]);
+                //     // $workers=array(
+                //     //     "name"=>$user[0]["name"],
+                //     //     "name"=>$user[0]["name"],
+                //     //     "name"=>$user[0]["name"],
+                //     // );
+                // $company=get("company","id",$user[0]["company"]);
+                // $sql="SELECT * FROM task WHERE state=0 AND state=2 AND ".$each["userId"];
+                // $taskNum=sql_str($sql);
+                // $taskNum=count($taskNum);
+                // $busy=$taskNum>=2?1:0;
+                             // $currentTask=get("task","userId",$user[0]["id"]);
+                if($each["userId"]!=NULL){
+                    if(!empty($peopleIdList)){
+                        if(in_array($each["userId"],$peopleIdList)){
+                        }
+                        else{
+                            array_push($peopleIdList,$each["userId"]);
+                            // $people=array(
+                            //     "name"=>$user[0]["name"],
+                            //     "currentTask"=>$each["taskName"],
+                            //     "taskId"=>$each["id"],
+                            //     "state"=>$each["state"],
+                            //     "busy"=>$busy,
+                            //     "company"=>$company[0]["companyName"]
+                            // );
+                            // array_push($workers,$people);
+                        }
+                    }
+                    else if(empty($peopleIdList)){
+                        array_push($peopleIdList,$each["userId"]);
+                        // $people=array(
+                        //     "name"=>$user[0]["name"],
+                        //     "currentTask"=>$each["taskName"],
+                        //     "taskId"=>$each["id"],
+                        //     "state"=>$each["state"],
+                        //     "busy"=>$busy,
+                        //     "company"=>$company[0]["companyName"]
+                        // );
+                        // array_push($workers,$people);
+                    }
+                }
                 if($each["state"]==2){
                     $censorNum++;
                     
@@ -71,12 +93,13 @@ if(!empty($project)){
                 else if($each["state"]==-1){
                     $delayNum++;
                     $user=get("user","id",$each["userId"]);
+                    $userName=!(empty($user[0]["name"]))?$user[0]["name"]:"无人接包";
                     $task=array(
                         "Name"=>$each["taskName"],
                         "id"=>$each["id"],
                         "startTime"=>$each["startTime"],
                         "endTime"=>$each["endTime"],
-                        "worker"=>$user[0]["name"],
+                        "worker"=>$userName,
                     );
                     array_push($delayTasks,$task);
                 }
@@ -88,10 +111,39 @@ if(!empty($project)){
                 }
             } 
         }
+        foreach($peopleIdList as $each){
+            $sql="SELECT taskName,id FROM task WHERE userId=".$each." ORDER BY startTime";
+            $signalTasks=sql_str($sql);
+            $currentWork=$signalTasks[0]["taskName"];
+            $sql="SELECT * FROM workinfo WHERE begin is not null AND end is null AND userId=".$each;
+            $isworking=sql_str($sql);
+            $state=!(empty($isworking))?"工作中":"未工作";
+            $user=get("user","id",$each);
+                    // $workers=array(
+                    //     "name"=>$user[0]["name"],
+                    //     "name"=>$user[0]["name"],
+                    //     "name"=>$user[0]["name"],
+                    // );
+            $company=get("company","id",$user[0]["company"]);
+            $sql="SELECT * FROM task WHERE state=0 AND state=2 AND ".$each;
+            $taskNum=sql_str($sql);
+            $taskNum=count($taskNum);
+            $busy=$taskNum>=2?1:0;
+            $people=array(
+                "name"=>$user[0]["name"],
+                "currentTask"=>$currentWork,
+                "taskId"=>$signalTasks[0]["id"],
+                "state"=>$state,
+                "busy"=>$busy,
+                "company"=>$company[0]["companyName"]
+            );
+            array_push($workers,$people);
+        }
+        echo $json=json_encode($peopleIdList,JSON_UNESCAPED_UNICODE);   
         $table=array(
             "censorTasks"=>$censorTasks,
             "delayTasks"=>$delayTasks,
-            "worker"=>$worker
+            "workers"=>$workers
         );
         $taskNum=array(
             "totalNum"=>$totalNum,
@@ -131,7 +183,7 @@ if(!empty($project)){
         $table=array(
             "censorTasks"=>$censorTasks,
             "delayTasks"=>$delayTasks,
-            "worker"=>$worker
+            "workers"=>$workers
         );
         $taskNum=array(
             "totalNum"=>$totalNum,
@@ -168,10 +220,10 @@ if(!empty($project)){
         );
     }
 }
-
+$title=(isset($project[0]["prjName"]))?$project[0]["prjName"]:NULL;
 $data=array(
     "code"=>$code,
-    "title"=>$project[0]["prjName"],
+    "title"=>$title,
     "taskNum"=>$taskNum,
     "table"=>$table,
     "pieChartData"=>$pieChartData
