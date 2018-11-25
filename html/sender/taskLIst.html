@@ -80,15 +80,15 @@
                             </thead>
                             <tbody>
                                 <!-- <p v-text="'asdasd'" :style="{'color':color_state==-1?'#ff0000':'#000000'}"></p> -->
-                                <tr v-for="task in tasks" @click="window.location.href='task.html?taskId='+task.id"
+                                <tr v-for="task in tasks" @click="window.location.href='taskCensor.html?taskId='+task.taskId"
                                     class="text-center">
-                                    <td style="width:15%"><a v-text="task.taskName" :href="'task.html?taskId='+task.id"
+                                    <td style="width:15%"><a v-text="task.taskName" :href="'taskCensor.html?taskId='+task.taskId"
                                             class="text-dark" style="text-decoration: none"></a></td>
                                     <td style="width:15%" v-text="task.prjName"></td>
                                     <td style="width:15%" v-text="convertTime(task.startTime)"></td>
                                     <td style="width:15%" v-text="convertTime(task.endTime)"></td>
-                                    <td style="width:15%" v-text="task.receiver"></td>
                                     <td style="width:10%" v-text="task.securityLevel==0?'普通':task.securityLevel==1?'高':'unknown'"></td>
+                                    <td style="width:15%" v-text="task.receiver"></td>
                                     <td style="width:10%" v-text="task.state==-1?'延误':task.state==2?'审核中':task.state==3?'待接受':'unknown'"
                                         :style="{'color':task.state==-1?'#ff0000':'#000000'}"></td>
                                 </tr>

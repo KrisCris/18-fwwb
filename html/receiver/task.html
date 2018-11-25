@@ -223,7 +223,6 @@
                         }).done((data) => {
                             data = JSON.parse(data);
                             that.task = data;
-                            that.code = that.task.code;
                             that.taskName = that.task.taskName; //任务名
                             that.source = that.task.workInfo.downloadPath; //路径
                             that.workFileName = that.task.workInfo.workFileName; //文件名
