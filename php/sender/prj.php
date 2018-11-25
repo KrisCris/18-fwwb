@@ -19,7 +19,7 @@ $taskNum=array();
 $censorTasks=array();
 $delayTasks=array();
 $worker=array();
-$pieCharData=array();
+$pieChartData=array();
 $table=array();
 
 $project=get("project","id",$prjId);
@@ -99,7 +99,7 @@ if(!empty($project)){
             "censorNum"=>$censorNum,
             "delayNum"=>$delayNum
         );
-        $pieCharData=array(
+        $pieChartData=array(
             array(
                 "value"=>$delayNum,
                 "name"=>"延期",
@@ -127,14 +127,54 @@ if(!empty($project)){
             )
         );
     }
-    
+    else{
+        $table=array(
+            "censorTasks"=>$censorTasks,
+            "delayTasks"=>$delayTasks,
+            "worker"=>$worker
+        );
+        $taskNum=array(
+            "totalNum"=>$totalNum,
+            "receiveNum"=>$receiveNum,
+            "censorNum"=>$censorNum,
+            "delayNum"=>$delayNum
+        );
+        $pieChartData=array(
+            array(
+                "value"=>$delayNum,
+                "name"=>"延期",
+                "url"=>"taskList.html?prjId=".$prjId."&state=-1"
+            ),
+            array(
+                "value"=>$ongoNum,
+                "name"=>"进行中",
+                "url"=>"taskList.html?prjId=".$prjId."&state=0"
+            ),
+            array(
+                "value"=>$censorNum,
+                "name"=>"待审核",
+                "url"=>"taskList.html?prjId=".$prjId."&state=2"
+            ),
+            array(
+                "value"=>$receiveNum,
+                "name"=>"待接包",
+                "url"=>"taskList.html?prjId=".$prjId."&state=3"
+            ),
+            array(
+                "value"=>$finishNum,
+                "name"=>"已完成",
+                "url"=>"taskList.html?prjId=".$prjId."&state=1"
+            )
+        );
+    }
 }
+
 $data=array(
     "code"=>$code,
     "title"=>$project[0]["prjName"],
     "taskNum"=>$taskNum,
     "table"=>$table,
-    "pieCharData"=>$pieCharData
+    "pieChartData"=>$pieChartData
 );
 
  
