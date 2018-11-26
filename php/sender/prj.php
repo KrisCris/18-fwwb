@@ -1,4 +1,5 @@
-<?php 
+<?php
+ 
 header("Content-type:text/html;charset=utf-8");
 date_default_timezone_set('Asia/Shanghai');
 require("../taskStateCheck.php");
@@ -146,7 +147,7 @@ if(!empty($project)){
             );
             array_push($workers,$people);
         }
-        echo $json=json_encode($peopleIdList,JSON_UNESCAPED_UNICODE);   
+        // echo $json=json_encode($peopleIdList,JSON_UNESCAPED_UNICODE);   
         $table=array(
             "censorTasks"=>$censorTasks,
             "delayTasks"=>$delayTasks,
@@ -162,27 +163,27 @@ if(!empty($project)){
             array(
                 "value"=>$delayNum,
                 "name"=>"延期",
-                "url"=>"taskList.html?prjId=".$prjId."&state=-1"
+                "url"=>(string)("taskList.html?prjId=".$prjId."&state=-1")
             ),
             array(
                 "value"=>$ongoNum,
                 "name"=>"进行中",
-                "url"=>"taskList.html?prjId=".$prjId."&state=0"
+                "url"=>(string)("taskList.html?prjId=".$prjId."&state=0")
             ),
             array(
                 "value"=>$censorNum,
                 "name"=>"待审核",
-                "url"=>"taskList.html?prjId=".$prjId."&state=2"
+                "url"=>(string)("taskList.html?prjId=".$prjId."&state=2")
             ),
             array(
                 "value"=>$receiveNum,
                 "name"=>"待接包",
-                "url"=>"taskList.html?prjId=".$prjId."&state=3"
+                "url"=>(string)("taskList.html?prjId=".$prjId."&state=3")
             ),
             array(
                 "value"=>$finishNum,
                 "name"=>"已完成",
-                "url"=>"taskList.html?prjId=".$prjId."&state=1"
+                "url"=>(string)("taskList.html?prjId=".$prjId."&state=1")
             )
         );
     }
@@ -202,27 +203,27 @@ if(!empty($project)){
             array(
                 "value"=>$delayNum,
                 "name"=>"延期",
-                "url"=>"taskList.html?prjId=".$prjId."&state=-1"
+                "url"=>(string)("taskList.html?prjId=".$prjId."&state=-1")
             ),
             array(
                 "value"=>$ongoNum,
                 "name"=>"进行中",
-                "url"=>"taskList.html?prjId=".$prjId."&state=0"
+                "url"=>(string)("taskList.html?prjId=".$prjId."&state=0")
             ),
             array(
                 "value"=>$censorNum,
                 "name"=>"待审核",
-                "url"=>"taskList.html?prjId=".$prjId."&state=2"
+                "url"=>(string)("taskList.html?prjId=".$prjId."&state=2")
             ),
             array(
                 "value"=>$receiveNum,
                 "name"=>"待接包",
-                "url"=>"taskList.html?prjId=".$prjId."&state=3"
+                "url"=>(string)("taskList.html?prjId=".$prjId."&state=3")
             ),
             array(
                 "value"=>$finishNum,
                 "name"=>"已完成",
-                "url"=>"taskList.html?prjId=".$prjId."&state=1"
+                "url"=>(string)("taskList.html?prjId=".$prjId."&state=1")
             )
         );
     }

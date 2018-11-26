@@ -310,7 +310,7 @@
 
             pass: function () {
                 swal({
-                    title: '确定要删除该公司吗？',
+                    title: '是否通过该任务？',
                     type: 'warning',
                     allowOutsideClick: false,
                     showCancelButton: true,
@@ -318,7 +318,6 @@
                     cancelButtonColor: '#257FED',
                     confirmButtonText: "确认",
                     cancelButtonText: "取消",
-                    //我估计result就是有没有确认,.value就是true/false
                 }).then((result) => {
                     if (result.value) {
                         this.star = $("#input-id").attr("value"),
