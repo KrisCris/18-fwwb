@@ -281,7 +281,7 @@
                     var file = $("#uploadFile").prop("files")[0];
                     formdata.append("file", file);
                     if (this.addSkill.replace(/\s+/g, "") != "") {
-                        var newSkill = addSkill.split("*");
+                        var newSkill = this.addSkill.split("*");
                         formdata.append("newSkill", newSkill);
                     }
                     formdata.append("uuid", that.uuid);
