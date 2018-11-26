@@ -100,8 +100,8 @@
                             <div class="form-group"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
                                     v-model="workDescription" name="workDescription"></textarea></div>
                             <div class="form-group"><input type="file" name="file"></div>
-                            <!-- <div class="form-group float-right"><input type="submit" name="submit" value="提交" class="btn btn-primary"></div> -->
-                            <button class="btn btn-danger float-right mr-3" @click="deliver">提交</button>
+                            <div class="form-group float-right"><input type="submit" name="submit" value="提交" class="btn btn-primary"></div>
+                            <!-- <button class="btn btn-danger float-right mr-3" @click="deliver">提交</button> -->
                         </form>
                     </li>
 
@@ -365,28 +365,28 @@
             closeWindow: function () {
                 return "2333";
             },
-            deliver: function () {
-                var form_data = new FormData();
-                //获取文件
-                var file = $("#file_input").prop("files")[0];
-                form_data.append("description",this.workDescription);
-                form_data.append("uuid",this.uuid);
-                form_data.append("descriptionFIle",file);
-                form_data.append("taskId",this.taskId);
-                $.ajax({
-                    type: "POST",
-                    url:"../../php/receiver/deliver.php",
-                    dataType : "json",
-                    processData: false,
-                    contentType: false,
-                    data: form_data
-                }).success(function(msg){
-                    console.log(msg);
+            // deliver: function () {
+            //     var form_data = new FormData();
+            //     //获取文件
+            //     var file = $("#file_input").prop("files")[0];
+            //     form_data.append("description",this.workDescription);
+            //     form_data.append("uuid",this.uuid);
+            //     form_data.append("descriptionFile",file);
+            //     form_data.append("taskId",this.taskId);
+            //     $.ajax({
+            //         type: "POST",
+            //         url:"../../php/receiver/deliver.php",
+            //         dataType : "json",
+            //         processData: false,
+            //         contentType: false,
+            //         data: form_data
+            //     }).success(function(msg){
+            //         console.log(msg);
                     
-                }).fail(function(msg){
-                    console.log(msg);
-                })
-            }
+            //     }).fail(function(msg){
+            //         console.log(msg);
+            //     })
+            // }
         }
     })
 

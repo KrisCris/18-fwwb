@@ -47,33 +47,65 @@ if(!empty($user)){
         } 
     }
     else{
-        $projectId=$prjId;
-        $sql="SELECT task.taskName,task.id,task.startTime,task.endTime,task.securityLevel,task.state,project.prjName,task.userId FROM task INNER JOIN project WHERE task.prjId=project.id AND task.state=".$state." AND project.id=".$projectId." ORDER BY task.endTime";
-        $tasks=sql_str($sql); 
-        if(!empty($tasks)){ 
-            $count=0; 
-            foreach($tasks as $each){ 
-                if($each["userId"]!=NULL){
-                    $sql="SELECT name FROM user WHERE id=".$each["userId"]; 
-                    $hasId=strpos($each["userId"],"*"); 
-                    if(!$hasId){
-                        $getName=sql_str($sql);
-                        $tasks[$count]["receiver"]=$getName[0]["name"];
+        if($state!="total"){
+            $projectId=$prjId;
+            $sql="SELECT task.taskName,task.id,task.startTime,task.endTime,task.securityLevel,task.state,project.prjName,task.userId FROM task INNER JOIN project WHERE task.prjId=project.id AND task.state=".$state." AND project.id=".$projectId." ORDER BY task.endTime";
+            $tasks=sql_str($sql); 
+            if(!empty($tasks)){ 
+                $count=0; 
+                foreach($tasks as $each){ 
+                    if($each["userId"]!=NULL){
+                        $sql="SELECT name FROM user WHERE id=".$each["userId"]; 
+                        $hasId=strpos($each["userId"],"*"); 
+                        if(!$hasId){
+                            $getName=sql_str($sql);
+                            $tasks[$count]["receiver"]=$getName[0]["name"];
+                        }
+                        else{
+                            $tasks[$count]["receiver"]="无人接包";
+                        }
                     }
-                    else{
-                        $tasks[$count]["receiver"]="无人接包";
-                    }
-                }
 
-                else{
-                    $tasks[$count]["receiver"]="";
-                }
-                $count++; 
+                    else{
+                        $tasks[$count]["receiver"]="";
+                    }
+                    $count++; 
+                } 
+                // array_push($taskArr,$tasks); 
+                    
+                $taskArr = array_merge($taskArr,$tasks);  
             } 
-            // array_push($taskArr,$tasks); 
-                
-            $taskArr = array_merge($taskArr,$tasks);  
-        } 
+        }
+        else{
+            $projectId=$prjId;
+            $sql="SELECT task.taskName,task.id,task.startTime,task.endTime,task.securityLevel,task.state,project.prjName,task.userId FROM task INNER JOIN project WHERE task.prjId=project.id AND project.id=".$projectId." ORDER BY task.endTime";
+            $tasks=sql_str($sql); 
+            if(!empty($tasks)){ 
+                $count=0; 
+                foreach($tasks as $each){ 
+                    if($each["userId"]!=NULL){
+                        $sql="SELECT name FROM user WHERE id=".$each["userId"]; 
+                        $hasId=strpos($each["userId"],"*"); 
+                        if(!$hasId){
+                            $getName=sql_str($sql);
+                            $tasks[$count]["receiver"]=$getName[0]["name"];
+                        }
+                        else{
+                            $tasks[$count]["receiver"]="无人接包";
+                        }
+                    }
+
+                    else{
+                        $tasks[$count]["receiver"]="";
+                    }
+                    $count++; 
+                } 
+                // array_push($taskArr,$tasks); 
+                    
+                $taskArr = array_merge($taskArr,$tasks);  
+            } 
+
+        }
     }
      
     $code=1; 

@@ -13,7 +13,8 @@ if(!empty($task)){
     // echo $endPoint;
     $task[0]["workFile"]=str_replace ("\\","/",$task[0]["workFile"]);
     // array_push($skillarray,$each['Field']);
-    $task[0]["workInfo"]["downloadPath"]=$task[0]["workFile"];
+    // $task[0]["workInfo"]["downloadPath"]=$task[0]["workFile"];
+    $task[0]["workInfo"]["downloadPath"]=(string)($task[0]["workFile"]);
     $task[0]["workInfo"]["workFileName"]= substr($task[0]["workFile"], $endPoint,strlen($task[0]["workFile"])-1);
 }
 
