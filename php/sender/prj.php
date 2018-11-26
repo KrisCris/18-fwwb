@@ -1,6 +1,13 @@
 <?php 
 header("Content-type:text/html;charset=utf-8");
+date_default_timezone_set('Asia/Shanghai');
 require("../taskStateCheck.php");
+
+$nowtime=time();
+
+$sql="UPDATE project SET state=-1 WHERE prjEnd<=$nowtime AND state!=1 AND state!=2";       //更新过期的
+sql_str($sql); 
+
 function Directory( $dir ){  
     return  is_dir ( $dir ) or Directory(dirname( $dir )) and  mkdir ( $dir , 0777);
 }

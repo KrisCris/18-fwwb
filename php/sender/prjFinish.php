@@ -1,6 +1,6 @@
 <?php 
 header("Content-type:text/html;charset=utf-8");
-require("../database.php"); 
+require("../projectStateCheck.php"); 
 
 $prjId=$_POST["prjId"]; 
 $code=0;

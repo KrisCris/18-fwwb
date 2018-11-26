@@ -78,7 +78,7 @@ else if(!empty($project)){
                         $userIdStr.=$each["userId"]."*";
                         // echo $each["userId"];
                     }
-                    $userIdStr= substr($userIdStr, 0, strlen($userIdStr)-1);
+                    $userIdStr= substr($userIdStr, 0, strlen($userIdStr));
                 }
                 $newtask=array(array("prjId",$prjId),array("startTime",$startTime),array("endTime",$endTime),array("taskName",$title),array("description",$description),array("workDescription",$workFile),array("text",$skills),array("securityLevel",$securityLevel),array("state",3),array("userId",$userIdStr)); 
                 add("task",$newtask); 

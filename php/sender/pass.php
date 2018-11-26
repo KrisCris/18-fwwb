@@ -1,6 +1,6 @@
 <?php 
 header("Content-type:text/html;charset=utf-8"); 
-require("../database.php"); 
+require("../taskStateCheck.php"); 
  
 $state=$_POST["state"];
 $taskId=$_POST["taskId"];

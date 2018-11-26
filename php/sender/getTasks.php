@@ -16,7 +16,7 @@ if(!empty($user)){
     $nameArr=array(); 
     $taskList=array(); 
     foreach($projectId as $each){ 
-        $sql="SELECT task.taskName,task.startTime,task.endTime,task.securityLevel,task.state,project.prjName,task.userId FROM task INNER JOIN project WHERE task.prjId=project.id AND task.state=".$state." AND project.id=".$each['id']." ORDER BY task.endTime"; 
+        $sql="SELECT task.taskName,task.id,task.startTime,task.endTime,task.securityLevel,task.state,project.prjName,task.userId FROM task INNER JOIN project WHERE task.prjId=project.id AND task.state=".$state." AND project.id=".$each['id']." ORDER BY task.endTime"; 
         $tasks=sql_str($sql); 
         if(!empty($tasks)){ 
             $count=0; 
