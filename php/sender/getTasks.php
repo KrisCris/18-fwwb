@@ -54,7 +54,8 @@ if(!empty($user)){
             $count=0; 
             foreach($tasks as $each){ 
                 if($each["userId"]!=NULL){
-                    $sql="SELECT name FROM user WHERE id=".$each["userId"];  
+                    $sql="SELECT name FROM user WHERE id=".$each["userId"]; 
+                    $hasId=strpos($each["userId"],"*"); 
                     if(!$hasId){
                         $getName=sql_str($sql);
                         $tasks[$count]["receiver"]=$getName[0]["name"];
