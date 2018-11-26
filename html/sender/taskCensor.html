@@ -132,7 +132,6 @@
                 <button class="btn btn-danger btn-block" @click="back">不通过</button>
             </div>
         </div>
-        <p v-text="star"></p>
     </div>
 </body>
 
@@ -172,7 +171,6 @@
             showTaskId: false,
             visible: true,
             showStar: false,
-            star: 4,
             verified: true,
             fileName: "",
 
@@ -251,9 +249,9 @@
                             // that.source = that.task[0].workInfo.downloadPath; //审核文件路径
                             // that.workFileName = that.task[0].workInfo.workFileName; //审核文件名
                             // that.workDescription = that.task[0].workDescription; //任务描述
-                            
+
                             that.taskName = that.task.task[0].taskName; //任务名
-                            that.source = "../../"+that.task.task[0].workInfo.downloadPath; //审核文件路径  //路径补充完整啊哥。。。不然根本目录不对的！！
+                            that.source = "../../" + that.task.task[0].workInfo.downloadPath; //审核文件路径  //路径补充完整啊哥。。。不然根本目录不对的！！
                             that.workFileName = that.task.task[0].workInfo.workFileName; //审核文件名
                             that.workDescription = that.task.task[0].workDescription; //任务描述
                             swal.close();
