@@ -120,6 +120,7 @@
             //taskList
             tTitle: '',
             tasks: [],
+            prjId: '',
 
         },
         created() {
@@ -189,7 +190,24 @@
                         }).then(() => {
                             window.location.href = "../login/login.html";
                         })
-                    } else {
+                    } 
+                    else if(getQueryString("prjId") != null){
+                        that.state = getQueryString("state");
+                        that.prjId = getQueryString("prjId");
+                        swal.close();
+                        $.post("../../php/sender/getTasks.php", {
+                            uuid: that.uuid,
+                            group: that.group,
+                            state: that.state,
+                            prjId: that.prjId,
+                        }).done((data) => {
+                            data = JSON.parse(data);
+                            that.tasks = data.tasks;
+                            that.code = data.code;
+                            swal.close();
+                        })
+                    }
+                    else {
                         that.state = getQueryString("state");
                         // that.fetchTask();
                         swal.close();
