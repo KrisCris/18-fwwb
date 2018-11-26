@@ -80,9 +80,9 @@
                             </thead>
                             <tbody>
                                 <!-- <p v-text="'asdasd'" :style="{'color':color_state==-1?'#ff0000':'#000000'}"></p> -->
-                                <tr v-for="task in tasks" @click="window.location.href='taskCensor.html?taskId='+task.taskId"
+                                <tr v-for="task in tasks" @click="window.location.href='taskCensor.html?taskId='+task.id"
                                     class="text-center">
-                                    <td style="width:15%"><a v-text="task.taskName" :href="'taskCensor.html?taskId='+task.taskId"
+                                    <td style="width:15%"><a v-text="task.taskName" :href="'taskCensor.html?taskId='+task.id"
                                             class="text-dark" style="text-decoration: none"></a></td>
                                     <td style="width:15%" v-text="task.prjName"></td>
                                     <td style="width:15%" v-text="convertTime(task.startTime)"></td>
