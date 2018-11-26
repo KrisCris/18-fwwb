@@ -1,13 +1,14 @@
 <!DOCTYPE <!DOCTYPE html>
-<html>
+<html lang="zh">
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8" />
+
+    <!-- <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.css"> -->
     <link rel="stylesheet" href="../../resource/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../resource/font-awesome-4.7.0/css/font-awesome.css">
-    <link rel="stylesheet" href="../../resource/star-rating/theme.css">
+    <!-- <link rel="stylesheet" href="../../resource/star-rating/theme.css"> -->
     <link rel="stylesheet" href="../../resource/star-rating/star-rating.css">
     <title>任务审核</title>
 </head>
@@ -76,23 +77,25 @@
                     <h3>工作信息</h3>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
+                    <li class="list-group-item mb-3 border-bottom-0">
                         <h4>简述</h4>
-                        <textarea id="area" rows="5" class="form-control rounded mb-3" v-model="workDescription"
-                            readonly="readonly"></textarea>
+                        <textarea id="area" rows="5" class="form-control rounded " v-model="workDescription" readonly="readonly"></textarea>
                     </li>
-                    <li class="list-group-item">
+                    <li class="list-group-item mb-3 border-bottom-0">
                         <h4>工作成果</h4>
                         <!-- 下载文件 -->
                         <a :href="source" :download="source" class="float-right" target="_blank" v-text="workFileName"></a>
-                        <button class="btn btn-primary float-right mr-3" @click="pass()" :disabled="showStar" v-show="verified">通过</button>
-                        <div class="float-right" v-show="verified"><input id="input-id" type="number" class="rating"
-                                min=0 max=5 step=0.5 data-size="sm" value=0></div>
+                    </li>
+                    <li class="list-group-item border-bottom-0">
+                        <h4 class="float-left">评分</h4>
+                        <div class="mb-3 float-right" v-show="verified"><input id="input-id" type="number" class="rating"
+                                min=0 max=5 step=0.5 data-size="lg" value=5></div>
                     </li>
                 </ul>
+                <button class="btn btn-primary  btn-block" @click="pass()" :disabled="showStar" v-show="verified">通过</button>
             </div>
         </div>
-        <div class="card shadow mb-4">
+        <div class="card shadow ">
             <div class="card-body">
                 <div class="card-title">
                     <h3>任务需求</h3>
@@ -105,22 +108,28 @@
                                         <button class="btn btn-primary float-right rounded" @click="upload">提交</button>
                                     </li> -->
                     <li class="list-group-item">
-                        <form name="form" method="post" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <h4>要求</h4>
+                        <div class="form-group">
+                            <h4>要求</h4>
+                        </div>
+                        <div class="form-group" v-show="showTaskId"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
+                                v-model="taskId" name="taskId">5</textarea></div>
+                        <div class="form-group"><textarea cols="60" rows="5" class="form-control rounded mb-3" v-model="description"
+                                name="description"></textarea></div>
+                        <!-- 添加需求文件 -->
+                        <!-- <div class="form-group"><input type="file" name="file" id="file_input"></div> -->
+                        <div class="input-group mt-3 mb-4 ">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="file_input" aria-describedby="inputGroupFileAddon04"
+                                    @change="getName()">
+                                <label class="custom-file-label" for="file_input" v-text="fileName"></label>
                             </div>
-                            <div class="form-group" v-show="showTaskId"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
-                                    v-model="taskId" name="taskId">5</textarea></div>
-                            <div class="form-group"><textarea cols="60" rows="5" class="form-control rounded mb-3"
-                                    v-model="description" name="description"></textarea></div>
-                                    <!-- 添加需求文件 -->
-                            <div class="form-group"><input type="file" name="file" id="file_input"></div>
-                            <!-- <div class="form-group float-right"><input type="submit" name="submit" value="提交" class="btn btn-primary"></div> -->
-                            <!-- 退回按钮返回新的需求文件以及文字 -->
-                            <button class="btn btn-danger float-right mr-3" @click="back">退回</button>
-                        </form>
+                        </div>
+                        <!-- <div class="form-group float-right"><input type="submit" name="submit" value="提交" class="btn btn-primary"></div> -->
+                        <!-- 退回按钮返回新的需求文件以及文字 -->
+
                     </li>
                 </ul>
+                <button class="btn btn-danger btn-block" @click="back">不通过</button>
             </div>
         </div>
         <p v-text="star"></p>
@@ -133,9 +142,10 @@
 <script src="../../resource/jquery/jquery.js"></script>
 <script src="../../resource/bootstrap/js/bootstrap.js"></script>
 <script src="../../resource/jquery/jquery.cookie.js"></script>
+<!-- <script src="../../resource/star-rating/zh.js"></script> -->
 <script src="../../resource/star-rating/star-rating.js"></script>
-<script src="../../resource/star-rating/theme.js"></script>
-<script src="../../resource/star-rating/zh.js"></script>
+<!-- <script src="../../resource/star-rating/theme.js"></script> -->
+
 <script>
     var app = new Vue({
         el: "#main",
@@ -164,6 +174,7 @@
             showStar: false,
             star: 4,
             verified: true,
+            fileName: "",
 
         },
         created() {
@@ -236,10 +247,15 @@
                         }).done((data) => {
                             data = JSON.parse(data);
                             that.task = data;
-                            that.taskName = that.task.taskName; //任务名
-                            that.source = that.task.workInfo.downloadPath; //审核文件路径
-                            that.workFileName = that.task.workInfo.workFileName; //审核文件名
-                            that.workDescription = that.task.workDescription; //任务描述
+                            // that.taskName = that.task[0].taskName; //任务名
+                            // that.source = that.task[0].workInfo.downloadPath; //审核文件路径
+                            // that.workFileName = that.task[0].workInfo.workFileName; //审核文件名
+                            // that.workDescription = that.task[0].workDescription; //任务描述
+                            
+                            that.taskName = that.task.task[0].taskName; //任务名
+                            that.source = "../../"+that.task.task[0].workInfo.downloadPath; //审核文件路径  //路径补充完整啊哥。。。不然根本目录不对的！！
+                            that.workFileName = that.task.task[0].workInfo.workFileName; //审核文件名
+                            that.workDescription = that.task.task[0].workDescription; //任务描述
                             swal.close();
                         })
                     }
@@ -248,6 +264,11 @@
             }
         },
         methods: {
+            getName: function () {
+                var file = $("#file_input").val();
+                var pos = file.lastIndexOf("\\");
+                this.fileName = file.substring(pos + 1);
+            },
             upload: function () {
                 var form_data = new FormData();
                 var file_data = $("#file_input").prop("files")[0];
@@ -336,21 +357,21 @@
                 var form_data = new FormData();
                 //获取文件
                 var file = $("#file_input").prop("files")[0];
-                form_data.append("description",this.description);
-                form_data.append("uuid",this.uuid);
-                form_data.append("descriptionFIle",file);
-                form_data.append("taskId",this.taskId);
+                form_data.append("description", this.description);
+                form_data.append("uuid", this.uuid);
+                form_data.append("descriptionFIle", file);
+                form_data.append("taskId", this.taskId);
                 $.ajax({
                     type: "POST",
-                    url:"../../php/sender/back.php",
-                    dataType : "json",
+                    url: "../../php/sender/back.php",
+                    dataType: "json",
                     processData: false,
                     contentType: false,
                     data: form_data
-                }).success(function(msg){
+                }).success(function (msg) {
                     console.log(msg);
-                    
-                }).fail(function(msg){
+
+                }).fail(function (msg) {
                     console.log(msg);
                 })
             }

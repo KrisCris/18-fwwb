@@ -286,6 +286,7 @@
                             that.acceptNum = data.acceptNum;
                             that.pendingTasks = data.chart.pendingTasks;
                             that.delayTasks = data.chart.delayTasks;
+                            $.cookie('portrait', that.portrait, { expires: 1, secure: false, path: '/' });
                             swal.close();
                         })
 
