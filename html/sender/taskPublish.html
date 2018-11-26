@@ -282,10 +282,15 @@
                     formdata.append("file", file);
                     if (this.addSkill.replace(/\s+/g, "") != "") {
                         var newSkill = this.addSkill.split("*");
-                        formdata.append("newSkill", newSkill);
+                        for (var i = 0; i < newSkill.length; i++) {
+                            formdata.append("newSkill[]", newSkill[i]);
+                        }
+
                     }
                     formdata.append("uuid", that.uuid);
-                    formdata.append("skill", that.skillRequire);
+                    for (var i = 0; i < that.skillRequire.length; i++) {
+                        formdata.append("skill[]", that.skillRequire[i]);
+                    }
                     formdata.append("description", that.description);
                     formdata.append("title", that.title);
                     formdata.append("prjId", that.prjId);
