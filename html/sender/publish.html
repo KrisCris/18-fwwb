@@ -300,9 +300,11 @@
                     .replace(/\s+/g, "") != "" || this.fileName != "")) {
                     var formData = new FormData();
                     if (this.fileName != "") {
+                        formData.append("hasFile",1);
                         var file = $("#uploadFile").prop("files")[0];
                         formData.append("file", file);
                     }
+                    else formData.append("hasFile",0);
                     formData.append("description", that.description);
                     formData.append("title", that.title);
                     formData.append("startTime", that.bd);
@@ -312,31 +314,19 @@
                     $.ajax({
                         type: "POST",
                         url: "../../php/sender/publish.php",
-                        // url:"../../php/receiver/upload.php",
-                        dataType: "json",
+                        dataType: "text",
                         processData: false,
                         contentType: false,
                         data: formData,
-                        success: function (data) {
+                    }).done((data) => {
                             console.log(data);
-
                             data = JSON.parse(data);
                             console.log(data.code);
                             if (data.code == 1) {
-                                // window.location.href = "'prj.html?'+data.data.id";
+                                window.location.href = "prj.html?id="+data.prjId;
                             }
                             else alert(data.code);
-                        }
-                    }).done((data) => {
-                        console.log(data);
-
-                        data = JSON.parse(data);
-                        console.log(data.code);
-                        if (data.code == 1) {
-                            window.location.href = "'prj.html?'+data.data.id";
-                        }
-                        else alert(data.code);
-                    });
+                        });
                 } else {
                     alert("请补充完整信息");
                 }
