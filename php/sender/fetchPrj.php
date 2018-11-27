@@ -20,6 +20,7 @@ if(!empty($prj)){
         $msg=1;
         $percentage=0;
         $projectId=$project["id"];
+        $projectName=$project["prjName"];
         $begin=$project["prjBegin"];
         $end=$project["prjEnd"];
         $imgSource=$project["img"];
@@ -44,6 +45,7 @@ if(!empty($prj)){
         $prj=array(
             "msg"=>$msg,      //0为没有数据
             "projectId"=>$projectId,
+            "projectName"=>$projectName,
             "begin"=>$begin,
             "end"=>$end,
             "imgSource"=>$imgSource,

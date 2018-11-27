@@ -73,6 +73,7 @@
                             <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width: project.percentage}"></div>
                         </div>
                         <h5 class="card-title" v-text=""></h5>
+                        <p class="card-text ">项目名称:<span v-text="project.projectName"></span></p>
                         <p class="card-text ">开始日期:<span v-text="convertTime(project.begin)"></span></p>
                         <p class="card-text">截止日期:<span v-text="convertTime(project.end)"></span></p>
 

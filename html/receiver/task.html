@@ -73,12 +73,13 @@
                         <h4>附件</h4>
                         <!-- 下载文件 -->
                         <a :href="source" :download="source" class="float-right" target="_blank" v-text="workFileName"></a>
+                        <div v-show="receive"><button class="btn btn-primary btn-block" @click="accept">接受任务</button></div>
                     </li>
                 </ul>
             </div>
         </div>
         <!-- 完成任务发送 -->
-        <div class="card shadow mb-4">
+        <div class="card shadow mb-4" v-show="!receive">
             <div class="card-body">
                 <div class="card-title">
                     <h3>任务上传</h3>
@@ -91,7 +92,8 @@
                         <button class="btn btn-primary float-right rounded" @click="upload">提交</button>
                     </li> -->
                     <li class="list-group-item">
-                        <form action="../../php/receiver/upload.php" name="form" method="post" enctype="multipart/form-data" target="myIframe">
+                        <form action="../../php/receiver/upload.php" name="form" method="post" enctype="multipart/form-data"
+                            target="myIframe">
                             <div class="form-group">
                                 <h4>信息</h4>
                             </div>
@@ -101,7 +103,7 @@
                                     v-model="workDescription" name="workDescription"></textarea></div>
                             <div class="form-group"><input type="file" name="file"></div>
                             <div class="form-group float-right"><input type="submit" name="submit" value="提交" class="btn btn-primary"></div>
-                            <!-- <button class="btn btn-danger float-right mr-3" @click="deliver">提交</button> -->
+                            <button class="btn btn-primary float-right mr-3 btn-block" @click="">提交</button>
                         </form>
                     </li>
 
@@ -120,7 +122,7 @@
         <p>{{description}}</p>
     </div>
     <!-- 防止表单提交时页面跳转 -->
-    <iframe id="myIframe" name="myIframe"style= "display:none "></iframe>
+    <iframe id="myIframe" name="myIframe" style="display:none "></iframe>
 </body>
 
 <script src="../../javascript/camera.js"></script>
@@ -154,6 +156,9 @@
             code: '',
             showTaskId: false,
             visible: true,
+            receive: true,
+            acceptSuccess: false,
+            state: '',
         },
         created() {
             swal({
@@ -228,6 +233,13 @@
                             that.source = that.task.workInfo.downloadPath; //路径
                             that.workFileName = that.task.workInfo.workFileName; //文件名
                             that.description = that.task.description; //任务描述
+                            that.state = that.task.state;
+                            if(that.state == 3){
+                                that.receive = true;
+                            }
+                            else{
+                                that.receive = fasle;
+                            }
                             swal.close();
                         })
                     }
@@ -365,28 +377,66 @@
             closeWindow: function () {
                 return "2333";
             },
-            // deliver: function () {
-            //     var form_data = new FormData();
-            //     //获取文件
-            //     var file = $("#file_input").prop("files")[0];
-            //     form_data.append("description",this.workDescription);
-            //     form_data.append("uuid",this.uuid);
-            //     form_data.append("descriptionFile",file);
-            //     form_data.append("taskId",this.taskId);
-            //     $.ajax({
-            //         type: "POST",
-            //         url:"../../php/receiver/deliver.php",
-            //         dataType : "json",
-            //         processData: false,
-            //         contentType: false,
-            //         data: form_data
-            //     }).success(function(msg){
-            //         console.log(msg);
-                    
-            //     }).fail(function(msg){
-            //         console.log(msg);
-            //     })
-            // }
+            deliver: function () {
+                var form_data = new FormData();
+                //获取文件
+                var file = $("#file_input").prop("files")[0];
+                form_data.append("description",this.workDescription);
+                form_data.append("uuid",this.uuid);
+                form_data.append("descriptionFile",file);
+                form_data.append("taskId",this.taskId);
+                $.ajax({
+                    type: "POST",
+                    url:"../../php/receiver/deliver.php",
+                    dataType : "text",
+                    processData: false,
+                    contentType: false,
+                    data: form_data
+                }).success(function(msg){
+                    console.log(msg);
+
+                }).fail(function(msg){
+                    console.log(msg);
+                })
+            },
+            accept: function () {
+                swal({
+                    title: '是否接受该任务？',
+                    type: 'warning',
+                    allowOutsideClick: false,
+                    showCancelButton: true,
+                    confirmButtonColor: '#CE252A',
+                    cancelButtonColor: '#257FED',
+                    confirmButtonText: "确认",
+                    cancelButtonText: "取消",
+                }).then((result) => {
+                    if (result.value) {
+                        $.post("../../php/receiver/accept.php", {
+                            uuid: this.uuid,
+                            taskId: this.taskId,
+                        }).done((data) => {
+                            data = JSON.parse(data);
+                            that.acceptSuccess = data;
+                            if (that.acceptSuccess == true) {
+                                swal(
+                                    '接受任务成功！',
+                                    '请尽快开始工作',
+                                    'success'
+                                )
+                                this.receive = false;
+                            }
+                            else{
+                                swal(
+                                    '接受任务失败！',
+                                    '该任务已经被别人抢先一步了呢！',
+                                    'erro'
+                                )
+                            }
+                        })
+                        swal.close();
+                    }
+                });
+            }
         }
     })
 
