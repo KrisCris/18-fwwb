@@ -19,7 +19,7 @@
 
                     </div>
                     <div class="float-right">
-                        <img :src="img" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
+                        <img :src="portrait" class="rounded-circle" style="width:40px; height:40px;"><span>&nbsp;</span>
                         <button type="button" class="btn btn-sm btn-outline-secondary" style="border: 0;" @click="window.history.back()"><i
                                 class="fa fa-reply">&nbsp;</i>返回</button>
                     </div>
@@ -36,12 +36,18 @@
                             <div class="card-body">
                                 <h4 class="card-title border-bottom pb-3">头像</h4>
                                 <div class="text-center mt-3 mb-3">
-                                    <img class="align-right mr-1" :src="img" style="width:45%; vertical-align: bottom;">
-                                    <img class="align-right mr-1" :src="img" style="width:30%; vertical-align: bottom;">
-                                    <img class="align-right" :src="img" style="width:15%; vertical-align: bottom;">
+                                    <img class="align-right mr-1" :src="sample" style="width:45%; vertical-align: bottom;">
+                                    <img class="align-right mr-1" :src="sample" style="width:30%; vertical-align: bottom;">
+                                    <img class="align-right" :src="sample" style="width:15%; vertical-align: bottom;">
                                 </div>
-                                <button class="btn btn-primary btn-block" disabled>修改头像</button>
-
+                                <div>
+                                    <input @change="getImage()" type="file" id="img" style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;"
+                                        accept="image/*" />
+                                    <button class="btn btn-block btn-primary mb-3" @click="$('#img').click()">选择</button>
+                                </div>
+                                <div>
+                                    <button class="btn btn-block btn-success" @click="edit('portrait',sample)">提交</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -102,35 +108,36 @@
                     </div>
                 </div>
 
-                <div class="row mt-4">
+                <div class="row mt-4" v-if="cGroup==2">
                     <div class="col">
                         <div class="card shadow text-left">
                             <div class="card-body">
                                 <h4 class="card-title border-bottom pb-3">擅长技能</h4>
                                 <div>
-
-                                    <div>
-                                        <button class="btn btn-success btn-sm">前端</button>
-                                        <button class="btn btn-success btn-sm">Html 5</button>
-                                        <button class="btn btn-success btn-sm">CSS</button>
-                                        <button class="btn btn-success btn-sm">Javascript</button>
-                                        <button class="btn btn-success btn-sm">Angular.js</button>
-                                        <button class="btn btn-success btn-sm">Vue.js</button>
+                                    <button v-for="skill in skills" class="btn btn-success btn-sm mr-2" v-text="skill"></button>
+                                </div>
+                                <br>
+                                <button class='btn btn-block btn-primary mb-3' @click="showNewSkill()">修改</button>
+                                <div v-show="showEditSkills">
+                                    <h4 class="card-title">选择技能</h4>
+                                    <div class="custom-control custom-checkbox float-left mb-2" v-for="skill in allSkills">
+                                        <input type="checkbox" class="custom-control-input" :id="skill" v-model="newSkills"
+                                            :value="skill">
+                                        <label class="custom-control-label" :for="skill" v-text="skill"></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     </div>
+                                    <div>
+                                        <input type="text" class="form-control" v-model="addSkill" placeholder="新增技能（多项技请用*分隔）">
+                                    </div>
+                                    <button class="btn btn-block btn-success mt-3" @click="editSkill()">保存</button>
                                 </div>
-                                <br>
-                                <div>
-                                    <button class="btn btn-info btn-sm">后端</button>
-                                    <button class="btn btn-info btn-sm">PHP</button>
-                                    <button class="btn btn-info btn-sm">SQL</button>
-                                </div>
-                                <br>
-                                <button class='btn btn-block btn-primary' disabled>修改</button>
                             </div>
                         </div>
                     </div>
+                    skills {{skills}}<br>
+                    allSkills {{allSkills}}<br>
+                    newSkills {{newSkills}}<br>
+                    addSkills {{addSkill}}<br>
                 </div>
-
 
                 <div class="row mt-4 mb-5">
                     <div class="col">
@@ -197,7 +204,7 @@
     var app = new Vue({
         el: "#main",
         data: {
-            img: "http://static.runoob.com/images/mix/img_avatar.png",
+            sample: "http://static.runoob.com/images/mix/img_avatar.png",
             username: "",
             name: "",
             type: "",
@@ -209,6 +216,13 @@
             newPassword2: "",
             newPhone: "",
             newMail: "",
+            //
+            portrait: "http://static.runoob.com/images/mix/img_avatar.png",
+            skills: [],
+            allSkills: [],
+            newSkills: [],
+            addSkill: "",
+            showEditSkills: false,
             //cookies
             cUuid: "",
             cGroup: "",
@@ -289,10 +303,18 @@
                 group: that.cGroup,
             }).done((data) => {
                 data = JSON.parse(data);
-                // that.img = data.img;
-                that.img = "http://static.runoob.com/images/mix/img_avatar.png";
+                that.portrait = data.portrait;
+                // that.img = "http://static.runoob.com/images/mix/img_avatar.png";
                 that.name = data.name;
                 that.username = data.username;
+                //
+                that.skills = ["Vue", "PHP", "SQL", "Angular.Js", "JavaScript"];//此人的skill
+                that.allSkills = ["Vue", "PHP", "SQL", "Angular.Js", "JavaScript", "HTML5", "CSS3", "Node.js", "Python"];//全部得skill
+                that.newSkills = that.skills;
+                //test above
+                // that.skills = data.skills;
+                // that.allSkills = data.allSkills;
+                // that.newSkills = data.skills;
                 if (that.cGroup == "admin");
                 else
                     that.company = data.company;
@@ -312,6 +334,64 @@
             })
         },
         methods: {
+            editSkill: function () {
+                var that = this;
+                swal({
+                    title: "Loading...",
+                    width: 250,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    showConfirmButton: false,
+                    onOpen: () => {
+                        swal.showLoading()
+                    }
+                });
+                var newSkill = this.addSkill.split("*");
+                // for (var i = 0; i < newSkill.length; i++) {
+                //     formdata.append("newSkill[]", newSkill[i]);
+                // }
+                $.post("../php/editSkills.php", {
+                    group: that.cGroup,
+                    uuid: that.cUuid,
+                    addSkills: newSkill,
+                    newSkills: that.newSkills,
+                }).done((data) => {
+                    that.skills = that.newskills + newskill;
+                    this.showEditSkills = false;
+                    swal.close();
+                    let timerInterval;
+                    swal({
+                        title: '修改成功！',
+                        showConfirmButton: false,
+                        type: "success",
+                        timer: 1000,
+                        onClose: () => {
+                            clearInterval(timerInterval)
+                        }
+                    })
+                })
+            },
+            showNewSkill: function () {
+                this.showEditSkills = !this.showEditSkills;
+                this.newSkills = this.skills;
+                this.addSkill = "";
+            },
+            getImage: function () {
+                var that = this;
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    imgFile = e.target.result;
+                    console.log(imgFile);
+                    that.sample = imgFile;
+                };
+                var file = $("#img").prop("files")[0];
+                var fileTypes = [".jpg", ".png"];
+                if (file.size / 1024 > 800) alert("图片大小不得大于800kb！");
+                else reader.readAsDataURL(file);
+
+            },
             edit: function (category, value) {
                 var that = this;
                 console.log(category + "   " + value);
@@ -354,6 +434,12 @@
                                 case "phone":
                                     that.phone = that.newPhone;
                                     that.showPhone = !that.showPhone;
+                                    break;
+                                case "portrait":
+                                    that.portrait = that.sample;
+                                    $.removeCookie('portrait',{ path: '/'});
+                                    console.log("that.portrait");
+                                    $.cookie('portrait', that.portrait, { expires: 1, secure: false, path: '/' });
                                     break;
                                 default:
                                     window.window.location.reload();
@@ -457,10 +543,6 @@
                 }
 
             },
-
-            newImg: function () {
-
-            }
         }
 
     });

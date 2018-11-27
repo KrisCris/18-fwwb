@@ -3,17 +3,20 @@
   require("database.php");
   $uuid=$_POST["uuid"];
   $group=$_POST["group"];
-  $img="";
+  $portrait="";
   $name="";
   $username="";
   $company="";
   $phone="";
   $mail="";
+  //hpc新增加
+  $skills=[];//这个人会的skill
+  $allSkills=[];//表里全部skill
 
   if($group=="admin"){                                      //第一级分别是否为管理员
     $data=get("administrator","token",$uuid);               //然后查看是否存在
     if(!empty($data)){                                      //第二级在存在的情况下传出所需参数
-        $img=$data[0]["facialData"];
+        $portrait=$data[0]["portrait"];
         $name=$data[0]["name"];
         $username=$data[0]["username"];
         // $company=$data[0]["company"];
@@ -25,7 +28,7 @@
   else{
     $data=get("user","token",$uuid);
     if(!empty($data)){       //第二级多查一下组别是否正常
-        $img=$data[0]["facialData"];
+        $portrait=$data[0]["portrait"];
         $name=$data[0]["name"];
         $username=$data[0]["username"];
         $company=$data[0]["company"];
@@ -36,7 +39,7 @@
 
 
   echo json_encode(array(
-      "img"=>$img,
+      "portrait"=>$portrait,
       "name"=>$name,
       "username"=>$username,
       "company"=>$company,

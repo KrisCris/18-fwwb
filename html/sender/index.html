@@ -106,7 +106,7 @@
                                                 v-text="workingNum"></p>
                                         </a>
                                         <a href="taskLIst.html?state=0" style="text-decoration: none" class="text-dark">
-                                            <p class="text-center">进行中项目</p>
+                                            <p class="text-center">进行中任务</p>
                                         </a>
                                     </div>
                                     <div class="col-lg-3 card border-0">
@@ -322,10 +322,10 @@
                 var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) +
                     '-';
                 var D = date.getDate() + ' ';
-                var h = date.getHours() + ':';
-                var m = date.getMinutes();
+                // var h = date.getHours() + ':';
+                // var m = date.getMinutes();
                 // var s = date.getSeconds();
-                return Y + M + D + h + m;
+                return Y + M + D ;
             }
         }
 

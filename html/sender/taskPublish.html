@@ -284,13 +284,13 @@
                         formdata.append("file", file);
                     }
                     else formdata.append("hasFile", 0);
-                    if (this.addSkill.replace(/\s+/g, "") != "") {
+                    // if (this.addSkill.replace(/\s+/g, "") != "") {
                         var newSkill = this.addSkill.split("*");
                         for (var i = 0; i < newSkill.length; i++) {
                             formdata.append("newSkill[]", newSkill[i]);
                         }
-                    }
-                    else formdata.append("newSkill", "");
+                    // }
+                    // else formdata.append("newSkill", "");
                     formdata.append("uuid", that.uuid);
                     if (that.skillRequire.length > 0) {
                         for (var i = 0; i < that.skillRequire.length; i++) {
