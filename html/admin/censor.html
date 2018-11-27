@@ -106,7 +106,7 @@
             person: [],
             uncensorList: [],
             badgeIndex: '',
-            hasCheckAll: false,
+            hasCheckAll: 0,
             //
             addable: true,
             deleble: false,
@@ -265,7 +265,7 @@
                 $.post("../../php/admin/verify.php", {
                     //返回的data是person的id以及通过的信息
                     personId: id,
-                    hasPass: true,
+                    hasPass: 1,
                 }).done((data) => {
                     //之后重新载入页面lo
                     data = JSON.parse(data);
@@ -276,7 +276,7 @@
                 var that = this;
                 $.post("../../php/admin/verify.php", {
                     personId: id,
-                    hasPass: false,
+                    hasPass: 0,
                 }).done((data) => {
                     data = JSON.parse(data); //.done之后用一个带参数data的function用来将JSON格式的data转换成js，然后把数据给info
                     that.info = data;
