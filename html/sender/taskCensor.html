@@ -126,7 +126,6 @@
                         </div>
                         <!-- <div class="form-group float-right"><input type="submit" name="submit" value="提交" class="btn btn-primary"></div> -->
                         <!-- 退回按钮返回新的需求文件以及文字 -->
-
                     </li>
                 </ul>
                 <button class="btn btn-danger btn-block" @click="back">不通过</button>
@@ -164,7 +163,7 @@
             endTime: '',
             timeType: '',
             jump: '',
-            source: '',
+            source: "",
             workFileName: '',
             facialCensor: 0,
             code: '',
@@ -239,6 +238,7 @@
                     } else {
                         swal.close();
                         that.taskId = getQueryString("taskId");
+
                         $.post("../../php/sender/fetchCensorInfo.php", {
                             //返回taskId
                             taskId: that.taskId,
@@ -254,7 +254,14 @@
                             that.source = "../../" + that.task.task[0].workInfo.downloadPath; //审核文件路径  //路径补充完整啊哥。。。不然根本目录不对的！！
                             that.workFileName = that.task.task[0].workInfo.workFileName; //审核文件名
                             that.workDescription = that.task.task[0].workDescription; //任务描述
+                            that.state = that.task.state;
+                            if (that.state == 2) {
+                                that.verified = false;
+                            } else {
+                                that.verified = true;
+                            }
                             swal.close();
+
                         })
                     }
                 });
@@ -267,35 +274,35 @@
                 var pos = file.lastIndexOf("\\");
                 this.fileName = file.substring(pos + 1);
             },
-            upload: function () {
-                var form_data = new FormData();
-                var file_data = $("#file_input").prop("files")[0];
-                form_data.append("file", file_data);
-                form_data.append("WorkDescription", this.workDescription);
-                $.ajax({
-                    type: "POST",
-                    url: "../../php/receiver/upload.php",
-                    dataType: "json",
-                    crossDomain: true,
-                    processData: false, // 注意：让jQuery不要处理数据
-                    contentType: false, // 注意：让jQuery不要设置contentType
-                    data: form_data,
-                }).success(function () {
-                    swal(
-                        '提交成功！',
-                        '请等待管理员审核',
-                        'success'
-                    )
-                    //清空
-                    this.WorkDescription = "";
-                }).fail(function () {
-                    swal(
-                        '提交失败！',
-                        '请尝试重新上传',
-                        'error'
-                    )
-                });
-            },
+            // upload: function () {
+            //     var form_data = new FormData();
+            //     var file_data = $("#file_input").prop("files")[0];
+            //     form_data.append("file", file_data);
+            //     form_data.append("WorkDescription", this.workDescription);
+            //     $.ajax({
+            //         type: "POST",
+            //         url: "../../php/receiver/upload.php",
+            //         dataType: "json",
+            //         crossDomain: true,
+            //         processData: false, // 注意：让jQuery不要处理数据
+            //         contentType: false, // 注意：让jQuery不要设置contentType
+            //         data: form_data,
+            //     }).success(function () {
+            //         swal(
+            //             '提交成功！',
+            //             '请等待管理员审核',
+            //             'success'
+            //         )
+            //         //清空
+            //         this.WorkDescription = "";
+            //     }).fail(function () {
+            //         swal(
+            //             '提交失败！',
+            //             '请尝试重新上传',
+            //             'error'
+            //         )
+            //     });
+            // },
             logout: function () {
                 var that = this;
                 $.post("../../php/logout.php", {
@@ -359,19 +366,38 @@
                 form_data.append("uuid", this.uuid);
                 form_data.append("descriptionFIle", file);
                 form_data.append("taskId", this.taskId);
-                $.ajax({
-                    type: "POST",
-                    url: "../../php/sender/back.php",
-                    dataType: "json",
-                    processData: false,
-                    contentType: false,
-                    data: form_data
-                }).success(function (msg) {
-                    console.log(msg);
+                swal({
+                    title: '是否退回该任务？',
+                    type: 'warning',
+                    allowOutsideClick: false,
+                    showCancelButton: true,
+                    confirmButtonColor: '#CE252A',
+                    cancelButtonColor: '#257FED',
+                    confirmButtonText: "确认",
+                    cancelButtonText: "取消",
+                }).then((result) => {
+                    $.ajax({
+                        type: "POST",
+                        url: "../../php/sender/back.php",
+                        dataType: "json",
+                        processData: false,
+                        contentType: false,
+                        data: form_data
+                    }).success(function (msg) {
+                        swal(
+                            '退回成功！',
+                            '等待修改后重新上传审核！',
+                            'success'
+                        )
 
-                }).fail(function (msg) {
-                    console.log(msg);
-                })
+                    }).fail(function (msg) {
+                        swal(
+                            '退回失败！',
+                            '请尝试重新上传！',
+                            'error'
+                        )
+                    })
+                });
             }
         },
     })

@@ -89,7 +89,7 @@
                                     <td style="width:15%" v-text="convertTime(task.endTime)"></td>
                                     <td style="width:10%" v-text="task.securityLevel==0?'普通':task.securityLevel==1?'高':'unknown'"></td>
                                     <td style="width:15%" v-text="task.receiver"></td>
-                                    <td style="width:10%" v-text="task.state==-1?'延误':task.state==2?'审核中':task.state==3?'待接受':'unknown'"
+                                    <td style="width:10%" v-text="task.state==-1?'延误':task.state==2?'审核中':task.state==3?'待接受':task.state==1?'进行中':'unknown'"
                                         :style="{'color':task.state==-1?'#ff0000':'#000000'}"></td>
                                 </tr>
                             </tbody>
