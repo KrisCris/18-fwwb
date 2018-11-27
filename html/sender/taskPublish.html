@@ -243,7 +243,7 @@
                                 //     skills:["","",""],
                                 // }
                                 that.skills = data.skills;
-
+                                swal.close();
                             })
                             that.prjId = getQueryString('prjId');
                             $("#datepickerEnd").datepicker({
@@ -264,7 +264,7 @@
                                     that.bd = date;
                                 }
                             })
-                            swal.close();
+
                         }
 
                     }
@@ -278,19 +278,26 @@
                     .replace(/\s+/g, "") != "" || this.fileName != "")) {
                     var that = this;
                     var formdata = new FormData();
-                    var file = $("#uploadFile").prop("files")[0];
-                    formdata.append("file", file);
+                    if (that.fileName != "") {
+                        formdata.append("hasFile", 1);
+                        var file = $("#uploadFile").prop("files")[0];
+                        formdata.append("file", file);
+                    }
+                    else formdata.append("hasFile", 0);
                     if (this.addSkill.replace(/\s+/g, "") != "") {
                         var newSkill = this.addSkill.split("*");
                         for (var i = 0; i < newSkill.length; i++) {
                             formdata.append("newSkill[]", newSkill[i]);
                         }
-
                     }
+                    else formdata.append("newSkill", "");
                     formdata.append("uuid", that.uuid);
-                    for (var i = 0; i < that.skillRequire.length; i++) {
-                        formdata.append("skill[]", that.skillRequire[i]);
+                    if (that.skillRequire.length > 0) {
+                        for (var i = 0; i < that.skillRequire.length; i++) {
+                            formdata.append("skill[]", that.skillRequire[i]);
+                        }
                     }
+                    else formdata.append("skill", "")
                     formdata.append("description", that.description);
                     formdata.append("title", that.title);
                     formdata.append("prjId", that.prjId);
@@ -300,11 +307,12 @@
                     $.ajax({
                         type: "POST",
                         url: "../../php/sender/taskPublish.php",
-                        dataType: "json",
+                        // dataType: "text",
                         processData: false,
                         contentType: false,
                         data: formdata,
                     }).done((data) => {
+                        console.log(data);
                         data = JSON.prase(data);
                         if (data.code == 0) {
                             swal({
@@ -323,7 +331,7 @@
                                 type: success,
                                 title: "发布成功！",
                                 showConfirmButton: false,
-                                timer: 1000,
+                                timer: 10000,
                             }).then(() => {
                                 window.location.href = "'taskCensor.html?taskId='+data.taskId";
                             })
