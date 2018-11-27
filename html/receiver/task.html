@@ -1,5 +1,5 @@
 <!DOCTYPE <!DOCTYPE html>
-<html>
+<html lang="zh">
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -229,10 +229,10 @@
                         }).done((data) => {
                             data = JSON.parse(data);
                             that.task = data;
-                            that.taskName = that.task.taskName; //任务名
-                            that.source = that.task.workInfo.downloadPath; //路径
-                            that.workFileName = that.task.workInfo.workFileName; //文件名
-                            that.description = that.task.description; //任务描述
+                            that.taskName = that.task[0].taskName; //任务名
+                            that.source = "../../"+that.task[0].workInfo.downloadPath; //路径
+                            that.workFileName = that.task[0].workInfo.workFileName; //文件名
+                            that.description = that.task[0].description; //任务描述
                             that.state = that.task.state;
                             if(that.state == 3){
                                 that.receive = true;
@@ -381,9 +381,9 @@
                 var form_data = new FormData();
                 //获取文件
                 var file = $("#file_input").prop("files")[0];
-                form_data.append("description",this.workDescription);
+                form_data.append("workDescription",this.workDescription);
                 form_data.append("uuid",this.uuid);
-                form_data.append("descriptionFile",file);
+                form_data.append("workFile",file);
                 form_data.append("taskId",this.taskId);
                 $.ajax({
                     type: "POST",
