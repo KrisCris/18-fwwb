@@ -243,7 +243,7 @@
                                 //     skills:["","",""],
                                 // }
                                 that.skills = data.skills;
-
+                                swal.close();
                             })
                             that.prjId = getQueryString('prjId');
                             $("#datepickerEnd").datepicker({
@@ -264,7 +264,7 @@
                                     that.bd = date;
                                 }
                             })
-                            swal.close();
+
                         }
 
                     }
@@ -297,7 +297,7 @@
                             formdata.append("skill[]", that.skillRequire[i]);
                         }
                     }
-                    else formdata.append("skill","")
+                    else formdata.append("skill", "")
                     formdata.append("description", that.description);
                     formdata.append("title", that.title);
                     formdata.append("prjId", that.prjId);

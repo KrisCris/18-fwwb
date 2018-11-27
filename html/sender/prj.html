@@ -137,8 +137,8 @@
                                     <tr v-for="task in censorTasks">
                                         <td><a v-text="task.Name" :href="'taskCensor.html?taskId='+task.id" class="text-dark"
                                                 style="text-decoration: none"></a></td>
-                                        <td v-text="task.startTime"></td>
-                                        <td v-text="task.endTime"></td>
+                                        <td v-text="convertTime(task.startTime)"></td>
+                                        <td v-text="convertTime(task.endTime)"></td>
                                         <td v-text="task.worker"></td>
                                     </tr>
                                 </tbody>
@@ -173,8 +173,8 @@
                                     <tr v-for="task in delayTasks">
                                         <td><a v-text="task.Name" :href="'taskCensor.html?taskId='+task.id" class="text-dark"
                                                 style="text-decoration: none"></a></td>
-                                        <td v-text="task.endTime"></td>
-                                        <td v-text="task.delayDays"></td>
+                                        <td v-text="convertTime(task.endTime)"></td>
+                                        <td v-text="delayTime(task.endTime)"></td>
                                         <td v-text="task.worker"></td>
                                     </tr>
                                 </tbody>
@@ -401,10 +401,10 @@
                             //piechart end
 
                             // }
-
+                            swal.close();
                         })
 
-                        swal.close();
+
                     }
                 });
             }
@@ -412,6 +412,12 @@
         },
 
         methods: {
+            delayTime:function(timeStamp){
+                var present = new Date().getTime()/1000;
+                present = present;
+                var delayDays = parseInt((present-timeStamp)/60/60/24);
+                return delayDays + "天";
+            },
             finish: function () {
                 var that = this;
                 $.post("../../php/sender/prjFinish.php", {
@@ -419,7 +425,18 @@
                 }).done(() => {
                     window.location.href = "prjList.html?state=1";
                 })
-            }
+            },
+            convertTime: function (timestamp) {
+                var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                var D = date.getDate() + ' ';
+                // var h = date.getHours() + ':';
+                // var m = date.getMinutes();
+                // var s = date.getSeconds();
+                return Y + M + D ;
+            },
+
         },
     })
 
