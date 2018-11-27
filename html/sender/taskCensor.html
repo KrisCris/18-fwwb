@@ -126,9 +126,11 @@
                         </div>
                         <!-- <div class="form-group float-right"><input type="submit" name="submit" value="提交" class="btn btn-primary"></div> -->
                         <!-- 退回按钮返回新的需求文件以及文字 -->
+                        <button class="btn btn-danger btn-block" @click="back" v-show="ifBack">不通过</button>
+                        <button class="btn btn-primary btn-block" @click="back" v-show="!ifBack">追加需求</button>
                     </li>
                 </ul>
-                <button class="btn btn-danger btn-block" @click="back">不通过</button>
+
             </div>
         </div>
     </div>
@@ -172,7 +174,8 @@
             showStar: false,
             verified: true,
             fileName: "",
-
+            ifBack: true,
+            state: '',
         },
         created() {
             swal({
@@ -256,9 +259,11 @@
                             that.workDescription = that.task.task[0].workDescription; //任务描述
                             that.state = that.task.state;
                             if (that.state == 2) {
-                                that.verified = false;
-                            } else {
                                 that.verified = true;
+                                that.ifBack = true;
+                            } else {
+                                that.verified = false;
+                                that.ifBack = false;
                             }
                             swal.close();
 
@@ -349,7 +354,6 @@
                         this.star = $("#input-id").attr("value"),
                             $.post("../../php/sender/pass.php", {
                                 uuid: this.uuid,
-                                state: this.state,
                                 taskId: this.taskId,
                                 star: $("#input-id").attr("value"),
                             });
