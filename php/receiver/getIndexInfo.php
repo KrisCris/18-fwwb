@@ -7,7 +7,10 @@ $uuid=$_POST["uuid"];
 $group=$_POST["group"];
 $code=0; 
 $checktime=strtotime("+3 day");
-$data=get("user","token",$uuid);      
+$data=get("user","token",$uuid); 
+$checkNum=0;
+$recentNum=0;
+$delayNum=0;     
 
 if(!empty($data)){ 
     $code=1;
@@ -17,9 +20,6 @@ if(!empty($data)){
     $personaltask=sql_str($sql);
 
     if(!empty($personaltask)){
-        $checkNum=0;
-        $recentNum=0;
-        $delayNum=0;
         foreach($personaltask as $each){
             if($each["state"]==2){
                 $checkNum++;
