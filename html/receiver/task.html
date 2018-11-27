@@ -58,6 +58,24 @@
 
             </div>
         </div>
+        <div class="card rounded shadow mb-4">
+                <div class="card-body">
+                    <div class="card-title">
+                        <h3>项目要求</h3>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <h4 v-text=" projectName"></h4>
+                            <textarea id="area" rows="10" class="form-control rounded mb-3" v-model="projectDescription" readonly="readonly"></textarea>
+                        </li>
+                        <li class="list-group-item">
+                            <h4>附件</h4>
+                            <!-- 下载文件 -->
+                            <a :href="projectSource" :download="projectSource" class="float-right" target="_blank" v-text="projectFileName"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         <!-- 任务需求 -->
         <div class="card rounded shadow mb-4">
             <div class="card-body">
@@ -92,7 +110,7 @@
                         <button class="btn btn-primary float-right rounded" @click="upload">提交</button>
                     </li> -->
                     <li class="list-group-item">
-                        <form action="../../php/receiver/upload.php" name="form" method="post" enctype="multipart/form-data"
+                        <form name="form" method="post" enctype="multipart/form-data"
                             target="myIframe">
                             <div class="form-group">
                                 <h4>信息</h4>
@@ -101,9 +119,9 @@
                                     v-model="taskId" name="taskId">5</textarea></div>
                             <div class="form-group"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
                                     v-model="workDescription" name="workDescription"></textarea></div>
-                            <div class="form-group"><input type="file" name="file"></div>
+                            <div class="form-group"><input type="file" name="file" id="file_input" class="rounded"></div>
                             <div class="form-group float-right"><input type="submit" name="submit" value="提交" class="btn btn-primary"></div>
-                            <button class="btn btn-primary float-right mr-3 btn-block" @click="">提交</button>
+                            <button class="btn btn-primary float-right mr-3 btn-block" @click="deliver">提交</button>
                         </form>
                     </li>
 
@@ -149,6 +167,10 @@
             receive: true,
             acceptSuccess: false,
             state: '',
+            projectDescription: '',
+            projectSource: '',
+            projectFileName: '',
+            projectName: '',
         },
         created() {
             swal({
@@ -218,7 +240,13 @@
                             taskId: that.taskId,
                         }).done((data) => {
                             data = JSON.parse(data);
-                            that.task = data;
+                            that.task = data.task;
+                            that.project = data.project;
+                            that.projectName = that.project.project[0].projectName;
+                            that.projectDescription = that.project.project[0].projectDescription;
+                            that.projectSource = "../../"+that.project.project[0].projectInfo.projectFile;
+                            that.projectFileName = that.project.project[0].projectFileName;
+
                             that.taskName = that.task.task[0].taskName; //任务名
                             that.source = "../../"+that.task.task[0].workInfo.downloadPath; //路径
                             that.workFileName = that.task.task[0].workInfo.workFileName; //文件名
