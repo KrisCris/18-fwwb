@@ -30,7 +30,7 @@
                         <div class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="taskList.html?state=0"><i class="fa fa-spinner">&nbsp;&nbsp;</i>进行中</a>
                             <a class="dropdown-item" href="taskList.html?state=2"><i class="fa fa-hourglass-2">&nbsp;&nbsp;</i>待审核</a>
-                            <a class="dropdown-item" href="taskList.html?state=-1"><i class="fa fa-warning">&nbsp;&nbsp;</i>延迟</a>
+                            <a class="dropdown-item" href="taskList.html?state=-1"><i class="fa fa-warning">&nbsp;&nbsp;</i>已延迟</a>
                             <a class="dropdown-item" href="taskList.html?state=1"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>已完成</a>
                         </div>
                     </li>
@@ -75,7 +75,7 @@
                                     <td style="width:20%" v-text="convertTime(task.startTime)"></td>
                                     <td style="width:20%" v-text="convertTime(task.endTime)"></td>
                                     <td style="width:10%" v-text="task.securityLevel==0?'普通':task.securityLevel==1?'高':'unknown'"></td>
-                                    <td style="width:10%" v-text="task.state==-1?'延误':task.state==1?'完成':task.state==2?'审核中':task.state==0?'进行中':'unknown'"
+                                    <td style="width:10%" v-text="task.state==-1?'已延误':task.state==1?'完成':task.state==2?'审核中':task.state==0?'进行中':'unknown'"
                                         :style="{'color':task.state==-1?'#ff0000':'#000000'}"></td>
                                 </tr>
                             </tbody>
@@ -84,15 +84,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-        <!-- content_end -->
-        <!-- test -->
-        <p>{{uuid}}</p>
-        <p>{{group}}</p>
-        <p>{{state}}</p>
     </div>
 
 </body>
@@ -123,7 +114,7 @@
             else if (this.state == 0) this.tTitle = "进行中的任务";
             else if (this.state == 2) this.tTitle = "审核中的任务";
             else if (this.state == "recent") this.tTitle = "近期的任务"
-            else if (this.state == -1) this.tTitle = "延迟"
+            else if (this.state == -1) this.tTitle = "已延迟"
             if ($.cookie('uuid') == null) {
                 let timerInterval
                 swal({
