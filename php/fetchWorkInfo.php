@@ -19,11 +19,37 @@ $taskName=NULL;
 $description=NULL;
 $code=-1;
 $state=NULL;
+$project=array();
+$projectName=NULL;
+$projectDescription=NULL;
+$projectFile=NULL;
+$projectFileName=NULL;
 
 $task=get("task","id",$taskId);
 
 if(!empty($task)){
     $code=0;
+    $prj=get("project","id",$task[0]["prjId"]);
+    if(!empty($prj)){
+        $projectName=$prj[0]["prjName"];
+        $projectDescription=$prj[0]["description"];
+        $projectFile=$prj[0]["demandPath"];
+
+        $endPoint=strripos($projectFile,"/")+1;
+        // echo $endPoint;
+        $projectFile=str_replace ("\\","/",$projectFile);
+        // array_push($skillarray,$each['Field']);
+        // $task[0]["workInfo"]["downloadPath"]=$task[0]["workFile"];
+        $projectFile=(string)($projectFile);
+        $projectFileName= substr($projectFile, $endPoint,strlen($projectFile)-1);
+
+        $project=array(
+            "projectName"=>$projectName,
+            "projectDescription"=>$projectDescription,
+            "projectFile"=>$projectFile,
+            "projectFileName"=>$projectFileName,
+        );
+    }
     $taskName=$task[0]["taskName"]; 
     $workFile_self=$task[0]["workFile"];             //数据库中原有目录名称字符串
     $workDescription_self=$task[0]["workDescription"];       //数据库中原有描写名称字符串
@@ -54,7 +80,8 @@ $data=array(
     "workInfo"=>$workInfo,
     "taskName"=>$taskName,                     //任务名
     "description"=>$description,                //任务说明，发包写的
-    "state"=>$state 
+    "state"=>$state,
+    "project"=>$project
 );
 
 echo json_encode($data,JSON_UNESCAPED_UNICODE);
