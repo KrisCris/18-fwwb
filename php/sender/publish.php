@@ -25,6 +25,7 @@ $imgname = $_FILES['file']['name'];                   //文件名
 $tmp = $_FILES['file']['tmp_name'];                   //文件...
 $code=0;
 $exist=0;
+$prjId=NULL;
 
 if($imgname==NULL){
     echo $json=json_encode(array( 
@@ -46,10 +47,14 @@ if($isbuilt){
     }
     $array=array(array("description",$description),array("prjBegin",$startTime),array("prjEnd",$endTime),array("img",$img),array("demandPath",$workFile),array("prjName",$title),array("publisherId",$userId));
     add("project",$array);
+    $sql="SELECT MAX(id) AS LargestId FROM project";
+    $prjId=sql_str($sql);
+    $prjId=$prjId[0]["LargestId"];
 }
  
 echo $json=json_encode(array( 
     "code"=>$code,
+    "prjId"=>$prjId,
 ));   
  // auther：hgz
 

@@ -2,10 +2,11 @@
 header("Content-type:text/html;charset=utf-8"); 
 require("../database.php"); 
 $taskId=$_POST["taskId"]; 
+$state=NULL;
 $code=0;
 $task=array();
 
-$sql="SELECT taskName,workDescription,workFile FROM task WHERE id=".$taskId;
+$sql="SELECT taskName,workDescription,state,workFile FROM task WHERE id=".$taskId;
 $task=sql_str($sql);
 if(!empty($task)){
     $code=1;
@@ -16,12 +17,14 @@ if(!empty($task)){
     // $task[0]["workInfo"]["downloadPath"]=$task[0]["workFile"];
     $task[0]["workInfo"]["downloadPath"]=(string)($task[0]["workFile"]);
     $task[0]["workInfo"]["workFileName"]= substr($task[0]["workFile"], $endPoint,strlen($task[0]["workFile"])-1);
+    $state=$task[0]["state"];
 }
 
 
 echo json_encode(array(
     "code"=>$code,
-    "task"=>$task
+    "task"=>$task,
+    "state"=>$state
 ));
  
 ?>
