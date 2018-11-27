@@ -57,7 +57,7 @@ else if(!empty($project)){
             if($isbuilt){ 
                 $workFile=$pathFile.$imgname;      //文件路径 
                 $skills=implode("*", $skill); 
-                if($newSkill[0]!=NULL){ 
+                if($newSkill[0]!=""){ 
                     foreach($newSkill as $each){ 
                         $sql="ALTER TABLE skill ADD"." ".$each." "."varchar(255) NOT NULL"; 
                         sql_str($sql);  

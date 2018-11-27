@@ -18,6 +18,7 @@ $workInfo=array();
 $taskName=NULL;
 $description=NULL;
 $code=-1;
+$state=NULL;
 
 $task=get("task","id",$taskId);
 
@@ -27,6 +28,7 @@ if(!empty($task)){
     $workFile_self=$task[0]["workFile"];             //数据库中原有目录名称字符串
     $workDescription_self=$task[0]["workDescription"];       //数据库中原有描写名称字符串
     $description=$task[0]["description"];
+    $state=$task[0]["state"];
     if(!empty($workFile_self)){
         $code=1;
         $filearray=explode(";",$workFile_self);   //数据库中文件字符串转成数组
@@ -51,7 +53,8 @@ $data=array(
     "code"=>$code,                             //-1为不存在，0为没数据，1为有数据
     "workInfo"=>$workInfo,
     "taskName"=>$taskName,                     //任务名
-    "description"=>$description                //任务说明，发包写的
+    "description"=>$description,                //任务说明，发包写的
+    "state"=>$state 
 );
 
 echo json_encode($data,JSON_UNESCAPED_UNICODE);
