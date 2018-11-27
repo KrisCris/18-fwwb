@@ -57,7 +57,8 @@ if(!empty($user)){
             // $receiver=isset($receiver[0]["name"])?$receiver[0]["name"]:"无人接包";
             // $receiver=(!empty($each["userId"]))?$receiver[0]["name"]:"无人接包";
             if(strpos($each["userId"], '*')==false&&!empty($each["userId"])){
-                $receiver=$each["userId"];
+                $receiverwork=get("user","id",$each["userId"]);
+                $receiver=$receiverwork[0]["name"];
             }
             else{
                 $receiver="无人接包";

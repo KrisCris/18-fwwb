@@ -14,11 +14,17 @@ $title=$_POST["title"];
 $prjId=$_POST["prjId"]; 
 $startTime=$_POST["startTime"]; 
 $endTime=$_POST["endTime"]; 
-$imgname = $_FILES['file']['name'];                   //文件名 
-$tmp = $_FILES['file']['tmp_name'];                   //文件... 
+// $imgname = $_FILES['file']['name'];                   //文件名 
+// $tmp = $_FILES['file']['tmp_name'];                   //文件... 
+$hasFile=$_POST["hasFile"];
+if($hasFile){
+    $imgname = $_FILES['file']['name'];                   //文件名
+    $tmp = $_FILES['file']['tmp_name'];                   //文件...
+}
 $data=array(); 
 $code=0; 
 $exist=0; 
+$taskId=NULL;
  
 $user=get("user","token",$uuid);  
 $project=get("project","id",$prjId);                 //查找有无这个工程 
@@ -55,7 +61,17 @@ else if(!empty($project)){
             $pathFile="../../files/prj/".$prjName."/".$title."/"."sender/";   //多级目录 
             $isbuilt=Directory($pathFile);              //创建多级目录 
             if($isbuilt){ 
-                $workFile=$pathFile.$imgname;      //文件路径 
+                $code=1;
+                if($hasFile){
+                    $workFile=$pathFile.$imgname;      //文件路径 
+                    $myfile = fopen($workFile, "w");     //创建多及目录文件                         2步骤 
+                    if(move_uploaded_file($tmp,$workFile)){  //将传入文件导入该文件中 
+                    }else{ 
+                    } 
+                }
+                else{
+                    $workFile=$pathFile;
+                }
                 $skills=implode("*", $skill); 
                 if($newSkill[0]!=""){ 
                     foreach($newSkill as $each){ 
@@ -80,13 +96,11 @@ else if(!empty($project)){
                     }
                     $userIdStr= substr($userIdStr, 0, strlen($userIdStr));
                 }
-                $newtask=array(array("prjId",$prjId),array("startTime",$startTime),array("endTime",$endTime),array("taskName",$title),array("description",$description),array("workDescription",$workFile),array("text",$skills),array("securityLevel",$securityLevel),array("state",3),array("userId",$userIdStr)); 
-                add("task",$newtask); 
-                $myfile = fopen($workFile, "w");     //创建多及目录文件                         2步骤 
-                if(move_uploaded_file($tmp,$workFile)){  //将传入文件导入该文件中 
-                    $code=1; 
-                }else{ 
-                } 
+                $newtask=array(array("prjId",$prjId),array("startTime",$startTime),array("endTime",$endTime),array("taskName",$title),array("workDescription",$description),array("workFile",$workFile),array("text",$skills),array("securityLevel",$securityLevel),array("state",3),array("userId",$userIdStr)); 
+                add("task",$newtask);
+                $sql="SELECT MAX(id) AS LargestId FROM task";
+                $addtask=sql_str($sql);
+                $taskId=$addtask[0]["LargestId"];
             } 
         } 
     } 
@@ -95,6 +109,7 @@ else if(!empty($project)){
  
 $data=array( 
     "code"=>$code, 
+    "taskId"=>$taskId
 ); 
 echo json_encode($data,JSON_UNESCAPED_UNICODE); 
  // auther：hgz 
