@@ -11,6 +11,9 @@ $data=get("user","token",$uuid);
 $checkNum=0;
 $recentNum=0;
 $delayNum=0;     
+$acceptTasks=array();
+$idArr=NULL;
+$hasId=NULL;
 
 if(!empty($data)){ 
     $code=1;
@@ -32,6 +35,24 @@ if(!empty($data)){
             }
         }
     }
+
+    $sql="SELECT taskName,endTime,id,userId FROM task WHERE state=3 ORDER BY task.endTime";
+    $bechecked=sql_str($sql);
+    foreach($bechecked as $each){
+        $userIdStr=$each["userId"];
+        $userIdStr=substr($userIdStr, 0, strlen($userIdStr)-1);
+        if(!empty($userIdStr)){
+            $idArr=explode("*", $userIdStr);
+            if(in_array($data[0]["id"],$idArr)){
+                $task=array(
+                    "taskName"=>$each["taskName"],
+                    "endTime"=>$each["endTime"],
+                    "id"=>$each["id"]
+                );
+                array_push($acceptTasks,$task);
+            }
+        }
+    }
 } 
  
 else{ 
@@ -42,6 +63,7 @@ if($code==1){
         "code"=>$code,
         "tasks"=>$personaltask,
         "name"=>$name,
+        "acceptTasks"=>$acceptTasks,
         "portrait"=>$portrait,
         "checkNum"=>$checkNum,
         "delayNum"=>$delayNum,
