@@ -75,25 +75,20 @@ else if(!empty($project)){
                 $skills=implode("*", $skill); 
                 if($newSkill[0]!=""){ 
                     foreach($newSkill as $each){ 
-                        // $sql="ALTER TABLE skill ADD"." ".$each." "."varchar(255) NOT NULL"; 
-                        // sql_str($sql);  
-                        sql_alt("skill","ADD",$each,"varchar(255) NOT NULL");
+                        if(!empty($each)){
+                            $sql="ALTER TABLE skill ADD"." ".$each." "."varchar(255) NOT NULL"; 
+                            sql_str($sql);  
+                        }
                     } 
                     $newSkills=implode("*", $newSkill); 
                     $skills.="*".$newSkills; 
                 }
                 $skillsArr=explode("*",$skills);
-                $check="userId IS NOT NULL ";
+                $check="userId is not null ";
                 foreach($skillsArr as $each){
                     $check.="AND ".$each."=1 ";
                 } 
                 $sql="SELECT userId FROM skill WHERE ".$check;
-                // $check="";
-                // foreach($skillsArr as $each){
-                //     $check.="$each = '1' AND ";
-                // } 
-                // $check=substr($check,0,strlen($check)-5);
-                // $sql="SELECT userId FROM skill WHERE $check";
                 $userIdArr=sql_str($sql);
                 $userIdStr=NULL;
                 if(!empty($userIdArr)){

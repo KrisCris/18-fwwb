@@ -50,7 +50,7 @@ function sql_str($sql){
         die('Could not connect: ' . mysql_error());
     }
     $result = $con->query($sql);
-    if(strpos($sql,"DELETE")!== false||strpos($sql,"UPDATE")!== false){
+    if(strpos($sql,"DELETE")!== false||strpos($sql,"UPDATE")!== false||strpos($sql,"ALTER")!== false){
     }
     else{
         if($result->num_rows<=0)return [];
@@ -63,35 +63,6 @@ function sql_str($sql){
   
 }
 
-function sql_get($sql){
-    static $con = null;
-    if(!$con)
-        $con = mysqli_connect("127.0.0.1","root","910189033","cs_db");
-    if (!$con)
-    {
-        die('Could not connect: ' . mysql_error());
-    }
-    $result = $con->query($sql);
-    while($row = $result->fetch_assoc()){
-        array_push($data,$row);
-    }
-    return $data;
-
-}
-
-
-function sql_alt($table,$action,$label,$else){
-    static $con = null;
-    if(!$con)
-        $con = mysqli_connect("127.0.0.1","root","910189033","cs_db");
-    if (!$con)
-    {
-        die('Could not connect: ' . mysql_error());
-    }
-    $statement="ALTER TABLE $table $action $label $else";
-    $result = $con->query($statement);
-    
-}
 
 //改
 // $change 改变的内容
