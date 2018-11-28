@@ -86,13 +86,13 @@
                         <!-- 下载文件 -->
                         <a :href="source" :download="source" class="float-right" target="_blank" v-text="workFileName"></a>
                     </li>
-                    <li class="list-group-item border-bottom-0">
+                    <li class="list-group-item border-bottom-0" v-if="verified">
                         <h4 class="float-left">评分</h4>
-                        <div class="mb-3 float-right" v-show="verified"><input id="input-id" type="number" class="rating"
+                        <div class="mb-3 float-right" v-if="verified"><input id="input-id" type="number" class="rating"
                                 min=0 max=5 step=0.5 data-size="lg" value=5></div>
                     </li>
                 </ul>
-                <button class="btn btn-primary  btn-block" @click="pass()" :disabled="showStar" v-show="verified">通过</button>
+                <button class="btn btn-primary  btn-block" @click="pass()" :disabled="showStar" v-if="verified">通过</button>
             </div>
         </div>
         <div class="card shadow ">

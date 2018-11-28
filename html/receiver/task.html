@@ -240,23 +240,23 @@
                             taskId: that.taskId,
                         }).done((data) => {
                             data = JSON.parse(data);
-                            that.task = data.task;
+                            // that.task = data.task;
                             that.project = data.project;
-                            that.projectName = that.project.project[0].projectName;
-                            that.projectDescription = that.project.project[0].projectDescription;
-                            that.projectSource = "../../"+that.project.project[0].projectInfo.projectFile;
-                            that.projectFileName = that.project.project[0].projectFileName;
+                            that.projectName = that.project.projectName;
+                            that.projectDescription = that.project.projectDescription;
+                            that.projectSource = "../../"+that.project.projectFile;
+                            that.projectFileName = that.project.projectName;
 
-                            that.taskName = that.task.task[0].taskName; //任务名
-                            that.source = "../../"+that.task.task[0].workInfo.downloadPath; //路径
-                            that.workFileName = that.task.task[0].workInfo.workFileName; //文件名
-                            that.description = that.task.task[0].description; //任务描述
-                            that.state = that.task.state;
+                            that.taskName = data.taskName; //任务名
+                            that.source = data.workInfo[0].downloadPath; //路径
+                            that.workFileName = data.workInfo[0].workFileName; //文件名
+                            that.description = data.workDescription; //任务描述
+                            that.state = data.state;
                             if(that.state == 3){
                                 that.receive = true;
                             }
                             else{
-                                that.receive = fasle;
+                                that.receive = false;
                             }
                             swal.close();
                         })

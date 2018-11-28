@@ -412,6 +412,25 @@
         },
 
         methods: {
+            logout: function () {
+                var that = this;
+                $.post("../../php/logout.php", {
+                    uuid: that.uuid,
+                    group: "admin",
+                }).done(() => {
+                    $.cookie("uuid", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    $.cookie("group", null, {
+                        expires: 1,
+                        secure: false,
+                        path: '/'
+                    });
+                    window.location.href = "../login/login.html";
+                })
+            },
             delayTime:function(timeStamp){
                 var present = new Date().getTime()/1000;
                 present = present;
