@@ -27,6 +27,17 @@
 
   else{
     $data=get("user","token",$uuid);
+    if($group==2){
+      $sql="SHOW FULL COLUMNS FROM skill";
+      $skills=sql_str($sql); 
+      $skilllen=count($skills);
+      for($i=1;$i<$skilllen;$i++){
+          array_push($allSkills,$skills[$i]['Field']);
+      }
+      $userSkill=get("skill","userId",$data[0]["id"]);
+      $skills=array_keys($userSkill[0],"1");
+    }
+  
     if(!empty($data)){       //第二级多查一下组别是否正常
         $portrait=$data[0]["portrait"];
         $name=$data[0]["name"];
@@ -44,7 +55,9 @@
       "username"=>$username,
       "company"=>$company,
       "phone"=>$phone,
-      "mail"=>$mail
+      "mail"=>$mail,
+      "skills"=>$skills,
+      "allSkills"=>$allSkills
   ),JSON_UNESCAPED_UNICODE);
 
 ?>
