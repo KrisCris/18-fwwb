@@ -21,9 +21,10 @@ if(!empty($data)){
     $portrait=$data[0]["portrait"];
     $sql="SELECT task.taskName,task.startTime,task.endTime,task.securityLevel,task.state,project.prjName,task.id FROM task INNER JOIN project WHERE task.prjId=project.id AND task.endTime<=".$checktime." AND task.userId=".$data[0]['id']." ORDER BY task.endTime";
     $personaltask=sql_str($sql);
-
-    if(!empty($personaltask)){
-        foreach($personaltask as $each){
+    $sql="SELECT * FROM task WHERE userId=".$data[0]['id'];
+    $userTasks=sql_str($sql);
+    if(!empty($userTasks)){
+        foreach($userTasks as $each){
             if($each["state"]==2){
                 $checkNum++;
             }

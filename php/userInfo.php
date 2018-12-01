@@ -35,7 +35,12 @@
           array_push($allSkills,$skills[$i]['Field']);
       }
       $userSkill=get("skill","userId",$data[0]["id"]);
-      $skills=array_keys($userSkill[0],"1");
+      if(!empty($userSkill)){
+        $skills=array_keys($userSkill[0],"1");
+      }
+      else{
+        $skills=[];
+      }
     }
   
     if(!empty($data)){       //第二级多查一下组别是否正常
