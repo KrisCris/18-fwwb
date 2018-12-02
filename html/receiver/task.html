@@ -91,9 +91,9 @@
                         <h4>附件</h4>
                         <!-- 下载文件 -->
                         <a :href="source" :download="source" class="float-right" target="_blank" v-text="workFileName"></a>
-                        <div v-show="receive"><button class="btn btn-primary btn-block" @click="accept">接受任务</button></div>
                     </li>
                 </ul>
+                <div v-show="receive"><button class="btn btn-primary btn-block" @click="accept">接受任务</button></div>
             </div>
         </div>
         <!-- 完成任务发送 -->
@@ -239,16 +239,19 @@
                             //返回taskId
                             taskId: that.taskId,
                         }).done((data) => {
+                            console.log(data)
                             data = JSON.parse(data);
                             // that.task = data.task;
                             that.project = data.project;
                             that.projectName = that.project.projectName;
                             that.projectDescription = that.project.projectDescription;
-                            that.projectSource = "../../"+that.project.projectFile;
+                            that.projectSource = '../../'+that.project.projectFile;
                             that.projectFileName = that.project.projectName;
 
                             that.taskName = data.taskName; //任务名
-                            that.source = data.workInfo[0].downloadPath; //路径
+                            if(data.workInfo[0].downloadPath==undefined){}
+                            else    that.source = '../../'+data.workInfo[0].downloadPath; //路径
+                            
                             that.workFileName = data.workInfo[0].workFileName; //文件名
                             that.description = data.workDescription; //任务描述
                             that.state = data.state;
@@ -293,7 +296,7 @@
                         this.visible = false;
                         $.post("../../php/receiver/recordTime.php", {
                             startTime: this.startTime,
-                            timeType: this.timeType,
+                            type: this.timeType,
                             taskId: this.taskId,
                             uuid: this.uuid,
                         })
@@ -328,7 +331,7 @@
                         this.visible = true;
                         $.post("../../php/receiver/recordTime.php", {
                             endTime: this.endTime,
-                            timeType: this.timeType,
+                            type: this.timeType,
                             taskId: this.taskId,
                             uuid: this.uuid,
                         })

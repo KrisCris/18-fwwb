@@ -107,7 +107,7 @@
                 <button class="btn btn-primary btn-block btn-lg" @click="submit">提交</button>
             </div>
         </div>
-        {{skillRequire}}
+        <!-- {{skillRequire}}
         {{prjId}}<br>
         {{title}}<br>
         {{description}}<br>
@@ -117,7 +117,7 @@
         {{group}}<br>
         {{fileName}}
         {{prjId}}
-        {{securityLevel}}
+        {{securityLevel}} -->
     </div>
 
 
@@ -307,7 +307,7 @@
                     $.ajax({
                         type: "POST",
                         url: "../../php/sender/taskPublish.php",
-                        // dataType: "text",
+                        dataType: "text",
                         processData: false,
                         contentType: false,
                         data: formdata,

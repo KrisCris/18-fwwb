@@ -76,9 +76,9 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="task in acceptTasks" class="text-center">
-                                            <td style="width:25%"><a v-text="acceptTasks.taskName" :href="'task.html?taskId='+acceptTasks.id"
+                                            <td style="width:25%"><a v-text="task.taskName" :href="'task.html?taskId='+task.id"
                                                     class="text-dark" style="text-decoration: none"></a></td>
-                                            <td style="width:25%" v-text="convertTime(acceptTasks.endTime)"></td>
+                                            <td style="width:25%" v-text="convertTime(task.endTime)"></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -185,6 +185,7 @@
             recentNum: 0,
             checkNum: 0,
             delayNum: 0,
+            acceptTasks:[],
         },
         created: function () {
             this.group = $.cookie('group');
@@ -257,6 +258,7 @@
                             if (data.code == 1) {
                                 that.tasks = data.tasks;
                                 that.acceptTasks = data.acceptTasks;
+                                console.log(that.acceptTasks);
                                 that.portrait = data.portrait;
                                 $.cookie('portrait', that.portrait, {
                                     expires: 1,
@@ -313,10 +315,10 @@
                 var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) +
                     '-';
                 var D = date.getDate() + ' ';
-                var h = date.getHours() + ':';
-                var m = date.getMinutes();
+                // var h = date.getHours() + ':';
+                // var m = date.getMinutes();
                 // var s = date.getSeconds();
-                return Y + M + D + h + m;
+                return Y + M + D;
             }
         }
     })

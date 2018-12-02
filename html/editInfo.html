@@ -133,10 +133,10 @@
                             </div>
                         </div>
                     </div>
-                    skills {{skills}}<br>
+                    <!-- skills {{skills}}<br>
                     allSkills {{allSkills}}<br>
                     newSkills {{newSkills}}<br>
-                    addSkills {{addSkill}}<br>
+                    addSkills {{addSkill}}<br> -->
                 </div>
 
                 <div class="row mt-4 mb-5">
@@ -308,13 +308,13 @@
                 that.name = data.name;
                 that.username = data.username;
                 //
-                that.skills = ["Vue", "PHP", "SQL", "Angular.Js", "JavaScript"];//此人的skill
-                that.allSkills = ["Vue", "PHP", "SQL", "Angular.Js", "JavaScript", "HTML5", "CSS3", "Node.js", "Python"];//全部得skill
+                // that.skills = ["Vue", "PHP", "SQL", "Angular.Js", "JavaScript"];//此人的skill
+                // that.allSkills = ["Vue", "PHP", "SQL", "Angular.Js", "JavaScript", "HTML5", "CSS3", "Node.js", "Python"];//全部得skill
                 that.newSkills = that.skills;
                 //test above
-                // that.skills = data.skills;
-                // that.allSkills = data.allSkills;
-                // that.newSkills = data.skills;
+                that.skills = data.skills;
+                that.allSkills = data.allSkills;
+                that.newSkills = data.skills;
                 if (that.cGroup == "admin");
                 else
                     that.company = data.company;
@@ -358,7 +358,7 @@
                     addSkills: newSkill,
                     newSkills: that.newSkills,
                 }).done((data) => {
-                    that.skills = that.newskills + newskill;
+                    that.skills = that.newskills + newSkill;
                     this.showEditSkills = false;
                     swal.close();
                     let timerInterval;
