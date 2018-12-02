@@ -58,7 +58,7 @@ if(!empty($project)){
                              // $currentTask=get("task","userId",$user[0]["id"]);
                 if($each["userId"]!=NULL){
                     if(!empty($peopleIdList)){
-                        if(in_array($each["userId"],$peopleIdList)){
+                        if(in_array($each["userId"],$peopleIdList)||strpos($each["userId"],"*")||empty($each["userId"])){
                         }
                         else{
                             array_push($peopleIdList,$each["userId"]);
@@ -119,33 +119,36 @@ if(!empty($project)){
                 }
             } 
         }
-        foreach($peopleIdList as $each){
-            $sql="SELECT taskName,id FROM task WHERE userId=".$each." ORDER BY startTime";
-            $signalTasks=sql_str($sql);
-            $currentWork=$signalTasks[0]["taskName"];
-            $sql="SELECT * FROM workinfo WHERE begin is not null AND end is null AND userId=".$each;
-            $isworking=sql_str($sql);
-            $state=!(empty($isworking))?"工作中":"未工作";
-            $user=get("user","id",$each);
-                    // $workers=array(
-                    //     "name"=>$user[0]["name"],
-                    //     "name"=>$user[0]["name"],
-                    //     "name"=>$user[0]["name"],
-                    // );
-            $company=get("company","id",$user[0]["company"]);
-            $sql="SELECT * FROM task WHERE state=0 AND state=2 AND ".$each;
-            $taskNum=sql_str($sql);
-            $taskNum=count($taskNum);
-            $busy=$taskNum>=2?1:0;
-            $people=array(
-                "name"=>$user[0]["name"],
-                "currentTask"=>$currentWork,
-                "taskId"=>$signalTasks[0]["id"],
-                "state"=>$state,
-                "busy"=>$busy,
-                "company"=>$company[0]["companyName"]
-            );
-            array_push($workers,$people);
+        if(!empty($peopleIdList))
+        {
+            foreach($peopleIdList as $each){
+                $sql="SELECT taskName,id FROM task WHERE userId=".$each." ORDER BY startTime";
+                $signalTasks=sql_str($sql);
+                $currentWork=$signalTasks[0]["taskName"];
+                $sql="SELECT * FROM workinfo WHERE begin is not null AND end is null AND userId=".$each;
+                $isworking=sql_str($sql);
+                $state=!(empty($isworking))?"工作中":"未工作";
+                $user=get("user","id",$each);
+                        // $workers=array(
+                        //     "name"=>$user[0]["name"],
+                        //     "name"=>$user[0]["name"],
+                        //     "name"=>$user[0]["name"],
+                        // );
+                $company=get("company","id",$user[0]["company"]);
+                $sql="SELECT * FROM task WHERE state=0 AND state=2 AND ".$each;
+                $taskNum=sql_str($sql);
+                $taskNum=count($taskNum);
+                $busy=$taskNum>=2?1:0;
+                $people=array(
+                    "name"=>$user[0]["name"],
+                    "currentTask"=>$currentWork,
+                    "taskId"=>$signalTasks[0]["id"],
+                    "state"=>$state,
+                    "busy"=>$busy,
+                    "company"=>$company[0]["companyName"]
+                );
+                array_push($workers,$people);
+            }
         }
         // echo $json=json_encode($peopleIdList,JSON_UNESCAPED_UNICODE);   
         $table=array(
