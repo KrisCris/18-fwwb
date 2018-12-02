@@ -88,7 +88,7 @@ if(!empty($project)){
                 }
                 if($each["state"]==2){
                     $censorNum++;
-                    
+                    $user=get("user","id",$each["userId"]);
                     $task=array(
                         "Name"=>$each["taskName"],
                         "id"=>$each["id"],
