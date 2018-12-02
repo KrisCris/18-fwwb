@@ -86,7 +86,7 @@ else if(!empty($project)){
                 $skillsArr=explode("*",$skills);
                 $check="userId is not null ";
                 foreach($skillsArr as $each){
-                    $check.="AND ".$each."=1 ";
+                    $check.="AND `$each`=1 ";
                 } 
                 $sql="SELECT userId FROM skill WHERE ".$check;
                 $userIdArr=sql_str($sql);
@@ -96,7 +96,7 @@ else if(!empty($project)){
                         $userIdStr.=$each["userId"]."*";
                         // echo $each["userId"];
                     }
-                    $userIdStr= substr($userIdStr, 0, strlen($userIdStr));
+                    $userIdStr= substr($userIdStr, 0, strlen($userIdStr));//useless
                 }
                 $newtask=array(array("prjId",$prjId),array("startTime",$startTime),array("endTime",$endTime),array("taskName",$title),array("workDescription",$description),array("workFile",$workFile),array("text",$skills),array("securityLevel",$securityLevel),array("state",3),array("userId",$userIdStr)); 
                 add("task",$newtask);

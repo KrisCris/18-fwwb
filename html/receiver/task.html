@@ -48,34 +48,64 @@
             <div class="card-body">
                 <div>
                     <!-- taskName -->
-                    <h4 v-text="taskName" class="float-left"></h4>
+                    <h4 v-text="taskName" class="float-left">载入中！</h4>
                     <!-- button-group -->
                     <div class="btn-group float-right">
                         <button class="btn btn-primary" :disabled="!visible" @click="startWork">开始工作</button>
                         <button class="btn btn-danger" :disabled="visible" @click="endWork">结束工作</button>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!-- 完成任务发送 -->
+        <div class="card shadow mb-4" v-show="!receive">
+            <div class="card-body">
+                <div class="card-title">
+                    <h3>任务上传</h3>
+                </div>
+                <ul class="list-group list-group-flush">
 
+                    <!-- <li class="list-group-item">
+                                <h4>附件</h4>
+                                <input type="file" id="file_input" class="rounded">
+                                <button class="btn btn-primary float-right rounded" @click="upload">提交</button>
+                            </li> -->
+                    <li class="list-group-item">
+                        <form name="form" method="post" enctype="multipart/form-data" target="myIframe">
+                            <div class="form-group">
+                                <h4>信息</h4>
+                            </div>
+                            <div class="form-group" v-show="showTaskId"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
+                                    v-model="taskId" name="taskId">5</textarea></div>
+                            <div class="form-group"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
+                                    v-model="workDescription" name="workDescription"></textarea></div>
+                            <div class="form-group"><input type="file" name="file" id="file_input" class="rounded"></div>
+                            <button class="btn btn-primary float-right mr-3 btn-block" @click="deliver">提交</button>
+                        </form>
+                    </li>
+
+                </ul>
             </div>
         </div>
         <div class="card rounded shadow mb-4">
-                <div class="card-body">
-                    <div class="card-title">
-                        <h3>项目要求</h3>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <h4 v-text=" projectName"></h4>
-                            <textarea id="area" rows="10" class="form-control rounded mb-3" v-model="projectDescription" readonly="readonly"></textarea>
-                        </li>
-                        <li class="list-group-item">
-                            <h4>附件</h4>
-                            <!-- 下载文件 -->
-                            <a :href="projectSource" :download="projectSource" class="float-right" target="_blank" v-text="projectFileName"></a>
-                        </li>
-                    </ul>
+            <div class="card-body">
+                <div class="card-title">
+                    <h3>项目要求</h3>
                 </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <h4 v-text=" projectName"></h4>
+                        <textarea id="area" rows="10" class="form-control rounded mb-3" v-model="projectDescription"
+                            readonly="readonly"></textarea>
+                    </li>
+                    <li class="list-group-item">
+                        <h4>附件</h4>
+                        <!-- 下载文件 -->
+                        <a :href="projectSource" :download="projectSource" class="float-right" target="_blank" v-text="projectFileName"></a>
+                    </li>
+                </ul>
             </div>
+        </div>
         <!-- 任务需求 -->
         <div class="card rounded shadow mb-4">
             <div class="card-body">
@@ -96,41 +126,10 @@
                 <div v-show="receive"><button class="btn btn-primary btn-block" @click="accept">接受任务</button></div>
             </div>
         </div>
-        <!-- 完成任务发送 -->
-        <div class="card shadow mb-4" v-show="!receive">
-            <div class="card-body">
-                <div class="card-title">
-                    <h3>任务上传</h3>
-                </div>
-                <ul class="list-group list-group-flush">
 
-                    <!-- <li class="list-group-item">
-                        <h4>附件</h4>
-                        <input type="file" id="file_input" class="rounded">
-                        <button class="btn btn-primary float-right rounded" @click="upload">提交</button>
-                    </li> -->
-                    <li class="list-group-item">
-                        <form name="form" method="post" enctype="multipart/form-data"
-                            target="myIframe">
-                            <div class="form-group">
-                                <h4>信息</h4>
-                            </div>
-                            <div class="form-group" v-show="showTaskId"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
-                                    v-model="taskId" name="taskId">5</textarea></div>
-                            <div class="form-group"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
-                                    v-model="workDescription" name="workDescription"></textarea></div>
-                            <div class="form-group"><input type="file" name="file" id="file_input" class="rounded"></div>
-                            <div class="form-group float-right"><input type="submit" name="submit" value="提交" class="btn btn-primary"></div>
-                            <button class="btn btn-primary float-right mr-3 btn-block" @click="deliver">提交</button>
-                        </form>
-                    </li>
-
-                </ul>
-            </div>
-        </div>
     </div>
     <!-- 防止表单提交时页面跳转 -->
-    <iframe id="myIframe" name="myIframe" style="display:none "></iframe>
+    <!-- <iframe id="myIframe" name="myIframe" style="display:none "></iframe> -->
 </body>
 
 <script src="../../javascript/camera.js"></script>
@@ -245,20 +244,20 @@
                             that.project = data.project;
                             that.projectName = that.project.projectName;
                             that.projectDescription = that.project.projectDescription;
-                            that.projectSource = '../../'+that.project.projectFile;
+                            that.projectSource = that.project.projectFile;
                             that.projectFileName = that.project.projectName;
 
                             that.taskName = data.taskName; //任务名
-                            if(data.workInfo[0].downloadPath==undefined){}
-                            else    that.source = '../../'+data.workInfo[0].downloadPath; //路径
-                            
+                            if (data.workInfo[0].downloadPath == undefined) { }
+                            else that.source = data.workInfo[0].downloadPath; //路径
+
                             that.workFileName = data.workInfo[0].workFileName; //文件名
                             that.description = data.workDescription; //任务描述
                             that.state = data.state;
-                            if(that.state == 3){
+                            if (that.state == 3) {
                                 that.receive = true;
                             }
-                            else{
+                            else {
                                 that.receive = false;
                             }
                             swal.close();
@@ -402,25 +401,26 @@
                 var form_data = new FormData();
                 //获取文件
                 var file = $("#file_input").prop("files")[0];
-                form_data.append("workDescription",this.workDescription);
-                form_data.append("uuid",this.uuid);
-                form_data.append("workFile",file);
-                form_data.append("taskId",this.taskId);
+                form_data.append("workDescription", this.workDescription);
+                form_data.append("uuid", this.uuid);
+                form_data.append("workFile", file);
+                form_data.append("taskId", this.taskId);
                 $.ajax({
                     type: "POST",
-                    url:"../../php/receiver/deliver.php",
-                    dataType : "text",
+                    url: "../../php/receiver/deliver.php",
+                    dataType: "text",
                     processData: false,
                     contentType: false,
                     data: form_data
-                }).success(function(msg){
+                }).success(function (msg) {
                     console.log(msg);
 
-                }).fail(function(msg){
+                }).fail(function (msg) {
                     console.log(msg);
                 })
             },
             accept: function () {
+                var that = this;
                 swal({
                     title: '是否接受该任务？',
                     type: 'warning',
@@ -433,20 +433,21 @@
                 }).then((result) => {
                     if (result.value) {
                         $.post("../../php/receiver/accept.php", {
-                            uuid: this.uuid,
-                            taskId: this.taskId,
+                            uuid: that.uuid,
+                            taskId: that.taskId,
                         }).done((data) => {
+                            console.log(data);
                             data = JSON.parse(data);
-                            that.acceptSuccess = data;
-                            if (that.acceptSuccess == true) {
+                            // that.acceptSuccess = data;
+                            if (data.acceptSuccess == true) {
                                 swal(
                                     '接受任务成功！',
                                     '请尽快开始工作',
                                     'success'
                                 )
-                                this.receive = false;
+                                that.receive = false;
                             }
-                            else{
+                            else {
                                 swal(
                                     '接受任务失败！',
                                     '该任务已经被别人抢先一步了呢！',

@@ -313,7 +313,7 @@
                         data: formdata,
                     }).done((data) => {
                         console.log(data);
-                        data = JSON.prase(data);
+                        data = JSON.parse(data);
                         if (data.code == 0) {
                             swal({
                                 type: error,
@@ -328,12 +328,12 @@
                         }
                         else if (data.code == 1) {
                             swal({
-                                type: success,
+                                type: "success",
                                 title: "发布成功！",
                                 showConfirmButton: false,
                                 timer: 10000,
                             }).then(() => {
-                                window.location.href = "'taskCensor.html?taskId='+data.taskId";
+                                window.location.href = "taskCensor.html?taskId="+data.taskId;
                             })
                         }
                     })
