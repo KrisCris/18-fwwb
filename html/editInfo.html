@@ -112,14 +112,17 @@
                     <div class="col">
                         <div class="card shadow text-left">
                             <div class="card-body">
-                                <h4 class="card-title border-bottom pb-3">擅长技能</h4>
-                                <div>
-                                    <button v-for="skill in skills" class="btn btn-success btn-sm mr-2" v-text="skill"></button>
+                                <div v-show="!showEditSkills">
+                                    <h4 class="card-title border-bottom pb-3">擅长技能</h4>
+                                    <div>
+                                        <button v-for="skill in skills" class="btn btn-success btn-sm mr-2 mb-2" v-text="skill"></button>
+                                    </div>
+                                    <br>
+                                    <button class='btn btn-block btn-primary' @click="showNewSkill()">修改</button>
                                 </div>
-                                <br>
-                                <button class='btn btn-block btn-primary mb-3' @click="showNewSkill()">修改</button>
+
                                 <div v-show="showEditSkills">
-                                    <h4 class="card-title">选择技能</h4>
+                                    <h4 class="card-title border-bottom pb-3">选择技能</h4>
                                     <div class="custom-control custom-checkbox float-left mb-2" v-for="skill in allSkills">
                                         <input type="checkbox" class="custom-control-input" :id="skill" v-model="newSkills"
                                             :value="skill">
@@ -128,7 +131,11 @@
                                     <div>
                                         <input type="text" class="form-control" v-model="addSkill" placeholder="新增技能（多项技请用*分隔）">
                                     </div>
-                                    <button class="btn btn-block btn-success mt-3" @click="editSkill()">保存</button>
+                                    <div>                          
+                                        <button class="btn btn-secondary mt-3 float-left" style="width:48%;"@click="showNewSkill()">取消</button>
+                                        <button class="btn btn-success mt-3 float-right" style="width:48%;"@click="editSkill()">保存</button>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -352,14 +359,22 @@
                 // for (var i = 0; i < newSkill.length; i++) {
                 //     formdata.append("newSkill[]", newSkill[i]);
                 // }
+                console.log(that.newSkills + "textfield:" + newSkill);
                 $.post("../php/editSkills.php", {
                     group: that.cGroup,
                     uuid: that.cUuid,
                     addSkills: newSkill,
                     newSkills: that.newSkills,
                 }).done((data) => {
-                    that.skills = that.newskills + newSkill;
-                    this.showEditSkills = false;
+                    if (newSkill[0] != "") {
+                        for (var i = 0; i < newSkill.length; i++) {
+                            that.newSkills.push(newSkill[i]);
+                            that.allSkills.push(newSkill[i]);
+                        }
+                    }
+                    console.log(that.newSkills);
+                    that.skills = that.newSkills;
+                    that.showEditSkills = false;
                     swal.close();
                     let timerInterval;
                     swal({
@@ -437,7 +452,7 @@
                                     break;
                                 case "portrait":
                                     that.portrait = that.sample;
-                                    $.removeCookie('portrait',{ path: '/'});
+                                    $.removeCookie('portrait', { path: '/' });
                                     console.log("that.portrait");
                                     $.cookie('portrait', that.portrait, { expires: 1, secure: false, path: '/' });
                                     break;
