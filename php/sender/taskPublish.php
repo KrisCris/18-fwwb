@@ -63,14 +63,14 @@ else if(!empty($project)){
             if($isbuilt){ 
                 $code=1;
                 if($hasFile){
-                    $workFile=$pathFile.$imgname;      //文件路径 
-                    $myfile = fopen($workFile, "w");     //创建多及目录文件                         2步骤 
-                    if(move_uploaded_file($tmp,$workFile)){  //将传入文件导入该文件中 
+                    $descriptionFile=$pathFile.$imgname;      //文件路径 
+                    $myfile = fopen($descriptionFile, "w");     //创建多及目录文件                         2步骤 
+                    if(move_uploaded_file($tmp,$descriptionFile)){  //将传入文件导入该文件中 
                     }else{ 
                     } 
                 }
                 else{
-                    $workFile=$pathFile;
+                    $descriptionFile=$pathFile;
                 }
                 $skills=implode("*", $skill); 
                 if($newSkill[0]!=""){ 
@@ -98,7 +98,7 @@ else if(!empty($project)){
                     }
                     $userIdStr= substr($userIdStr, 0, strlen($userIdStr));//useless
                 }
-                $newtask=array(array("prjId",$prjId),array("startTime",$startTime),array("endTime",$endTime),array("taskName",$title),array("workDescription",$description),array("workFile",$workFile),array("text",$skills),array("securityLevel",$securityLevel),array("state",3),array("userId",$userIdStr)); 
+                $newtask=array(array("prjId",$prjId),array("startTime",$startTime),array("endTime",$endTime),array("taskName",$title),array("description",$description),array("descriptionFile",$descriptionFile),array("text",$skills),array("securityLevel",$securityLevel),array("state",3),array("userId",$userIdStr)); 
                 add("task",$newtask);
                 $sql="SELECT MAX(id) AS LargestId FROM task";
                 $addtask=sql_str($sql);

@@ -84,7 +84,7 @@
                     <li class="list-group-item mb-3 border-bottom-0">
                         <h4>工作成果</h4>
                         <!-- 下载文件 -->
-                        <a :href="source" :download="source" class="float-right" target="_blank" v-text="workFileName"></a>
+                        <a :href="workFilePath" :download="workFilePath" class="btn btn-success" target="_blank" v-text="workFileName"></a>
                     </li>
                     <li class="list-group-item border-bottom-0" v-if="verified">
                         <h4 class="float-left">评分</h4>
@@ -114,7 +114,9 @@
                         <div class="form-group" v-show="showTaskId"> <textarea cols="60" rows="5" class="form-control rounded mb-3"
                                 v-model="taskId" name="taskId">5</textarea></div>
                         <div class="form-group"><textarea cols="60" rows="5" class="form-control rounded mb-3" v-model="description"
-                                name="description"></textarea></div>
+                                name="description"></textarea>
+                            <a :href="descriptionFilePath" :download="descriptionFilePath" class="btn btn-success" target="_blank" v-text="descriptionFileName"></a></div>
+
                         <!-- 添加需求文件 -->
                         <!-- <div class="form-group"><input type="file" name="file" id="file_input"></div> -->
                         <div class="input-group mt-3 mb-4 ">
@@ -157,16 +159,16 @@
             portrait: "http://static.runoob.com/images/mix/img_avatar.png",
             taskId: '',
             //
-            task: [],
-            taskName: '',
-            workDescription: '',
-            description: '',
+            // task: [],
+            // taskName: '',
+            // workDescription: '',
+            // description: '',
             startTime: '',
             endTime: '',
             timeType: '',
             jump: '',
-            source: "",
-            workFileName: '',
+            // source: "",
+            // workFileName: '',
             facialCensor: 0,
             code: '',
             showTaskId: false,
@@ -176,6 +178,16 @@
             fileName: "",
             ifBack: true,
             state: '',
+
+
+            taskName:'',
+            state:'',
+            workDescription:'',
+            workFileName:'',
+            workFilePath:'',
+            description:'',
+            descriptionFileName:'',
+            descriptionFilePath:'',
         },
         created() {
             swal({
@@ -247,17 +259,25 @@
                             taskId: that.taskId,
                         }).done((data) => {
                             data = JSON.parse(data);
-                            that.task = data;
-                            // that.taskName = that.task[0].taskName; //任务名
-                            // that.source = that.task[0].workInfo.downloadPath; //审核文件路径
-                            // that.workFileName = that.task[0].workInfo.workFileName; //审核文件名
-                            // that.workDescription = that.task[0].workDescription; //任务描述
+                            // that.task = data; x
+                            // that.taskName = that.task.task[0].taskName; //任务名
+                            // that.source = that.task.task[0].workInfo.downloadPath; //审核文件路径  //路径补充完整啊哥。。。不然根本目录不对的！！
+                            // that.workFileName = that.task.task[0].workInfo.workFileName; //审核文件名
+                            // that.workDescription = that.task.task[0].workDescription; //任务描述
+                            // that.state = that.task.state;
 
-                            that.taskName = that.task.task[0].taskName; //任务名
-                            that.source = that.task.task[0].workInfo.downloadPath; //审核文件路径  //路径补充完整啊哥。。。不然根本目录不对的！！
-                            that.workFileName = that.task.task[0].workInfo.workFileName; //审核文件名
-                            that.workDescription = that.task.task[0].workDescription; //任务描述
-                            that.state = that.task.state;
+                            // hpc
+                            that.taskName = data.taskInfo.taskName;
+                            that.state = data.taskInfo.state;
+
+                            that.workDescription = data.workInfo.workDescription;
+                            that.workFileName = data.workInfo.fileName;
+                            that.workFilePath = data.workInfo.workFile;
+
+                            that.description = data.originInfo.description;
+                            that.descriptionFileName = data.originInfo.fileName;
+                            that.descriptionFilePath = data.originInfo.descriptionFile;
+
                             if (that.state == 2) {
                                 that.verified = true;
                                 that.ifBack = true;

@@ -50,9 +50,12 @@
                     <!-- taskName -->
                     <h4 v-text="taskName" class="float-left">载入中！</h4>
                     <!-- button-group -->
-                    <div class="btn-group float-right">
+                    <div class="btn-group float-right" v-show="!receive">
                         <button class="btn btn-primary" :disabled="!visible" @click="startWork">开始工作</button>
                         <button class="btn btn-danger" :disabled="visible" @click="endWork">结束工作</button>
+                    </div>
+                    <div class="float-right" v-show="receive">
+                        <button class="btn btn-primary" @click="accept">接受任务</button>
                     </div>
                 </div>
             </div>
@@ -83,25 +86,25 @@
                             <button class="btn btn-primary float-right mr-3 btn-block" @click="deliver">提交</button>
                         </form>
                     </li>
-
                 </ul>
             </div>
         </div>
         <div class="card rounded shadow mb-4">
             <div class="card-body">
                 <div class="card-title">
-                    <h3>项目要求</h3>
+                    <h3 v-text="projectName">项目</h3>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <h4 v-text=" projectName"></h4>
+                        <h4>项目信息</h4>
                         <textarea id="area" rows="10" class="form-control rounded mb-3" v-model="projectDescription"
                             readonly="readonly"></textarea>
                     </li>
                     <li class="list-group-item">
                         <h4>附件</h4>
                         <!-- 下载文件 -->
-                        <a :href="projectSource" :download="projectSource" class="float-right" target="_blank" v-text="projectFileName"></a>
+                        <a class="btn btn-primary" :href="projectSource" :download="projectSource" class="float-right"
+                            target="_blank" v-text="projectFileName"></a>
                     </li>
                 </ul>
             </div>
@@ -112,18 +115,26 @@
                 <div class="card-title">
                     <h3>任务要求</h3>
                 </div>
+
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
+
+                    <li class="list-group-item ">
                         <h4>信息</h4>
                         <textarea id="area" rows="10" class="form-control rounded mb-3" v-model="description" readonly="readonly"></textarea>
                     </li>
                     <li class="list-group-item">
+                        <h4>能力需求</h4>
+                        <div>
+                            <button v-for="skill in skills" class="btn btn-success btn-sm mr-2 mb-2" v-text="skill"></button>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
                         <h4>附件</h4>
                         <!-- 下载文件 -->
-                        <a :href="source" :download="source" class="float-right" target="_blank" v-text="workFileName"></a>
+
+                        <a class="btn btn-primary" :href="source" :download="source" target="_blank" v-text="workFileName"></a>
                     </li>
                 </ul>
-                <div v-show="receive"><button class="btn btn-primary btn-block" @click="accept">接受任务</button></div>
             </div>
         </div>
 
@@ -148,6 +159,8 @@
             img: "http://static.runoob.com/images/mix/img_avatar.png",
             portrait: "http://static.runoob.com/images/mix/img_avatar.png",
             taskId: '',
+            //
+            skills: ["vue.js", "php", "html"],
             //
             task: [],
             taskName: '',
@@ -240,18 +253,18 @@
                         }).done((data) => {
                             console.log(data)
                             data = JSON.parse(data);
-                            // that.task = data.task;
-                            that.project = data.project;
-                            that.projectName = that.project.projectName;
-                            that.projectDescription = that.project.projectDescription;
-                            that.projectSource = that.project.projectFile;
-                            that.projectFileName = that.project.projectName;
+                            that.projectName = data.project.projectName;
+                            that.projectDescription = data.project.projectDescription;
+                            that.projectSource = data.project.projectFile;
+                            that.projectFileName = data.project.projectName;
 
                             that.taskName = data.taskName; //任务名
                             if (data.workInfo[0].downloadPath == undefined) { }
                             else that.source = data.workInfo[0].downloadPath; //路径
 
                             that.workFileName = data.workInfo[0].workFileName; //文件名
+                            that.workFileName = that.workFileName.split("/");
+                            that.workFileName = that.workFileName[that.workFileName.length - 1];
                             that.description = data.workDescription; //任务描述
                             that.state = data.state;
                             if (that.state == 3) {
