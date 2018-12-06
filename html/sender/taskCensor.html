@@ -388,7 +388,7 @@
                 var file = $("#file_input").prop("files")[0];
                 form_data.append("description", this.description);
                 form_data.append("uuid", this.uuid);
-                form_data.append("descriptionFIle", file);
+                form_data.append("descriptionFile", file);
                 form_data.append("taskId", this.taskId);
                 swal({
                     title: '是否退回该任务？',
@@ -406,7 +406,7 @@
                         dataType: "text",
                         processData: false,
                         contentType: false,
-                        data: form_data
+                        data: form_data,
                     }).success(function (msg) {
                         swal(
                             '退回成功！',
