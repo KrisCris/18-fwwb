@@ -75,10 +75,11 @@ if(!empty($user)){
         else if($each["state"]==0){
             $workingNum++;
         }
-        else if($each["state"]==1){
-            $acceptNum++;
-        }
+        // else if($each["state"]==1){
+        //     $acceptNum++;
+        // }
         else if($each["state"]==3){
+            $acceptNum++;
             $project=get("project","id",$each["prjId"]);
             $task=array(
                 "taskName"=>$each["taskName"],
