@@ -10,8 +10,10 @@
 </head>
 
 <body style="background-image: url(../../image/papper.png)" onbeforeunload="return closeWindow()">
-    <div id="main" class="container">
+    <div id="main" class="container" v-if="faceChecked">
+        <!-- <img :src="faceBase64" alt=""> -->
         <!-- simple bar -->
+        <div id="camera" v-if=false></div>
         <nav class="navbar navbar-expand-md bg-dark navbar-dark shadow p-3 mb-3 mt-3 rounded sticky-top">
             <a class="navbar-brand" href="#">CrowdSourcing</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -73,7 +75,8 @@
 
                         <div class="">
                             <h4>描述</h4>
-                            <textarea cols="60" rows="5" class="form-control rounded mb-2" v-model="workDescription" :disabled="censor"></textarea>
+                            <textarea cols="60" rows="5" class="form-control rounded mb-2" v-model="workDescription"
+                                :disabled="censor"></textarea>
                         </div>
                         <!-- <div class="form-group" v-show="showTaskId">
                             <textarea cols="60" rows="5" class="form-control rounded mb-3" v-model="taskId" name="taskId"></textarea>
@@ -88,8 +91,8 @@
                         </div>
                         <div class="input-group mt-2 mb-4">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="workFile" :disabled="censor" aria-describedby="inputGroupFileAddon04"
-                                    @change="getName()">
+                                <input type="file" class="custom-file-input" id="workFile" :disabled="censor"
+                                    aria-describedby="inputGroupFileAddon04" @change="getName()">
                                 <label class="custom-file-label" for="workFile" v-text="fileName"></label>
                             </div>
                         </div>
@@ -112,7 +115,7 @@
                         <textarea id="area" rows="10" class="form-control rounded mb-3" v-model="prjDescription"
                             readonly="readonly"></textarea>
                     </li>
-                    <li class="list-group-item" >
+                    <li class="list-group-item">
                         <h4>附件</h4>
                         <!-- 下载文件 -->
                         <a class="btn btn-primary" :href="prjFile" :download="prjFile" class="float-right" target="_blank"
@@ -175,8 +178,8 @@
             workDescription: "",
             workFileName: "",
             workFile: "",
-            hasFile:false,
-            censor:false,
+            hasFile: false,
+            censor: false,
             //prj
             prjName: "",
             prjDescription: "",
@@ -200,7 +203,17 @@
             visible: true,
             receive: true,
             acceptSuccess: false,
-            
+            //facialRecog
+            facialData: {},
+            faceBase64: "",
+            cameraObj: {
+                needEdit: true,
+                imageType: 'png',
+                width: 400,
+                height: 250,
+            },
+            faceChecked: true,
+
         },
         created() {
             swal({
@@ -286,9 +299,9 @@
                             that.workDescription = data.work.workDescription;
                             that.workFile = data.work.workFile;
                             that.workFileName = data.work.workFileName;
-                            if(that.workFileName=="")   that.hasFile=false;
-                            else    that.hasFile=true;
-                            
+                            if (that.workFileName == "") that.hasFile = false;
+                            else that.hasFile = true;
+
                             that.state = data.task.state;
                             if (that.state == 3) {
                                 that.receive = true;
@@ -297,21 +310,58 @@
                             else {
                                 that.receive = false;
                                 swal.close();
-                                if(that.state ==2)
-                                {
+                                if (that.state == 2) {
                                     that.censor = true;
                                     swal({
-                                        title:'审核中',
-                                        text:'您已提交本任务，请耐心等待审核！',
-                                        type:'warning',
-                                        confirmButtonText:'了解',
+                                        title: '审核中',
+                                        text: '您已提交本任务，请耐心等待审核！',
+                                        type: 'warning',
+                                        confirmButtonText: '了解',
                                     })
                                 }
                             }
-                            
+
                         })
                     }
                 });
+                //facialRecog
+                var camera = new Camera('camera', this.cameraObj);
+                camera.init();
+                var timer = window.setInterval(() => {
+                    this.faceBase64 = camera.take().src;
+                    console.log(this.faceBase64);
+                    this.facialData = base64ToBlob(this.faceBase64);
+                    formData = new FormData();
+                    formData.append("uuid", this.uuid);
+                    formData.append("facialData", this.facialData);
+                    $.ajax({
+                        type: "POST",
+                        url: "../../php/receiver/checkFace.php",
+                        dataType: "text",
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                    }).done((data) => {
+                        console.log(data);
+                        data = JSON.parse(data);
+                        if (data.code == 0) {
+                            that.faceChecked = false;
+                            endWork();
+                            swal({
+                                title: "身份验证失败!",
+                                type: "error",
+                                text: "已停止工作,请重新登陆!",
+                                confirmButtonText: "是",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                timer: 1000,
+                            }).then(() => {
+                                window.location.href="../login/login.html";
+                            });
+                        }
+                    })
+                }, 1000)
 
             }
         },
@@ -500,6 +550,32 @@
         if (r != null) return unescape(r[2]);
         return null;
     }
+
+    var camera = new Camera('camera', {
+        needEdit: true,
+        imageType: 'bmp',
+        width: 400,
+        height: 250,
+    });
+    function base64ToBlob(urlData) {
+        var arr = urlData.split(',');
+        var mime = arr[0].match(/:(.*?);/)[1] || 'image/png';
+        // 去掉url的头，并转化为byte
+        var bytes = window.atob(arr[1]);
+        // 处理异常,将ascii码小于0的转换为大于0
+        var ab = new ArrayBuffer(bytes.length);
+        // 生成视图（直接针对内存）：8位无符号整数，长度1个字节
+        var ia = new Uint8Array(ab);
+
+        for (var i = 0; i < bytes.length; i++) {
+            ia[i] = bytes.charCodeAt(i);
+        }
+
+        return new Blob([ab], {
+            type: mime
+        });
+    }
+
 </script>
 
 </html>

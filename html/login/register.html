@@ -104,30 +104,39 @@
                                 </div>
                                 <div id="camera" style="border-radius: 5px;background-color: rgb(155, 155, 155);"></div>
                                 <br>
+                                <div>
+                                    <button class="btn btn-primary btn-block" @click="faceRecog" :disabled="faceRegDone">确认拍摄</button>
+                                </div>
+                                <div>
+                                    <img :src="facePic">
+                                </div>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
                                     </div>
-                                    <input v-model="username" type="text" class="form-control" placeholder="输入用户名">
+                                    <input v-model="username" type="text" class="form-control" placeholder="输入用户名"
+                                        :readonly="!faceRegDone">
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text "><i class="fa fa-key"></i></span>
                                     </div>
-                                    <input v-model="password" type="password" class="form-control" placeholder="输入密码">
+                                    <input v-model="password" type="password" class="form-control" placeholder="输入密码"
+                                        :readonly="!faceRegDone">
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text "><i class="fa fa-key"></i></span>
                                     </div>
-                                    <input v-model="password_2" type="password" class="form-control" placeholder="重复输入密码">
+                                    <input v-model="password_2" type="password" class="form-control" placeholder="重复输入密码"
+                                        :readonly="!faceRegDone">
                                 </div>
                                 <div class="clearfix">
                                     <button @click="prev()" type="button" class="btn btn-secondary float-left" style="width:48%;">返回</button>
                                     <button @click="register()" type="button" class="btn btn-success float-right "
-                                        style="width:48%;">提交</button>
+                                        style="width:48%;" :disabled="!faceRegDone">提交</button>
                                 </div><br>
                             </div>
                         </div>
@@ -179,6 +188,12 @@
             companyCls: "form-control",
             passwordCls: "form-control",
             usernameCls: "form-control",
+            //
+            picNum: 0,
+            facePic: [],
+            faceBase64: "",
+            faceRegDone: false,
+
         },
         created() {
             swal({
@@ -201,6 +216,33 @@
         },
 
         methods: {
+            faceRecog: function () {
+                if (this.picNum < 5) {
+                    this.faceBase64 = camera.take().src;
+                    this.facePic[this.picNum] = base64ToBlob(this.faceBase64);
+                    var formData = new FormData();
+                    formData.append("face", this.facePic[this.picNum]);
+                    var that = this;
+                    $.ajax({
+                        type: "POST",
+                        url: "../../php/login/faceNumCheck.php",
+                        dataType: "text",
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                    }).done((data) => {
+                        console.log(data);
+                        data = JSON.parse(data);
+                        if (data.code == 1) that.picNum += 1;
+                        else if (data.code == 2) console.log("多个人脸");
+                        else console.log("face recognition error");
+                        if (that.picNum = 4) {
+                            that.faceRegDone = true;
+                        }
+                    })
+                }
+            },
+
 
             register: function () {
                 var that = this;
@@ -210,34 +252,43 @@
                         allowOutsideClick: false,
                         showConfirmButton: false,
                         showCloseButton: false,
-                        width:250,
+                        width: 250,
                         onOpen: () => {
                             swal.showLoading()
                         }
                     })
-                    $.post("../../php/login/register.php", {
-                        name: that.name,
-                        company: that.company,
-                        phone: that.phone,
-                        mail: that.mail,
-                        identificationNum: that.identificationNum,
-                        username: that.username,
-                        password: that.password,
-                        facialData: that.facialData,
+                    var formData = new FormData();
+                    formData.append("name", that.name);
+                    formData.append("company", that.company);
+                    formData.append("phone", that.phone);
+                    formData.append("mail", that.mail);
+                    formData.append("identification", that.identificationNum);
+                    formData.append("username", that.username);
+                    formData.append("password", that.password);
+                    for (var i = 0; i < 5; i++) {
+                        formData.append("facialData[]", that.facialData[i]);
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "../../php/login/register.php",
+                        dataType: "text",
+                        processData: false,
+                        contentType: false,
+                        data: formData,
                     }).done((data) => {
                         data = JSON.parse(data);
                         if (data.code == 1) {
                             swal({
                                 title: "注册成功！",
-                                text:"您的账号将在2小时内得到审核。",
+                                text: "您的账号将在2小时内得到审核。",
                                 type: "success",
                                 showConfirmButton: false,
                                 timer: 2000,
-                                width:300,
-                            }).then(()=>{
+                                width: 300,
+                            }).then(() => {
                                 window.location.href = "login.html";
                             });
-                            
+
                         }
                         else if (data.code == 0) {
                             this.notify = '用户名重复！';
@@ -245,6 +296,36 @@
                             swal.close();
                         }
                     })
+                    // $.post("../../php/login/register.php", {
+                    //     name: that.name,
+                    //     company: that.company,
+                    //     phone: that.phone,
+                    //     mail: that.mail,
+                    //     identificationNum: that.identificationNum,
+                    //     username: that.username,
+                    //     password: that.password,
+                    //     facialData: that.facialData,
+                    // }).done((data) => {
+                    //     data = JSON.parse(data);
+                    //     if (data.code == 1) {
+                    //         swal({
+                    //             title: "注册成功！",
+                    //             text: "您的账号将在2小时内得到审核。",
+                    //             type: "success",
+                    //             showConfirmButton: false,
+                    //             timer: 2000,
+                    //             width: 300,
+                    //         }).then(() => {
+                    //             window.location.href = "login.html";
+                    //         });
+
+                    //     }
+                    //     else if (data.code == 0) {
+                    //         this.notify = '用户名重复！';
+                    //         this.stateColor = "alert alert-danger";
+                    //         swal.close();
+                    //     }
+                    // })
                 }
                 else {
                     this.notify = '请重新确认您的密码！';
@@ -258,7 +339,7 @@
                 if (!this.complete_1) {
                     this.notify = '请填写正确的信息！';
                     this.stateColor = "alert alert-danger";
-                    
+
                 }
                 else {
                     swal({
@@ -270,7 +351,7 @@
                         allowEnterKey: false,
                         showConfirmButton: false,
                         onOpen: () => { swal.showLoading() }
-                    });  
+                    });
                     this.notify = '确认中';
                     this.stateColor = "alert alert-primary";
                     var that = this;
@@ -311,7 +392,7 @@
                             that.show = !that.show;
                             window.setTimeout(() => {
                                 that.fade = !that.fade;
-                                this.notify = '请继续填写登陆信息';
+                                this.notify = '请录入不同角度的人脸。';
                                 this.stateColor = "alert alert-primary";
                             }, 500)
                             this.seen = true;
@@ -375,6 +456,24 @@
     // //take photo
     // var img = camera.take();
     // console.log(img);
+    function base64ToBlob(urlData) {
+        var arr = urlData.split(',');
+        var mime = arr[0].match(/:(.*?);/)[1] || 'image/png';
+        // 去掉url的头，并转化为byte
+        var bytes = window.atob(arr[1]);
+        // 处理异常,将ascii码小于0的转换为大于0
+        var ab = new ArrayBuffer(bytes.length);
+        // 生成视图（直接针对内存）：8位无符号整数，长度1个字节
+        var ia = new Uint8Array(ab);
+
+        for (var i = 0; i < bytes.length; i++) {
+            ia[i] = bytes.charCodeAt(i);
+        }
+
+        return new Blob([ab], {
+            type: mime
+        });
+    }
 
 
 
