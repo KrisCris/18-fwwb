@@ -52,7 +52,7 @@ if (!empty($data) || !empty($data_admin)) {
     // if ($isbuilt) {
     // $workFile = $pathFile . $maxId . $imgname;
     for ($i = 0; $i < 5; $i++){
-        $workFile = $pathFile . $maxId ."No". $i .".png";
+        $workFile = $pathFile . $maxId ."No". $i .".tmp";
         $myfile = fopen($workFile, "w"); //创建多及目录文件                         2步骤
         if (move_uploaded_file($tmp[$i], $workFile)) { //将传入文件导入该文件中
         // $code = 1;  
@@ -60,7 +60,7 @@ if (!empty($data) || !empty($data_admin)) {
         fclose($myfile);
 
         $im = imagecreatefrompng($workFile);
-        $workFile1 = str_replace('png', 'bmp', $workFile);
+        $workFile1 = str_replace('tmp', 'bmp', $workFile);
         imagebmp1($im, $workFile1, 24);
         $workPath .= $workFile1 . ";";
     }
