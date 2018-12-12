@@ -14,14 +14,18 @@ $phone = $_POST["phone"];
 $company = $_POST["company"];
 $mail = $_POST["mail"];
 $group;
-$identificationNum = $_POST["identificationNum"];
+$identificationNum = $_POST["identification"];
 $workPath=NULL;
 // $facialData = $_POST["facialData"];
 $imgname=array();
 $tmp = array();
+// for($i=0;$i<5;$i++){
+//     $imgname[$i] = $_FILES['facialData[]'][$i]['name'];                   //文件名
+//     $tmp[$i] = $_FILES['facialData[]'][$i]['tmp_name'];                   //文件...
+// }
 for($i=0;$i<5;$i++){
-    $imgname[$i] = $_FILES['facialData[]'][$i]['name'];                   //文件名
-    $tmp[$i] = $_FILES['facialData[]'][$i]['tmp_name'];                   //文件...
+    $imgname[$i] = $_FILES['facialData'.$i]['name'];                   //文件名
+    $tmp[$i] = $_FILES['facialData' . $i]['tmp_name'];                   //文件...
 }
 
 $msg = "";
