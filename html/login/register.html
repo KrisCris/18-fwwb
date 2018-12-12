@@ -265,9 +265,14 @@
                     formData.append("identification", that.identificationNum);
                     formData.append("username", that.username);
                     formData.append("password", that.password);
-                    for (var i = 0; i < 5; i++) {
-                        formData.append("facialData[]", that.facialData[i]);
-                    }
+                    // for (var i = 0; i < 5; i++) {
+                    //     formData.append("facialData[]", that.facialData[i]);
+                    // }
+                    formData.append("facialData0",this.facialData[0]);
+                    formData.append("facialData1",this.facialData[1]);
+                    formData.append("facialData2",this.facialData[2])
+                    formData.append("facialData3",this.facialData[3])
+                    formData.append("facialData4",this.facialData[4])
                     $.ajax({
                         type: "POST",
                         url: "../../php/login/register.php",
