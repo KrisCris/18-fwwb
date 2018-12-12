@@ -21,7 +21,7 @@
                     <!-- content -->
                     <div class="row">
                         <div class="col">
-                            <div class=" text-center text-light" >
+                            <div class=" text-center text-light">
                                 <a href="login.html" class="btn btn-dark btn-lg btn-block"><strong>CrowdSourcing</strong></a>
                             </div><br>
 
@@ -58,7 +58,7 @@
 
                                 <input type="password" name="password1" style="display:none" />
                                 <input v-model="password" @focus="recog()" type="password" class="form-control"
-                                    placeholder="输入密码" name="username">
+                                    placeholder="输入密码" name="username" :readonly="facialRecogFail">
                             </div>
 
                         </div>
@@ -66,7 +66,7 @@
 
                     <div class="row">
                         <div class="col">
-                            <button @click="login()" type="button" class="btn btn-primary btn-block">登陆</button>
+                            <button @click="login()" type="button" class="btn btn-primary btn-block" :disabled="facialRecogFail">登陆</button>
                             <button @click="window.location.href='register.html'" type="button" class="btn btn-default btn-block">注册</button><br>
                             <div style="text-align:right;">
                                 <a href="">忘记密码？</a>
@@ -92,6 +92,7 @@
             username: "",
             password: "",
             img: "",
+            imgFile: {},
             hasCam: false,
             notify: "在这里登陆",
             seen: false,
@@ -99,6 +100,8 @@
             hasPass: false,
             group: null,
             disabled: false,
+            //
+            facialRecogFail: false,
         },
         created() {
 
@@ -135,9 +138,18 @@
                         var count = 0;
                         var timer = window.setInterval(() => {
                             this.img = (camera.take()).src;
-                            $.post("../../php/login/facialRecog.php", {
-                                username: that.username,
-                                facialData: that.img,
+                            this.imgFile = base64ToBlob(this.img);
+                            var formData = new FormData();
+                            formData.append("username", that.username);
+                            formData.append("facialData", that.imgFile);
+                            console.log(this.img);
+                            $.ajax({
+                                type: "POST",
+                                url: "../../php/login/facialRecog.php",
+                                dataType: "text",
+                                processData: false,
+                                contentType: false,
+                                data: formData,
                             }).done((data) => {
                                 // code:1成功, 0面部识别失败（未匹配成功？，-1用户名不存在
                                 data = JSON.parse(data);
@@ -147,21 +159,42 @@
                                     that.hasPass = true;   //..........
                                     window.clearInterval(timer);
                                     console.log(this.img);
-
+                                }
+                                else if (data.code == 2) {
+                                    that.notify = "摄像头中出现多人";
+                                    that.stateColor = "alert alert-danger";
+                                }
+                                else {
+                                    if (++count > 5 && !that.hasPass) {
+                                        that.hasPass = false;
+                                        that.notify = "面部识别失败,请刷新页面重试";
+                                        that.facialRecogFail = true;
+                                        that.stateColor = "alert alert-danger";
+                                        window.clearInterval(timer);
+                                    }
                                 }
                             });
-                            count++;
-                            if (count >= 5) {
-                                that.hasPass = false;
-                                that.notify = "面部识别失败！";
-                                that.stateColor = "alert alert-danger";
-                                window.clearInterval(timer);
-                                console.log(this.img);
-                            }
+                            // $.post("../../php/login/facialRecog.php", {
+                            //     username: that.username,
+                            //     facialData: that.img,
+                            // }).done((data) => {
+                            //     // code:1成功, 0面部识别失败（未匹配成功？，-1用户名不存在
+                            //     data = JSON.parse(data);
+                            //     if (data.code == 1) {
+                            //         that.notify = "面部识别通过";
+                            //         that.stateColor = "alert alert-success";
+                            //         that.hasPass = true;   //..........
+                            //         window.clearInterval(timer);
+                            //         console.log(this.img);
+
+                            //     }
+                            // });
                         }, 1000);
                     }
                 }
             },
+
+
 
             login: function () {
                 swal({
@@ -231,7 +264,24 @@
         width: 400,
         height: 250,
     });
+    function base64ToBlob(urlData) {
+        var arr = urlData.split(',');
+        var mime = arr[0].match(/:(.*?);/)[1] || 'image/png';
+        // 去掉url的头，并转化为byte
+        var bytes = window.atob(arr[1]);
+        // 处理异常,将ascii码小于0的转换为大于0
+        var ab = new ArrayBuffer(bytes.length);
+        // 生成视图（直接针对内存）：8位无符号整数，长度1个字节
+        var ia = new Uint8Array(ab);
 
+        for (var i = 0; i < bytes.length; i++) {
+            ia[i] = bytes.charCodeAt(i);
+        }
+
+        return new Blob([ab], {
+            type: mime
+        });
+    }
 
 
 </script>
