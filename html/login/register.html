@@ -165,7 +165,7 @@
             username: "",
             password: "",
             password_2: "",
-            facialData: "",
+            facialData: [],
             seen: false,
             complete_1: true,
             complete_2: false,
@@ -236,7 +236,7 @@
                         if (data.code == 1) that.picNum += 1;
                         else if (data.code == 2) console.log("多个人脸");
                         else console.log("face recognition error");
-                        if (that.picNum == 4) {
+                        if (that.picNum == 5) {
                             that.faceRegDone = true;
                         }
                     })
@@ -268,11 +268,11 @@
                     // for (var i = 0; i < 5; i++) {
                     //     formData.append("facialData[]", that.facialData[i]);
                     // }
-                    formData.append("facialData0", that.facialData[0]);
-                    formData.append("facialData1", that.facialData[1]);
-                    formData.append("facialData2", that.facialData[2]);
-                    formData.append("facialData3", that.facialData[3]);
-                    formData.append("facialData4", that.facialData[4]);
+                    formData.append("facialData0", that.facePic[0]);
+                    formData.append("facialData1", that.facePic[1]);
+                    formData.append("facialData2", that.facePic[2]);
+                    formData.append("facialData3", that.facePic[3]);
+                    formData.append("facialData4", that.facePic[4]);
                     $.ajax({
                         type: "POST",
                         url: "../../php/login/register.php",

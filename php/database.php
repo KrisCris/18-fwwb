@@ -6,7 +6,7 @@
 function get($table,$label="",$value=""){
     static $con = null;
     if(!$con)
-        $con = mysqli_connect("127.0.0.1","root","910189033","cs_db");
+        $con = mysqli_connect("localhost","root","910189033","cs_db");
     if (!$con)
     {
         die('Could not connect: ' . mysql_error());
@@ -44,7 +44,7 @@ function get($table,$label="",$value=""){
 function sql_str($sql){
     static $con = null;
     if(!$con)
-        $con = mysqli_connect("127.0.0.1","root","910189033","cs_db");
+        $con = mysqli_connect("localhost","root","910189033","cs_db");
     if (!$con)
     {
         die('Could not connect: ' . mysql_error());
@@ -68,7 +68,7 @@ function sql_str($sql){
 function set($table,$label,$value,$change){
     static $con = null;
     if(!$con)
-        $con = mysqli_connect("127.0.0.1","root","910189033","cs_db");
+        $con = mysqli_connect("localhost","root","910189033","cs_db");
     if (!$con)
     {
         die('Could not connect: ' . mysql_error());
@@ -91,7 +91,7 @@ function set($table,$label,$value,$change){
 function add($table,$array){
     static $con = null;
     if(!$con)
-        $con = mysqli_connect("127.0.0.1","root","910189033","cs_db");
+        $con = mysqli_connect("localhost","root","910189033","cs_db");
     if (!$con)
     {
         die('Could not connect: ' . mysql_error());
@@ -114,7 +114,7 @@ function add($table,$array){
 function del($table,$label,$value){
     static $con = null;
     if(!$con)
-        $con = mysqli_connect("127.0.0.1","root","910189033","cs_db");
+        $con = mysqli_connect("localhost","root","910189033","cs_db");
     if (!$con)
     {
         die('Could not connect: ' . mysql_error());
@@ -126,7 +126,7 @@ function del($table,$label,$value){
 // function get_limit($table,$index=0,$label="",$value=""){
 //     static $con = null;
 //     if(!$con)
-//         $con = mysqli_connect("127.0.0.1","root","910189033","cs_db");
+//         $con = mysqli_connect("localhost","root","910189033","cs_db");
 //     if (!$con)
 //     {
 //         die('Could not connect: ' . mysql_error());

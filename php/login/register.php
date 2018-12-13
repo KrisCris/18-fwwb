@@ -1,7 +1,7 @@
 <?php
 header("Content-type:text/html;charset=utf-8");
 require "../database.php";
-
+require("../bmp24Change.php");
 // function Directory($dir)
 // {
 //     return is_dir($dir) or Directory(dirname($dir)) and mkdir($dir, 0777);

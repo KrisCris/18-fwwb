@@ -24,7 +24,7 @@ if(empty($user)){
 $facialDataList= $user[0]["facialData"];
 $facialDataArr=explode(";", $facialDataList);
 $pathFile = "../../files/user/";
-$workFile = $pathFile . $imgname;
+$workFile = $pathFile . $imgname. ".tmp";
 $myfile = fopen($workFile, "w"); //创建多及目录文件                         2步骤
 if (move_uploaded_file($tmp, $workFile)) { //将传入文件导入该文件中
         // $code = 1;  
@@ -32,7 +32,7 @@ if (move_uploaded_file($tmp, $workFile)) { //将传入文件导入该文件中
 fclose($myfile);
 
 $im = imagecreatefrompng($workFile);
-$workFile1 = str_replace('png', 'bmp', $workFile);
+$workFile1 = str_replace('tmp', 'bmp', $workFile);
 imagebmp1($im, $workFile1, 24);
 $command = '..\..\exec\facialRecog\regFace.exe ' . $workFile1;
 // $result = passthru($command);

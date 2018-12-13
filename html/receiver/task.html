@@ -344,9 +344,12 @@
                     }).done((data) => {
                         console.log(data);
                         data = JSON.parse(data);
-                        if (data.code == 0) {
+                        if (data.code == 0||data.code==2) {
                             that.faceChecked = false;
-                            endWork();
+                            if(!that.visible){
+                                 endWork();
+                            }
+                            // endWork();
                             swal({
                                 title: "身份验证失败!",
                                 type: "error",
@@ -361,7 +364,7 @@
                             });
                         }
                     })
-                }, 1000)
+                }, 10000)
 
             }
         },
