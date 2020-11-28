@@ -1,2 +1,4 @@
 # crowdsourcing_platform
 省赛练习
+
+最新的commit把res里的资源文件给删了
